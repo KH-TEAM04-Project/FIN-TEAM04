@@ -149,7 +149,7 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> 그얘기들었어? | Minimal UI </title>
+        <title> 거짓말하지마 | Minimal UI </title>
       </Helmet>
 
       <Container>
