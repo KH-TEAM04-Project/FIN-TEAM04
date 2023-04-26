@@ -1,4 +1,4 @@
-package com.kh.team4.board.entity;
+package com.kh.team4.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import javax.persistence.*;
         , initialValue = 1  //시작값
         , allocationSize = 1  //메모리를 통해 할당할 범위 사이즈
 )
-public class QnAEntity {
+public class QnA {
     @Id // pk 칼럼 지정
     @GeneratedValue(  // 기본키를 자동으로 생성해주는 어노테이션
             strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택

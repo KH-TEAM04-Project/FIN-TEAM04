@@ -1,4 +1,4 @@
-package com.kh.team4.board.entity;
+package com.kh.team4.entity;
 
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 
-public class BaseEntity {
+public class Base {
     @CreationTimestamp // 생성시간
     @Column(updatable = false)  // 수정시 관여 x
     private LocalDateTime regDate;
