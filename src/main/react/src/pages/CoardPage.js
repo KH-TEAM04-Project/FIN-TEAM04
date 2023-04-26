@@ -27,18 +27,18 @@ import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
+import { CoardListHead, CoardListToolbar } from '../sections/@dashboard/coard';
 // mock
-import USERLIST from '../_mock/user';
+import board from '../_mock/board';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'name', label: '번호', alignRight: false },
+  { id: 'company', label: '아이디', alignRight: false },
+  { id: 'role', label: '????', alignRight: false },
+  { id: 'isVerified', label: '모르쇠', alignRight: false },
+  { id: 'status', label: '상태', alignRight: false },
   { id: '' },
 ];
 
@@ -73,7 +73,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function UserPage() {
+export default function BoardPage() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -104,7 +104,7 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = board.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -140,39 +140,41 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - board.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(board, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
   return (
     <>
-      <Helmet>
-        <title> QnA | 꽁머니 </title>
-      </Helmet>
+     <Helmet>
+     <title> 공지사항 | 꽁머니 </title>
+     </Helmet>
+        
+      
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            QnA
+            공지사항
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            작성하기
+          <Button href='http://localhost:3000/CoardPage' startIcon={<Iconify icon="eva:plus-fill" />}>
+            게시글 작성하기
           </Button>
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <CoardListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
+                <CoardListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={board.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -252,7 +254,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={board.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

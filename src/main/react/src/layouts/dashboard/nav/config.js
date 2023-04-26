@@ -3,7 +3,8 @@ import SvgColor from '../../../components/svg-color';
 
 // ----------------------------------------------------------------------
 
-const icon = (name) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />;
+const icon = (name) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} 
+sx={{ width: 1, height: 1 }} />;
 
 const navConfig = [
   {
@@ -12,9 +13,14 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'user',
-    path: '/dashboard/user',
-    icon: icon('ic_user'),
+    title: '공지사항',
+    path: '/dashboard/b',
+    icon: icon('notice'),
+  },
+  {
+    title: 'QNA',
+    path: '/dashboard/QnA',
+    icon: icon('qna'),
   },
   {
     title: 'product',
