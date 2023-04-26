@@ -22,40 +22,36 @@ public class BoardEntity {
           strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택
           , generator = "BOARD_SEQ_GENERATOR" //식별자 생성기를 설정해놓은  USER_SEQ_GEN으로 설정
   )
-  private int boardNumber;
+  private int bnum;
 
   @Column(length = 50, nullable = false)
-  private String boardTitle;
+  private String btitle;
 
   @Column
-  private String boardContent;
+  private String bcontent;
 
   @Column
-  private String boardImage;
+  private String bimage;
 
   @Column
-  private String boardVideo;
+  private String bvideo;
 
   @Column
-  private String boardFile;
+  private String bfile;
 
   @Column(length = 20, nullable = false)
-  private String boardWriterEmail;
+  private String bwriterid;
 
   @Column
-  private String boardWriterProfile;
+  private String bwriterprofile;
 
   @Column
   @ColumnDefault("0")
   // 디폴트 값을 0으로 설정
-  private int boardClickCount;
+  private int bclickcount;
 
   @Column
   @ColumnDefault("0")
-  private int boardLikeCount;
-
-  @Column
-  @ColumnDefault("0")
-  private int boardCommentCount;
+  private int bcommentcount;
 
 }
