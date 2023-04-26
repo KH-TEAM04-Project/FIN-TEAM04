@@ -10,6 +10,7 @@ import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 
+
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -26,9 +27,10 @@ export default function Router() {
       ],
     },
     {
-      path: 'login',
+      path: '/login',
       element: <LoginPage />,
     },
+    
     {
       element: <SimpleLayout />,
       children: [
