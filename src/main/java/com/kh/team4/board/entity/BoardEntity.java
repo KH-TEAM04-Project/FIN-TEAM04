@@ -5,11 +5,12 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "board_table")  // 데이터베이스에 해당하는 테이블
+@Table(name = "board")  // 데이터베이스에 해당하는 테이블
 @SequenceGenerator(
         name = "BOARD_SEQ_GENERATOR"  //시퀀스 제너레이터 이름
         , sequenceName = "BOARD_SEQ"  //시퀀스 이름
@@ -22,40 +23,19 @@ public class BoardEntity {
           strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택
           , generator = "BOARD_SEQ_GENERATOR" //식별자 생성기를 설정해놓은  USER_SEQ_GEN으로 설정
   )
-  private int boardNumber;
+  private int bno;
 
   @Column(length = 50, nullable = false)
-  private String boardTitle;
+  private String title;
 
-  @Column
-  private String boardContent;
-
-  @Column
-  private String boardImage;
-
-  @Column
-  private String boardVideo;
-
-  @Column
-  private String boardFile;
-
-  @Column(length = 20, nullable = false)
-  private String boardWriterEmail;
-
-  @Column
-  private String boardWriterProfile;
+  @Column(nullable = false)
+  private String content;
 
   @Column
   @ColumnDefault("0")
-  // 디폴트 값을 0으로 설정
-  private int boardClickCount;
+  protected int hits;
 
   @Column
-  @ColumnDefault("0")
-  private int boardLikeCount;
-
-  @Column
-  @ColumnDefault("0")
-  private int boardCommentCount;
+  private String files;
 
 }
