@@ -16,7 +16,7 @@ import java.util.List;
         , initialValue = 1  //시작값
         , allocationSize = 1  //메모리를 통해 할당할 범위 사이즈
 )
-public class Board {
+public class Board extends Base {
   @Id // pk 칼럼 지정
   @GeneratedValue(  // 기본키를 자동으로 생성해주는 어노테이션
           strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택
@@ -38,8 +38,8 @@ public class Board {
   @ColumnDefault("0")
   protected Integer hits;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_mno", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_mno")
     private Member member;
 
   /* 게시글 수정 */
