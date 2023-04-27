@@ -11,10 +11,12 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import BoardPage from './pages/BoardPage';
 import CoardPage from './pages/CoardPage';
+import SignUpPage from './pages/SignUpPage';
+import FetchPage from './pages/FetchPage';
+
 
 
 // ----------------------------------------------------------------------
-
 export default function Router() {
   const routes = useRoutes([
     {
@@ -34,9 +36,10 @@ export default function Router() {
       element: <LoginPage />,
     },
     {
-      path: '/login',
-      element: <LoginPage />,
+      path: '/SignUp',
+      element: <SignUpPage />,
     },
+
     {
       path: 'Coardpage',
       element: <CoardPage />,
