@@ -21,7 +21,7 @@ public class Member {
             strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택
             , generator = "member_seq_generator" //식별자 생성기를 설정해놓은  USER_SEQ_GEN으로 설정
     )
-    private Integer mno;
+    private Long mno;
 
     @Column(name = "mtype", columnDefinition = "VARCHAR2(1) DEFAULT 'U'")
     private String mtype;
