@@ -12,6 +12,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import BoardPage from './pages/BoardPage';
 import CoardPage from './pages/CoardPage';
 
+
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -29,7 +30,11 @@ export default function Router() {
       ],
     },
     {
-      path: 'login',
+      path: '/login',
+      element: <LoginPage />,
+    },
+    {
+      path: '/login',
       element: <LoginPage />,
     },
     {
