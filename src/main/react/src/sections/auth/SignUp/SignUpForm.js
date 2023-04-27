@@ -1,69 +1,82 @@
-// import { useState } from 'react';
-// import { Link, Stack, TextField } from '@mui/material';
-// import { LoadingButton } from '@mui/lab';
+import PropTypes from 'prop-types';
 
-// export default function SignUpForm() {
+export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
+  return (
     
-//   const [email, setEmail] = useState("");
-//   const [pw, setPw] = useState("");
-//   const [pwConfirm, setPwConfirm] = useState("");
-//   const [emailValid, setemailValid] = useState(false);    
-//   const [pwValid, setPwValid] =useState(false);
-//   const [pwConfirmValid, setPwConfirmValid] = useState(false);
-//   const [notAllow, setNowAllow] = useState(true);
+    <form onSubmit={onFormSubmit}>
+      <div>
+       
+        <input
+          type="text"
+          id="FullName"
+          name="FullName"
+          value={formValues.FullName}
+          onChange={onFormChange}
+          required
+          placeholder='이름'
+        />
+      </div>
+      <div>
+        
+        <input
+          type="text"
+          id="Id"
+          name="Id"
+          value={formValues.Id}
+          onChange={onFormChange}
+          required
+          placeholder='아이디'
+        />
+      </div>
+      <div>
+        
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={formValues.email}
+          onChange={onFormChange}
+          required
+          placeholder='이메일'
+        />
+      </div>
+      <div>
+        
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={formValues.password}
+          onChange={onFormChange}
+          required
+          placeholder='비밀번호'
+        />
+      </div>
+      <div>
+        
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          value={formValues.confirmPassword}
+          onChange={onFormChange}
+          required
+          placeholder='비밀번호 확인'
+        />
+      </div>
+      <button type="submit">Sign Up</button>
+    </form>
+  );
+}
 
-//   const handleEmail = (e) => {
-//     setEmail(e.target.value);
-//     // eslint-disable-next-line
-//     const regex =  /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-//     if(regex.test(email)) {
-//       setemailValid(true);
-//     } else {
-//       setemailValid(false);
-//     }
-//   }
-
-//   const handlePassword = (e) => {
-//     setPw(e.target.value);
-//     // eslint-disable-next-line
-//     const regex = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
-//     if (regex.test(e.target.value)) {
-//       setPwValid(true);
-//     } else {
-//       setPwValid(false)
-//     }
-//   }
-
-//   const handlePasswordConfirm = (e) => {
-//     setPwConfirm(e.target.value);
-//     if (e.target.value === pw) {
-//       setPwConfirmValid(true);
-//     } else {
-//       setPwConfirmValid(false);
-//     }
-//   }
-
-//   const handleSignUp = (e) => {
-//     e.preventDefault();
-//     // 회원가입 로직 구현
-//   }
-
-//   const isAllValid = emailValid && pwValid && pwConfirmValid;
-
-//   return (
-    
-//       <Stack spacing={3}>
-//         <TextField
-//           name="email"
-//           label="이메일 주소"
-//           type="email"
-//           value={email}
-//           onChange={handleEmail}
-//           error={!emailValid && email.length > 0}
-//           helperText={!emailValid }
-//           />
-//         </Stack>
-//   )
-// }
-
-    
+SignUpForm.propTypes = {
+  formValues: PropTypes.shape({
+    FullName: PropTypes.string.isRequired,
+    Id: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    confirmPassword: PropTypes.string.isRequired,
+  }).isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
+  onFormChange: PropTypes.func.isRequired,
+};

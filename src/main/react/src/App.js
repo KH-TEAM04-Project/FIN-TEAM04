@@ -6,8 +6,10 @@ import Router from './routes';
 import ThemeProvider from './theme';
 // components
 import { StyledChart } from './components/chart';
-import ScrollToTop from './components/scroll-to-top';
-import SignUpForm from './sections/auth/SignUp/SignUpForm';
+import ScrollToTop from './components/scroll-to-top'; 
+
+
+
 
 
 // ----------------------------------------------------------------------
@@ -22,6 +24,7 @@ export default function App() {
           <StyledChart />
           
           <Router />
+          
         </ThemeProvider>
       </BrowserRouter>
     </HelmetProvider>
