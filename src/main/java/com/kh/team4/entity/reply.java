@@ -1,6 +1,6 @@
 package com.kh.team4.entity;
 
-import com.kh.team4.board.entity.Board;
+import com.kh.team4.entity.Board;
 import lombok.Getter;
 import lombok.Setter;
 
