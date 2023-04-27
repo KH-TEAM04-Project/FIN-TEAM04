@@ -1,13 +1,12 @@
 package com.kh.team4.entity;
 
 import lombok.Getter;
-import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "qna")
 @SequenceGenerator(
         name = "QNA_SEQ_GENERATOR"  //시퀀스 제너레이터 이름
@@ -21,21 +20,26 @@ public class QnA {
             strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택
             , generator = "QNA_SEQ_GENERATOR" //식별자 생성기를 설정해놓은  USER_SEQ_GEN으로 설정
     )
-    private int qno;
+    private long qno;
 
     @Column(length = 50, nullable = false)
     private String title;
 
-    @Column
+    @Column(nullable = false)
     private String content;
 
-    @Column
-    private String files;
+    @Column(length = 1)
+    @ColumnDefault("0")
+    private Integer secret;
 
     @Column
-    private String secret;
+    @ColumnDefault("0")
+    private Integer hits;
 
-    @Column
-    private int hits;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_mno", nullable = false)
+    private Member member;
+
+
 
 }
