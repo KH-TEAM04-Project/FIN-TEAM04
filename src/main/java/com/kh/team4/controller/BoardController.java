@@ -1,4 +1,4 @@
-package com.kh.team4.board.controller;
+package com.kh.team4.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
