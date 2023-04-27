@@ -12,7 +12,7 @@ import javax.persistence.*;
         , initialValue = 1  //시작값
         , allocationSize = 1  //메모리를 통해 할당할 범위 사이즈
 )
-public class Reply {
+public class Reply extends Base {
 
     @Id // pk 칼럼 지정
     @GeneratedValue(  // 기본키를 자동으로 생성해주는 어노테이션
@@ -22,7 +22,7 @@ public class Reply {
     private long rno;
 
     @JoinColumn(name = "member_mno", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Member member;
 
     @JoinColumn(name = "qna_qno", nullable = false)
