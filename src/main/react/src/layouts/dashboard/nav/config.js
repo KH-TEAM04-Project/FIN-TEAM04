@@ -43,9 +43,10 @@ const navConfig = [
     icon: icon('ic_disabled'),
   },
   {
-    title: '회원관리',
-    path: '/dashboard/fetch',
-    icon: icon('ic_Register'),
+    title: 'Test Page',
+    path: '/dashboard/test',
+    icon: icon('ic_cart'),
+
   },
 ];
 
