@@ -1,13 +1,16 @@
 package com.kh.team4.entity;
 
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "members")
 @SequenceGenerator(
         name = "member_seq_generator"  //시퀀스 제너레이터 이름
@@ -21,7 +24,7 @@ public class Member {
             strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택
             , generator = "member_seq_generator" //식별자 생성기를 설정해놓은  USER_SEQ_GEN으로 설정
     )
-    private Integer mno;
+    private Long mno;
 
     @Column(name = "mtype", columnDefinition = "VARCHAR2(1) DEFAULT 'U'")
     private String mtype;
@@ -46,4 +49,16 @@ public class Member {
 
     @Column(columnDefinition = "varchar2(100)", nullable = false)
     private String address;
+
+    @Builder // 생성자 대신 이용하는 친구
+    public Member(String mtype, String mname, String regno, String mid, String pwd, String email, String ph, String address) {
+        this.mtype = mtype;
+        this.mname = mname;
+        this.regno = regno;
+        this.mid = mid;
+        this.pwd = pwd;
+        this.email = email;
+        this.ph = ph;
+        this.address = address;
+    }
 }

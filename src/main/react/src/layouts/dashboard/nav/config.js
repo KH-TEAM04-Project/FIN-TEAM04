@@ -46,6 +46,7 @@ const navConfig = [
     title: 'Test Page',
     path: '/dashboard/test',
     icon: icon('ic_cart'),
+
   },
 ];
 
