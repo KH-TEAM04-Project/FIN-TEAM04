@@ -1,16 +1,14 @@
 package com.kh.team4.entity;
 
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor // (@NoArgsConstructor 이거 쓰면서 @Builder 도 동시에 쓰기 위해 사용)
 @Table(name = "members")
 @SequenceGenerator(
         name = "member_seq_generator"  //시퀀스 제너레이터 이름
@@ -50,7 +48,7 @@ public class Member {
     @Column(columnDefinition = "varchar2(100)", nullable = false)
     private String address;
 
-    @Builder // 생성자 대신 이용하는 친구
+    @Builder // 생성자 대신 이용하는 친구 (@NoArgsConstructor 이거 쓰면 @Builder 못쓰는데 @AllArgsConstructor 사용해서 사용가능.)
     public Member(String mtype, String mname, String regno, String mid, String pwd, String email, String ph, String address) {
         this.mtype = mtype;
         this.mname = mname;
@@ -61,4 +59,5 @@ public class Member {
         this.ph = ph;
         this.address = address;
     }
+
 }
