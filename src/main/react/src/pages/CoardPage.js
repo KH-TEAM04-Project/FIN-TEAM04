@@ -249,7 +249,7 @@ export default function Page404() {
         <Box sx={{ ...style, width: 500 }}>
           <h2 id="parent-modal-title">꽁 머 니</h2>
           <p id="parent-modal-description">
-            게시글이 작성됐습니다.
+            게시글이 작성됐습니다람쥐.
           </p>
           <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
        등록
@@ -259,6 +259,7 @@ export default function Page404() {
     </div>
       </StyledContent2>
       </Container>
+
     </>
   );
 }
