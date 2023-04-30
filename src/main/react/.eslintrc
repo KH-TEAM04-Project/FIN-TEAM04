@@ -4,7 +4,6 @@
     "browser": true,
     "es2021": true
   },
-  
   "extends": [
     "airbnb",
     "plugin:jsx-a11y/recommended",
@@ -26,7 +25,6 @@
     }
   },
   "rules": {
-    
     "no-new": 0,
     "no-alert": 0,
     "no-shadow": 0,
@@ -77,8 +75,15 @@
         "object": true,
         "array": false
       }
+    ],
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "labelAttributes": [
+          "htmlFor"
+        ]
+      }
     ]
-
-    
   }
+
 }
