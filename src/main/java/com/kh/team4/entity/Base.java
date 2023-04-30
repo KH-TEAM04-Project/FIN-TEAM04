@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 public class Base {
     @CreationTimestamp // 생성시간
     @Column(updatable = false)  // 수정시 관여 x
-    private LocalDateTime regDate;
+    private LocalDateTime regdate;
 
     @UpdateTimestamp    // 업데이트 시간
     @Column(insertable = false) // 입력시 관여 x
-    private LocalDateTime modDate;
+    private LocalDateTime moddate;
 }
