@@ -94,7 +94,7 @@ export default function LoginForm() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Checkbox name="remember" label="Remember me" />
+        <Checkbox name="remember" label="Remember me">아이디저장</Checkbox>
         <Link href="/IdPw" underline="hover">아이디 비밀번호 찾기 </Link>
           
       </Stack>
