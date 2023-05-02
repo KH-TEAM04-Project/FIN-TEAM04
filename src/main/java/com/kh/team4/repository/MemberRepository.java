@@ -11,7 +11,7 @@ import java.util.List;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 // public interface MemberRepository{
 
-    MemberResDTO findByMidAndPwd(final String mid, final String Pwd);
+    MemberResDTO findByMidAndPwd(final String mid, final String pwd);
 
 
 }

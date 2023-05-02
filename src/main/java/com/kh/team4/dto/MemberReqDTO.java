@@ -23,7 +23,7 @@ public class MemberReqDTO {
     private String address;
 
     // 로그인 하려고 만든거임
-    public Member toEntity() {
+   public Member toEntity() {
         return Member.builder()
                 .mid(mid)
                 .pwd(pwd)
