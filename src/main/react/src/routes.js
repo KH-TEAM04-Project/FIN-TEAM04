@@ -12,7 +12,6 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import BoardPage from './pages/BoardPage';
 import CoardPage from './pages/CoardPage';
 import SignUpPage from './pages/SignUpPage';
-
 import IdPwPage from './pages/IdPwPage' ;
 
 

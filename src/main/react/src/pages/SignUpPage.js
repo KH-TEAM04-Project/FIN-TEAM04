@@ -7,8 +7,8 @@ import SignUpForm from '../sections/auth/SignUp/SignUpForm';
 export default function SignUpPage() {
   
   const [formValues, setFormValues] = useState({
-    FullName: '',
-    Id: '',
+    fullname: '',
+    id: '',
     ssn: '',
     email: '',
     password: '',
