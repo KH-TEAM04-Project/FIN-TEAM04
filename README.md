@@ -80,3 +80,9 @@
 - -- 유저명으로 조회(리스트)
 SELECT * FROM all_sequences
 WHERE sequence_owner = 'TEAM4'
+
+
+### 터미널 관련 깔꺼
+mui아이콘 깔기 : yarn add @mui/icons-material
+아시오스 깔기 : npm install -save axios
+

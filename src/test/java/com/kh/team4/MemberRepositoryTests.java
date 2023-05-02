@@ -21,8 +21,8 @@ public class MemberRepositoryTests {
         Member params = Member.builder()
                 .mname("쏘")
                 .ph("01041756934")
-                .mid("za5")
-                .pwd("za5")
+                .mid("za5@naver.com")
+                .pwd("Cwsook97!")
                 .email("lee970808@naver.com")
                 .regno("970808213456")
                 .build();

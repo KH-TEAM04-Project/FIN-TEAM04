@@ -14,13 +14,13 @@
     "clear-all": "rm -rf build node_modules",
     "re-start": "rm -rf build node_modules && yarn install && yarn start",
     "re-build": "rm -rf build node_modules && yarn install && yarn build"
-  },  "proxy": "http://localhost:8082",
+  },
+  "proxy": "http://localhost:8082",
   "eslintConfig": {
     "extends": [
       "react-app"
     ]
   },
-
   "babel": {
     "presets": [
       "@babel/preset-react"
@@ -43,9 +43,11 @@
     "@emotion/styled": "^11.10.6",
     "@faker-js/faker": "^7.6.0",
     "@iconify/react": "^4.1.0",
+    "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.103",
     "@mui/material": "^5.11.10",
     "apexcharts": "^3.37.0",
+    "axios": "^1.4.0",
     "change-case": "^4.1.2",
     "date-fns": "^2.29.3",
     "history": "^5.3.0",
