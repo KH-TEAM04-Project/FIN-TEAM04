@@ -8,9 +8,9 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
        
         <input
           type="text"
-          id="FullName"
-          name="FullName"
-          value={formValues.FullName}
+          id="fullname"
+          name="fullname"
+          value={formValues.fullname}
           onChange={onFormChange}
           required
           placeholder='이름'
@@ -20,12 +20,23 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
         
         <input
           type="text"
-          id="Id"
-          name="Id"
-          value={formValues.Id}
+          id="id"
+          name="id"
+          value={formValues.id}
           onChange={onFormChange}
           required
           placeholder='아이디'
+        />
+      </div>
+      <div>
+      <input
+          type="text"
+          id="ssn"
+          name="ssn"
+          value={formValues.ssn}
+          onChange={onFormChange}
+          required
+          placeholder='주민등록번호'
         />
       </div>
       <div>
@@ -71,11 +82,13 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
 
 SignUpForm.propTypes = {
   formValues: PropTypes.shape({
-    FullName: PropTypes.string.isRequired,
-    Id: PropTypes.string.isRequired,
+    fullname: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    ssn: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
     confirmPassword: PropTypes.string.isRequired,
+    
   }).isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   onFormChange: PropTypes.func.isRequired,

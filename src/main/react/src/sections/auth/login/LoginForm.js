@@ -26,7 +26,7 @@ export default function LoginForm() {
   const handleId = (e) => {
       setId(e.target.value);
       // eslint-disable-next-line
-      const regex =  /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+      const regex =  /^[a-zA-Z0-9]*$/;
       if(regex.test(id)) {
           setIdValid(true);
       }else {
@@ -94,10 +94,9 @@ export default function LoginForm() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Checkbox name="remember" label="Remember me" />
-        <Link variant="subtitle2" underline="hover">
-          아이디 비밀번호 찾기
-        </Link>
+        <Checkbox name="remember" label="Remember me">아이디저장</Checkbox>
+        <Link href="/IdPw" underline="hover">아이디 비밀번호 찾기 </Link>
+          
       </Stack>
 
       <LoadingButton fullWidth size="large" type="submit" variant="contained" disabled={notAllow} onClick={handleClick}>

@@ -81,8 +81,8 @@
 SELECT * FROM all_sequences
 WHERE sequence_owner = 'TEAM4'
 
-
-### 터미널 관련 깔꺼
-mui아이콘 깔기 : yarn add @mui/icons-material
-아시오스 깔기 : npm install -save axios
-
+## 2023. 05. 02 전달사항 및 필요사항
+1. 프로젝트 개요 정리해서 멘토님한테 전달
+2. 질문사항 모아서 멘토님한테 물어보기
+3. react 폴더 정리 및 이름 변경
+4. 

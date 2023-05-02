@@ -27,7 +27,7 @@ public class Reply extends Base {
 
     @JoinColumn(name = "qna_qno", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private QnA qna;
+    private Qna qna;
 
     @Column(nullable = false)
     private String content;
