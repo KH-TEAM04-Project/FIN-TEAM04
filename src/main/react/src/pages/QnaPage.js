@@ -157,8 +157,8 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             QnA
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            작성하기
+          <Button href='http://localhost:3000/DoardPage' variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            QnA 작성하기
           </Button>
         </Stack>
 

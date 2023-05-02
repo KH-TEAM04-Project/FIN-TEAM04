@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
+
 import { useState } from 'react';
 // @mui
 import {
@@ -11,7 +12,7 @@ import {
   Avatar,
   Button,
   Popover,
-  Checkbox,
+ 
   TableRow,
   MenuItem,
   TableBody,
@@ -20,26 +21,41 @@ import {
   Typography,
   IconButton,
   TableContainer,
-  TablePagination,
+  TablePagination
+  ,Modal,Box
 } from '@mui/material';
 // components
-import Label from '../components/label';
+
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
-import { BoardListHead, BoardListToolbar } from '../sections/@dashboard/board';
+import { BoardListHead } from '../sections/@dashboard/board';
 // mock
 import board from '../_mock/board';
 
 // ----------------------------------------------------------------------
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3
+};
+
 const TABLE_HEAD = [
-  { id: 'name', label: '번호', alignRight: false },
-  { id: 'company', label: '아이디', alignRight: false },
-  { id: 'role', label: '????', alignRight: false },
-  { id: 'isVerified', label: '모르쇠', alignRight: false },
-  { id: 'status', label: '상태', alignRight: false },
-  { id: '' },
+  { id: 'name', label: 'NAME', alignRight: false },
+  { id: 'company', label: '제목', alignRight: false },
+  { id: 'role', label: '작성자', alignRight: false },
+  { id: 'isVerified', label: '작성일자', alignRight: false },
+  { id: 'status', label: '조회수', alignRight: false },
+  { id: 'EDIT' }
 ];
 
 // ----------------------------------------------------------------------
@@ -74,13 +90,20 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function BoardPage() {
+  const [open1, setOpen1] = React.useState(false);
+  const handleOpen = () => {
+    setOpen1(true);
+  };
+  const handleClose = () => {
+    setOpen1(false);
+  };
+
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
 
-  const [selected, setSelected] = useState([]);
 
   const [orderBy, setOrderBy] = useState('name');
 
@@ -102,30 +125,9 @@ export default function BoardPage() {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = board.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+ 
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
-
+  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -159,35 +161,37 @@ export default function BoardPage() {
           <Typography variant="h4" gutterBottom>
             공지사항
           </Typography>
+
+          
           <Button href='http://localhost:3000/CoardPage' startIcon={<Iconify icon="eva:plus-fill" />}>
             게시글 작성하기
           </Button>
         </Stack>
 
         <Card>
-          <BoardListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+         
 
+         
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWidth: 900 }}>
               <Table>
                 <BoardListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={board.length}
-                  numSelected={selected.length}
+                  
                   onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
+                 
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
-
+                    const { id, name, role,  company, avatarUrl } = row;
+                    
                     return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
+                      <TableRow hover key={id} tabIndex={-1} >
+                        <TableCell >
+                          ya
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
@@ -203,10 +207,10 @@ export default function BoardPage() {
 
                         <TableCell align="left">{role}</TableCell>
 
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                        <TableCell align="left">전화번호</TableCell>
 
                         <TableCell align="left">
-                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
+                         Yes
                         </TableCell>
 
                         <TableCell align="right">
@@ -282,14 +286,36 @@ export default function BoardPage() {
         }}
       >
         <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Edit
+        <Button href="http://localhost:3000/EditPage">
+          <Iconify  icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+         글 수 정</Button>
         </MenuItem>
 
+       
+
+        
+      
+
+   
         <MenuItem sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
-          Delete
-        </MenuItem>
+      <Button color='error' onClick={handleOpen}>
+      <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />글 삭 제</Button>
+      <Modal
+        open={open1}
+        onClose={handleClose}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 400 }}>
+          <h2 id="parent-modal-title">게시글 삭제</h2>
+          <p id="parent-modal-description">
+            진짜 글삭제 되는데요?
+          </p>
+          <Button>진짜 삭제</Button>
+        </Box>
+      </Modal>
+    
+    </MenuItem>
       </Popover>
     </>
   );

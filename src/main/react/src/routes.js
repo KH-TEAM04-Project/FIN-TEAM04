@@ -4,15 +4,18 @@ import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 //
 import BlogPage from './pages/BlogPage';
-import UserPage from './pages/UserPage';
+import QnaPage from './pages/QnaPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import BoardPage from './pages/BoardPage';
 import CoardPage from './pages/CoardPage';
+import DoardPage from './pages/DoardPage';
 import SignUpPage from './pages/SignUpPage';
-import IdPwPage from './pages/IdPwPage' ;
+import EditPage from './pages/EditPage';
+import RetryPage from './pages/RetryPage';
+// import FetchPage from './pages/FetchPage';
 
 
 
@@ -25,10 +28,11 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
-        { path: 'QnA', element: <UserPage /> },
+        { path: 'QnA', element: <QnaPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'b', element: <BoardPage /> },
+      
       ],
     },
     {
@@ -39,15 +43,22 @@ export default function Router() {
       path: '/SignUp',
       element: <SignUpPage />,
     },
-    {
-      path: '/IdPw',
-      element: <IdPwPage />
-
-    },
 
     {
       path: 'Coardpage',
       element: <CoardPage />,
+    },
+    {
+      path: 'Doardpage',
+      element: <DoardPage />,
+    },
+    {
+      path: 'EditPage',
+      element: <EditPage />,
+    },
+    {
+      path: '/re',
+      element: <RetryPage />
     },
     {
       element: <SimpleLayout />,
