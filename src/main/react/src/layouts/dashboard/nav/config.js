@@ -48,6 +48,12 @@ const navConfig = [
     icon: icon('ic_cart'),
 
   },
+  {
+    title: 'retryPage',
+    path: '/re',
+    icon: icon('ic_cart'),
+
+  },
 ];
 
 export default navConfig;
