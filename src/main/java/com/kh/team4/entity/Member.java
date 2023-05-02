@@ -16,6 +16,17 @@ import javax.persistence.*;
         , initialValue = 1  //시작값
         , allocationSize = 1  //메모리를 통해 할당할 범위 사이즈
 )
+/*@Embeddable
+public class Address {
+    @Column(name = "addr1")
+    private String address1;
+    @Column(name = "addr2")
+    private String address2;
+    @Column(name = "zipcode")
+    private String zipcode;
+}*/
+
+
 public class Member {
     @Id // pk: 유저넘버
     @GeneratedValue(  // 기본키를 자동으로 생성해주는 어노테이션
@@ -45,11 +56,11 @@ public class Member {
     @Column(columnDefinition = "varchar2(20)", nullable = false)
     private String ph;
 
-    @Column(columnDefinition = "varchar2(100)", nullable = false)
-    private String address;
+  /*  @Embedded
+    private Address address;*/
 
     @Builder // 생성자 대신 이용하는 친구 (@NoArgsConstructor 이거 쓰면 @Builder 못쓰는데 @AllArgsConstructor 사용해서 사용가능.)
-    public Member(String mtype, String mname, String regno, String mid, String pwd, String email, String ph, String address) {
+    public Member(String mtype, String mname, String regno, String mid, String pwd, String email, String ph) {
         this.mtype = mtype;
         this.mname = mname;
         this.regno = regno;
@@ -57,7 +68,7 @@ public class Member {
         this.pwd = pwd;
         this.email = email;
         this.ph = ph;
-        this.address = address;
+        //this.address = address;
     }
 
 }

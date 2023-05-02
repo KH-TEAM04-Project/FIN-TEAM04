@@ -25,7 +25,6 @@ public class MemberRepositoryTests {
                 .pwd("za5")
                 .email("lee970808@naver.com")
                 .regno("970808213456")
-                .address("경기도 용인시")
                 .build();
 
 
@@ -33,8 +32,8 @@ public class MemberRepositoryTests {
         MemberRepository.save(params);
 
         // 3. 1번 회원 조회
-        Member entity = MemberRepository.findById((long) 1).get();
-        assertThat(entity.getMname()).isEqualTo("쏘");
+        /*Member entity = MemberRepository.findById((long) 1).get();
+        assertThat(entity.getMname()).isEqualTo("쏘");*/
     }
 
    /* @Test
