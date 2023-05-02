@@ -1,10 +1,14 @@
 package com.kh.team4;
 
+import com.kh.team4.dto.QnaDTO;
 import com.kh.team4.entity.Member;
+import com.kh.team4.entity.Qna;
 import com.kh.team4.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
