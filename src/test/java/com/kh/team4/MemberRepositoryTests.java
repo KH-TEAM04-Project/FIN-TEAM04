@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.stream.IntStream;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -46,5 +48,25 @@ public class MemberRepositoryTests {
         // 2. 회원삭제
         MemberRepository.delete(entity);
     }*/
+
+    /*@Test // Member 객체 100개  생성
+    public void insertMembers(){
+
+        IntStream.rangeClosed(1,100).forEach(i -> {
+
+            Member member = Member.builder()
+                    .address("경기")
+                    .mid("ID" + i)
+                    .ph("010-" + i)
+                    .mtype("u")
+                    .regno("999999-"+i)
+                    .email("user" + i + "@aaa.com")
+                    .pwd("1111")
+                    .mname("USER" + i)
+                    .build();
+
+            MemberRepository.save(member);
+        });*/
+
 
 }

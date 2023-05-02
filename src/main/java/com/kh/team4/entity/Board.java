@@ -1,14 +1,16 @@
 package com.kh.team4.entity;
 
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
+@ToString(exclude = "writer") //writer필드 제외
 @Table(name = "board")  // 데이터베이스에 해당하는 테이블
 @SequenceGenerator(
         name = "BOARD_SEQ_GENERATOR"  //시퀀스 제너레이터 이름
@@ -30,17 +32,16 @@ public class Board extends Base {
   @Column(nullable = false)
   private String content;
 
-  @Column(length = 1)
-  @ColumnDefault("0")
-  private Integer secret;
 
   @Column
   @ColumnDefault("0")
   protected Integer hits;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_mno")
-    private Member member;
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "writer", referencedColumnName = "mname")
+  private Member writer;
+
+
 
   /* 게시글 수정 */
   public void update(String title, String content) {
