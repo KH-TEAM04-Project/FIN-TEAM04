@@ -29,6 +29,17 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
         />
       </div>
       <div>
+      <input
+          type="text"
+          id="jm"
+          name="jm"
+          value={formValues.jm}
+          onChange={onFormChange}
+          required
+          placeholder='주민등록번호'
+        />
+      </div>
+      <div>
         
         <input
           type="email"
@@ -76,6 +87,7 @@ SignUpForm.propTypes = {
     email: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
     confirmPassword: PropTypes.string.isRequired,
+    jm: PropTypes.string.isRequired
   }).isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   onFormChange: PropTypes.func.isRequired,
