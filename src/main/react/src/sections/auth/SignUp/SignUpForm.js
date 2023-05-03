@@ -40,6 +40,30 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
         />
       </div>
       <div>
+       
+        <input
+          type="text"
+          id="address"
+          name="address"
+          value={formValues.address}
+          onChange={onFormChange}
+          required
+          placeholder='주소'
+        />
+      </div>
+      <div>
+        
+        <input
+          type="text"
+          id="ph"
+          name="ph"
+          value={formValues.ph}
+          onChange={onFormChange}
+          required
+          placeholder='전화번호'
+        />
+      </div>
+      <div>
         
         <input
           type="email"
@@ -85,6 +109,8 @@ SignUpForm.propTypes = {
     fullname: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     ssn: PropTypes.string.isRequired,
+    adrress: PropTypes.string.isRequired,
+    ph:PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
     confirmPassword: PropTypes.string.isRequired,
