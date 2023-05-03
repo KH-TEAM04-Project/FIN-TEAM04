@@ -56,8 +56,8 @@ export default function CoardPage1() {
 
   const [data, setData] = useState({
     title: "",
-    date: "",
-    write: "",
+    regDate: "",
+    writer: "",
     content: ""
   });
 
@@ -72,8 +72,8 @@ export default function CoardPage1() {
     e.preventDefault();
     const userData = {
       title: data.title,
-      date: data.date,
-      write: data.write,
+      regDate: data.regDate,
+      writer: data.writer,
       content: data.content
     };
     axios
@@ -288,7 +288,7 @@ export default function CoardPage1() {
             <DemoContainer components={['DatePicker', 'DatePicker']}>
             <DatePicker
                 label="작성 날짜"
-                value={data.date}
+                value={data.regDate}
                 defaultValue={value}
                 onChange={(newValue) => setValue(newValue)}
                 onChange={handleChange}
@@ -297,10 +297,10 @@ export default function CoardPage1() {
           </LocalizationProvider>
 
 
-          <TextField    name="write" label="작성자" 
-          value={data.write}
+          <TextField    name="writer" label="작성자" 
+          value={data.writer}
           onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
         
                 
             
