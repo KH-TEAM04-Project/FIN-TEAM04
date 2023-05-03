@@ -16,10 +16,10 @@ import java.time.LocalDateTime;
 
 public class Base {
     @CreationTimestamp // 생성시간
-    @Column(updatable = false)  // 수정시 관여 x
+    @Column(name = "regdate", updatable = false)  // 수정시 관여 x
     private LocalDateTime regDate;
 
     @UpdateTimestamp    // 업데이트 시간
-    @Column(insertable = false) // 입력시 관여 x
+    @Column(name = "moddate", insertable = false) // 입력시 관여 x
     private LocalDateTime modDate;
 }
