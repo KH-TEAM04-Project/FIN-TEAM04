@@ -314,9 +314,7 @@ export default function BlogPage() {
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
                   >
-                    <TableCell >
-                     yaya
-                    </TableCell>
+                   <div>Yes</div>
                     <TableCell
 
                     >

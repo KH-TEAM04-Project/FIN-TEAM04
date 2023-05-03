@@ -23,15 +23,15 @@ import RetryPage from './pages/RetryPage';
 export default function Router() {
   const routes = useRoutes([
     {
-      path: '/dashboard',
+      path: '/',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
-        { path: 'QnA', element: <QnaPage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
-        { path: 'b', element: <BoardPage /> },
+        { element: <Navigate to="/" />, index: true },
+        { path: '/app', element: <DashboardAppPage /> },
+        { path: '/QnA', element: <QnaPage /> },
+        { path: '/products', element: <ProductsPage /> },
+        { path: '/blog', element: <BlogPage /> },
+        { path: '/b', element: <BoardPage /> },
       
       ],
     },
@@ -45,15 +45,15 @@ export default function Router() {
     },
 
     {
-      path: 'Coardpage',
+      path: '/Coardpage',
       element: <CoardPage />,
     },
     {
-      path: 'Doardpage',
+      path: '/Doardpage',
       element: <DoardPage />,
     },
     {
-      path: 'EditPage',
+      path: '/EditPage',
       element: <EditPage />,
     },
     {
@@ -65,13 +65,13 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: '404', element: <Page404 /> },
-        { path: '*', element: <Navigate to="/404" /> },
+        // { path: '*', element: <Navigate to="/404" /> },
       ],
     },
-    {
-      path: '*',
-      element: <Navigate to="/404" replace />,
-    },
+    // {
+    //   path: '*',
+    //   element: <Navigate to="/404" replace />,
+    // },
   ]);
 
   return routes;
