@@ -1,35 +1,28 @@
 package com.kh.team4.service;
 
-import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.QnaDTO;
+import com.kh.team4.entity.Member;
 import com.kh.team4.entity.Qna;
+import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class QnaService {
     private final QnaRepository qnaRepository;
 
-    public void save(QnaDTO qnaDTO) throws IOException {
-        Qna qna = Qna.dtoToEntity(qnaDTO);
+    private final MemberRepository memberRepository;
+
+    public void save(QnaDTO qnaDTO) {
+        Member member = memberRepository.findById(Long.parseLong(qnaDTO.getMember()))
+                .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
+
+        Qna qna = Qna.dtoToEntity(qnaDTO, member);
+
         qnaRepository.save(qna);
-    }
 
-    @Transactional
-    public List<QnaDTO> findAll() {
-      List<Qna> qnaList = qnaRepository.findAll();
-
-      List<QnaDTO> qnaDTOList = new ArrayList<>();
-      for (Qna qna:qnaList) {
-          qnaDTOList.add(QnaDTO.toQnaDTO(qna));
-      }
-      return qnaDTOList;
     }
 }

@@ -50,13 +50,14 @@ public class Qna extends Base {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replyList = new ArrayList<>();
 
-    public static Qna dtoToEntity(QnaDTO qnaDTO) {
+    public static Qna dtoToEntity(QnaDTO qnaDTO, Member member) {
 
         Qna qna = Qna.builder()
             .title(qnaDTO.getTitle())
             .content(qnaDTO.getContent())
             .secret(qnaDTO.getSecret())
             .hits(qnaDTO.getHits())
+                .member(member)
             .build();
         return qna;
     }
