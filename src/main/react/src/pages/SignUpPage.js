@@ -10,6 +10,8 @@ export default function SignUpPage() {
     fullname: '',
     id: '',
     ssn: '',
+    address: '',
+    ph:'',
     email: '',
     password: '',
     confirmPassword: '',

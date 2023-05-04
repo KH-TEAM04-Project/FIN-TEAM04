@@ -15,9 +15,9 @@ public class QnaDTO {
     private Long qno;
     private String title;
     private String content;
+    private String writer;
     private Integer secret;
     private Integer hits;
-    private String member;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 
@@ -27,13 +27,10 @@ public class QnaDTO {
 
     public static QnaDTO toQnaDTO(Qna qna) {
         QnaDTO qnaDTO = new QnaDTO();
-        qnaDTO.setQno(qna.getQno());
         qnaDTO.setTitle(qna.getTitle());
         qnaDTO.setContent(qna.getContent());
         qnaDTO.setSecret(qna.getSecret());
         qnaDTO.setHits(qna.getHits());
-        qnaDTO.setRegDate(qna.getRegDate());
-        qnaDTO.setModDate(qna.getModDate());
 
         return qnaDTO;
     }

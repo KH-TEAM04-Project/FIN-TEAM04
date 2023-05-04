@@ -26,8 +26,13 @@ export default function Router() {
       path: '/',
       element: <DashboardLayout />,
       children: [
+<<<<<<< HEAD
         { element: <Navigate to="/Main" />, index: true },
         { path: '/Main', element: <DashboardAppPage /> },
+=======
+        { element: <Navigate to="/app" />, index: true },
+        { path: '/app', element: <DashboardAppPage /> },
+>>>>>>> a37301387b41a0a735fda4d724b4fd00b9d14d36
         { path: '/QnA', element: <QnaPage /> },
         { path: '/products', element: <ProductsPage /> },
         { path: '/blog', element: <BlogPage /> },

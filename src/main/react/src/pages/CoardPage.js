@@ -56,7 +56,11 @@ export default function CoardPage1() {
 
   const [data, setData] = useState({
     title: "",
+<<<<<<< HEAD
     RegDate: "",
+=======
+    regDate: "",
+>>>>>>> a37301387b41a0a735fda4d724b4fd00b9d14d36
     writer: "",
     content: ""
   });
@@ -72,7 +76,11 @@ export default function CoardPage1() {
     e.preventDefault();
     const userData = {
       title: data.title,
+<<<<<<< HEAD
       RegDate: data.RegDate,
+=======
+      regDate: data.regDate,
+>>>>>>> a37301387b41a0a735fda4d724b4fd00b9d14d36
       writer: data.writer,
       content: data.content
     };
@@ -288,7 +296,7 @@ export default function CoardPage1() {
             <DemoContainer components={['DatePicker', 'DatePicker']}>
             <DatePicker
                 label="작성 날짜"
-                value={data.date}
+                value={data.regDate}
                 defaultValue={value}
                 onChange={(newValue) => setValue(newValue)}
                 onChange={handleChange}
@@ -297,10 +305,14 @@ export default function CoardPage1() {
           </LocalizationProvider>
 
 
+<<<<<<< HEAD
           <TextField    name="write" label="작성자" 
+=======
+          <TextField    name="writer" label="작성자" 
+>>>>>>> a37301387b41a0a735fda4d724b4fd00b9d14d36
           value={data.writer}
           onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
         
                 
             
