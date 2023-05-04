@@ -9,9 +9,6 @@ import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
-// import { number } from 'prop-types';
-// import Clock from 'react-live-clock'
-// import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -56,11 +53,7 @@ export default function CoardPage1() {
 
   const [data, setData] = useState({
     title: "",
-<<<<<<< HEAD
     RegDate: "",
-=======
-    regDate: "",
->>>>>>> a37301387b41a0a735fda4d724b4fd00b9d14d36
     writer: "",
     content: ""
   });
@@ -76,11 +69,7 @@ export default function CoardPage1() {
     e.preventDefault();
     const userData = {
       title: data.title,
-<<<<<<< HEAD
       RegDate: data.RegDate,
-=======
-      regDate: data.regDate,
->>>>>>> a37301387b41a0a735fda4d724b4fd00b9d14d36
       writer: data.writer,
       content: data.content
     };
@@ -305,11 +294,11 @@ export default function CoardPage1() {
           </LocalizationProvider>
 
 
-<<<<<<< HEAD
-          <TextField    name="write" label="작성자" 
-=======
+
+          
+
           <TextField    name="writer" label="작성자" 
->>>>>>> a37301387b41a0a735fda4d724b4fd00b9d14d36
+
           value={data.writer}
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
