@@ -45,19 +45,19 @@ public class Qna extends Base {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_mno", nullable = false)
-    private Member member;
+    private Member writer;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replyList = new ArrayList<>();
 
-    public static Qna dtoToEntity(QnaDTO qnaDTO, Member member) {
+    public static Qna dtoToEntity(QnaDTO qnaDTO, Member writer) {
 
         Qna qna = Qna.builder()
             .title(qnaDTO.getTitle())
             .content(qnaDTO.getContent())
             .secret(qnaDTO.getSecret())
             .hits(qnaDTO.getHits())
-                .member(member)
+            .writer(writer)
             .build();
         return qna;
     }
