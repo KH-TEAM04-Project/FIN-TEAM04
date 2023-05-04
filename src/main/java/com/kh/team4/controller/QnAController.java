@@ -3,6 +3,7 @@ package com.kh.team4.controller;
 import com.kh.team4.dto.QnaDTO;
 import com.kh.team4.service.QnaService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +15,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/dashboard")
 @CrossOrigin(origins = "http://localhost:3000")
+@Log4j2
 
 public class QnAController {
     private final QnaService qnaService;
 
-    @PostMapping("/qna")
+    @PostMapping("/DoardPage")
     public ResponseEntity<String> register(@RequestBody QnaDTO qnaDTO, @RequestParam Long mno) {
         // "/dashboard/write" 주소로 POST 요청이 들어오면 QnaDTO를 받아서 QnaService의 register() 메서드를 호출
         qnaService.register(qnaDTO, mno);

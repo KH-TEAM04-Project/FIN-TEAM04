@@ -70,7 +70,7 @@
 #### @mui 관련 오류 발생시 
 - npm add @mui/icons-material
 #### axios install
-nom install -save axios
+npm install -save axios
 
 ### 오라클 데이터베이스 계정 생성
 1. 계정 생성  

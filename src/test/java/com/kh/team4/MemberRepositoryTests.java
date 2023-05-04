@@ -27,7 +27,7 @@ public class MemberRepositoryTests {
                 .pwd("za5")
                 .email("lee970808@naver.com")
                 .regno("970808213456")
-                .address("경기도 용인시")
+//                .address("경기도 용인시")
                 .build();
 
 

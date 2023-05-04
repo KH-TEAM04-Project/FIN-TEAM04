@@ -27,4 +27,9 @@ public class QnaService {
         log.info("Q&A 등록: {}", qna);
 
     }
+
+    public void delete(Long qno) {
+        qnaRepository.deleteById(qno);
+    }
+
 }
