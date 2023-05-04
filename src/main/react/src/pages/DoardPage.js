@@ -9,8 +9,6 @@ import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
-// import { number } from 'prop-types';
-// import Clock from 'react-live-clock'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -68,7 +66,7 @@ export default function Page404() {
       content: data.content
     };
     axios
-      .post("http://localhost:3000/DoardPage", userData)
+      .post("/DoardPage", userData)
       .then((response) => {
         console.log(response.status, response.data);
       })
