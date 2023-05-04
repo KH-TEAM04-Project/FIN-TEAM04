@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import * as React from 'react';
+import  React, {useState} from "react";
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -9,8 +9,11 @@ import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
-// import { number } from 'prop-types';
-// import Clock from 'react-live-clock'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import axios from "axios";
 // ----------------------------------------------------------------------
 
 const StyledContent2 = styled('div')(({ theme }) => ({
@@ -40,11 +43,53 @@ const style = {
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 export default function Page404() {
+  const [data, setData] = useState({
+    title: "",
+    RegDate: "",
+    writer: "",
+    content: ""
+  });
+
+  const handleChange = (e) => { const value = e.target.value;
+    setData({
+      ...data,
+      [e.target.name]: value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const userData = {
+      title: data.title,
+      RegDate: data.RegDate,
+      writer: data.writer,
+      content: data.content
+    };
+    axios
+      .post("/DoardPage", userData)
+      .then((response) => {
+        console.log(response.status, response.data);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log("이거 에러인걸?");
+          console.log(userData);
+        } else if (error.request) {
+          console.log("network error");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
+
+  const [value, setValue] = React.useState('today');
+
   // const [value, setValue] = React.useState<number ||  null>(2);
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/dashboard/b', { replace: true });
+    navigate('/QnA', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -86,7 +131,7 @@ export default function Page404() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href="/Main"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -199,8 +244,8 @@ export default function Page404() {
         </Toolbar>
       </Container>
     </AppBar>
-    
-      <Container Width="10000">
+    <form onSubmit={handleSubmit}>
+      <Container width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
             QnA 작성하세유
@@ -210,25 +255,42 @@ export default function Page404() {
         무엇이든 물어보세유 
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-         
-          <TextField name="text" label="제목"
-          sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
+         {/* 여기서 부터 내용 */}
 
-          <TextField color="secondary"   name="text" label="작성자"
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1
-          } }}/>  
+
+         <TextField    name="title" label="제목" 
+          value={data.title}
+          onChange={handleChange}
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
+
+           
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['DatePicker', 'DatePicker']}>
+            <DatePicker
+                label="작성 날짜"
+                value={data.date}
+                defaultValue={value}
+                onChange={(newValue) => setValue(newValue)}
+                onChange={handleChange}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+
+          <TextField    name="writer" label="작성자" 
+          value={data.writer}
+          onChange={handleChange}
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
         
                 
             
            
-        
-          <TextField
-          id="outlined-multiline-static"
-          label="내용"
+        <TextField    name="content" label="내용" 
+          value={data.content}
           multiline
           rows={10}
+          onChange={handleChange}
           defaultValue=" 글 작성"
-        />
+         />
        
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
       <Button variant="contained" component="label">
@@ -259,7 +321,7 @@ export default function Page404() {
     </div>
       </StyledContent2>
       </Container>
-
+      </form>      
     </>
   );
 }

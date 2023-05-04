@@ -16,7 +16,7 @@ import SignUpPage from './pages/SignUpPage';
 import EditPage from './pages/EditPage';
 import RetryPage from './pages/RetryPage';
 // import FetchPage from './pages/FetchPage';
-
+import BoardReadPage from './pages/BoardReadPage';
 
 
 // ----------------------------------------------------------------------
@@ -26,12 +26,13 @@ export default function Router() {
       path: '/',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/app" />, index: true },
-        { path: '/app', element: <DashboardAppPage /> },
+
+        { element: <Navigate to="/Main" />, index: true },
+        { path: '/Main', element: <DashboardAppPage /> },
         { path: '/QnA', element: <QnaPage /> },
         { path: '/products', element: <ProductsPage /> },
         { path: '/blog', element: <BlogPage /> },
-        { path: '/b', element: <BoardPage /> },
+        { path: '/board', element: <BoardPage /> },
       
       ],
     },
@@ -59,6 +60,10 @@ export default function Router() {
     {
       path: '/re',
       element: <RetryPage />
+    },
+    {
+      path: '/BoardReadPage',
+      element: <BoardReadPage />
     },
     {
       element: <SimpleLayout />,

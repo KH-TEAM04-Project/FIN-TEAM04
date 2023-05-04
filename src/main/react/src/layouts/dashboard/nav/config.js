@@ -9,12 +9,12 @@ sx={{ width: 1, height: 1 }} />;
 const navConfig = [
   {
     title: 'dashboard',
-    path: '/app',
+    path: '/Main',
     icon: icon('ic_analytics'),
   },
   {
     title: '공지사항',
-    path: '/b',
+    path: '/board',
     icon: icon('notice'),
   },
   {

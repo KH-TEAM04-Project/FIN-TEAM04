@@ -8,6 +8,7 @@ import javax.persistence.Id;
 @ToString
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor // (@NoArgsConstructor 이거 쓰면서 @Builder 도 동시에 쓰기 위해 사용)
 public class MemberResDTO {
@@ -30,5 +31,13 @@ public class MemberResDTO {
         this.pwd = member.getPwd();
         this.email = member.getEmail();
         this.ph = member.getPh();
+    }
+
+    // 로그인 하려고 만든거임
+    public static MemberResDTO toEntity(Member member) {
+        MemberResDTO dto = new MemberResDTO();
+        dto.setMid(member.getMid());
+        dto.setPwd(member.getPwd());
+        return dto;
     }
 }
