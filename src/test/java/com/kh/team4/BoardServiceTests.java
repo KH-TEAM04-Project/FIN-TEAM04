@@ -6,18 +6,18 @@ import com.kh.team4.service.BoardService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
+
 
 @ExtendWith(SpringExtension.class)
-
 @SpringBootTest
-
-@AutoConfigureMockMvc
 public class BoardServiceTests {
 
     @Autowired
@@ -27,10 +27,13 @@ public class BoardServiceTests {
     @Test
     public void testRegister() {
         BoardDTO dto = BoardDTO.builder()
+                .bno(111111L)
                 .title("Test.")
                 .content("Test...")
                 .writerId("ID1")
                 .hits(0)
+                .regDate(LocalDateTime.parse("22:20"))
+                .modDate(LocalDateTime.parse("22:20"))
                 .build();
 
         //boardService.register(dto);
