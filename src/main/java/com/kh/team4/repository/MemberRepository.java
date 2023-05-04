@@ -6,12 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 // public interface MemberRepository{
 
-    MemberResDTO findByMidAndPwd(final String mid, final String Pwd);
+    //  MemberResDTO findByMidAndPwd(final String mid, final String pwd);
+
+    Optional<Member> findByMid(String mid);
 
 
 }

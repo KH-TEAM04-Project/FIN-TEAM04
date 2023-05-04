@@ -22,11 +22,12 @@ public class MemberReqDTO {
     private String ph;
     private String address;
 
-    // 로그인 하려고 만든거임
-    public Member toEntity() {
-        return Member.builder()
-                .mid(mid)
-                .pwd(pwd)
-                .build();
+    @Override
+    public String toString(){
+        return mid + pwd;
+
     }
+
+
+
 }

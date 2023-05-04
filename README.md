@@ -62,10 +62,15 @@
 ### 개발 환경
 - SpringBoot, OracleDB, React, JPA, MY BATIS
 
-### NPM START시 API 오류 발생하는 경우
+#### NPM START시 API 오류 발생하는 경우
 1. reactfront 패키지에 .env 파일 생성
 2. DANGEROUSLY_DISABLE_HOST_CHECK=true 입력
 3. cd src/main/reactfront -> npm start 
+
+#### @mui 관련 오류 발생시 
+- npm add @mui/icons-material
+#### axios install
+nom install -save axios
 
 ### 오라클 데이터베이스 계정 생성
 1. 계정 생성  
@@ -81,8 +86,14 @@
 SELECT * FROM all_sequences
 WHERE sequence_owner = 'TEAM4'
 
-## 2023. 05. 02 전달사항 및 필요사항
+  1. 테이블 삭제
+     drop table files;
+     drop table board;
+     drop table reply;
+     drop table qna;
+     drop table members;
+  2. 
+#### 2023. 05. 02 전달사항 및 필요사항
 1. 프로젝트 개요 정리해서 멘토님한테 전달
 2. 질문사항 모아서 멘토님한테 물어보기
 3. react 폴더 정리 및 이름 변경
-4. 

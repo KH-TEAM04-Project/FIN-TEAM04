@@ -16,9 +16,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from "axios";
 // ----------------------------------------------------------------------
 
- 
-
-
 const StyledContent2 = styled('div')(({ theme }) => ({
   maxWidth: 1000,
   margin: 'auto',
@@ -45,12 +42,7 @@ const style = {
 // ----------------------------------------------------------------------
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
-
-
-
-export default function CoardPage1() {
-
+export default function Page404() {
   const [data, setData] = useState({
     title: "",
     RegDate: "",
@@ -74,7 +66,7 @@ export default function CoardPage1() {
       content: data.content
     };
     axios
-      .post("/CoardPage", userData)
+      .post("/DoardPage", userData)
       .then((response) => {
         console.log(response.status, response.data);
       })
@@ -89,19 +81,20 @@ export default function CoardPage1() {
         }
       });
   };
-  
-// 여기까지 axios
+
+
   const [value, setValue] = React.useState('today');
- 
+
+  // const [value, setValue] = React.useState<number ||  null>(2);
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/board', { replace: true });
+    navigate('/QnA', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
-
-
-
+  const handleOpen = () => {
+    setOpen(true);
+  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -124,18 +117,10 @@ export default function CoardPage1() {
     setAnchorElUser(null);
   };
 
-
-
- 
-       const handleOpen = () => {
-        
-        setOpen(true);
-       
-      };
   return (
     <>
       <Helmet>
-        <title> 게시글 작성| 꽁머니 </title>
+        <title> QnA 작성| 꽁머니 </title>
       </Helmet>
    
       <AppBar position="static">
@@ -259,33 +244,31 @@ export default function CoardPage1() {
         </Toolbar>
       </Container>
     </AppBar>
-       <form onSubmit={handleSubmit}>       
-      <Container width="10000" >
+    <form onSubmit={handleSubmit}>
+      <Container width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            게시글 작성하세유
+            QnA 작성하세유
           </Typography>
-                
+      
           <Typography sx={{ color: 'text.secondary' }}>
         무엇이든 물어보세유 
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-            
-       
+         {/* 여기서 부터 내용 */}
 
-          {/* 여기서 부터 내용 */}
-                
-             
-          <TextField    name="title" label="제목" 
+
+         <TextField    name="title" label="제목" 
           value={data.title}
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
-                  
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+           
+<LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker', 'DatePicker']}>
             <DatePicker
                 label="작성 날짜"
-                value={data.regDate}
+                value={data.date}
                 defaultValue={value}
                 onChange={(newValue) => setValue(newValue)}
                 onChange={handleChange}
@@ -293,15 +276,10 @@ export default function CoardPage1() {
             </DemoContainer>
           </LocalizationProvider>
 
-
-
-          
-
           <TextField    name="writer" label="작성자" 
-
           value={data.writer}
           onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
         
                 
             
@@ -313,41 +291,37 @@ export default function CoardPage1() {
           onChange={handleChange}
           defaultValue=" 글 작성"
          />
-
+       
+         <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
+      <Button variant="contained" component="label">
+        Upload  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
+        <input hidden accept="image/*" multiple type="file" />
         
-          
-            <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
-          <Button variant="contained" component="label">
-            Upload  &nbsp; <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
-            <input hidden accept="image/*" multiple type="file" />
-        
-          </Button>
-          </Stack>
-            
-          <div>
-          <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-          aria-labelledby="parent-modal-title"
-              aria-describedby="parent-modal-description"
-            >
-              <Box sx={{ ...style, width: 500 }}>
-                <h2 id="parent-modal-title">꽁 머 니</h2>
-                <p id="parent-modal-description">
-                  게시글이 작성됐습니다람쥐.
-                </p>
-                      <LoadingButton fullWidth size="large"  variant="contained" onClick={handleClick}>
-                  등록
-            </LoadingButton>
-              </Box>
-            </Modal>
-          </div>
-  
-            </StyledContent2>
-            </Container>
-            </form>      
+      </Button>
+      </Stack>
+         
+      <div>
+      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 500 }}>
+          <h2 id="parent-modal-title">꽁 머 니</h2>
+          <p id="parent-modal-description">
+           QnA이 작성됐습니다람쥐.
+          </p>
+          <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
+       등록
+      </LoadingButton>
+        </Box>
+      </Modal>
+    </div>
+      </StyledContent2>
+      </Container>
+      </form>      
     </>
-  ) ;
+  );
 }
-
