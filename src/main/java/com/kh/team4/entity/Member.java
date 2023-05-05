@@ -83,7 +83,7 @@ public class Member {
                 .regno(memberReqDTO.getRegno())
                 .mname(memberReqDTO.getMname())
                 .mtype(memberReqDTO.getMtype())
-                .build();;
+                .build();
         return member;
     }
 

@@ -20,8 +20,8 @@ public class MemberController {
     public String login(MemberReqDTO memberDTO) {
         MemberResDTO login = memberService.login(memberDTO);
         if (login != null) {
-            // session 에 setAttribute 를 이용해서 로그인회원의 이메일정보를 세션에 담아준다.
-            return "/dashboard/app";
+            String answer = "Y";
+            return answer;
         } else {
             // login 실패
             return "/login";
