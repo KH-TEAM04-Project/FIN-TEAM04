@@ -54,7 +54,20 @@ export default function LoginForm() {
                 pwd: pw
             }
         })
-
+            .then(response => {
+                console.log(response);
+                console.log("res.data.userId :: ", response.data);
+                localStorage.setItem('token', response.data.token);
+                if (response.data.token) {
+                    alert('환영합니다 ' + id + '님');
+                    navigate('/')
+                } else {
+                    alert('로그인에 실패하였습니다.');
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
     };
 // ----------------------------------------------------------------
     useEffect(() => {
