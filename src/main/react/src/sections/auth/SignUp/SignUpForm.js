@@ -1,69 +1,126 @@
-// import { useState } from 'react';
-// import { Link, Stack, TextField } from '@mui/material';
-// import { LoadingButton } from '@mui/lab';
+import PropTypes from 'prop-types';
+import Address from './Address';
 
-// export default function SignUpForm() {
+
+export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
+  return (
     
-//   const [email, setEmail] = useState("");
-//   const [pw, setPw] = useState("");
-//   const [pwConfirm, setPwConfirm] = useState("");
-//   const [emailValid, setemailValid] = useState(false);    
-//   const [pwValid, setPwValid] =useState(false);
-//   const [pwConfirmValid, setPwConfirmValid] = useState(false);
-//   const [notAllow, setNowAllow] = useState(true);
+    <form onSubmit={onFormSubmit}>
+      <div>
+       
+        <input
+          type="text"
+          id="mname"
+          name="mname"
+          value={formValues.mname}
+          onChange={onFormChange}
+          required
+          placeholder='이름'
+        />
+      </div>
+      <div>
+        
+        <input
+          type="text"
+          id="mid"
+          name="mid"
+          value={formValues.mid}
+          onChange={onFormChange}
+          required
+          placeholder='아이디'
+        />
+      </div>
+      <div>
+      <input
+          type="text"
+          id="regno"
+          name="regno"
+          value={formValues.regno}
+          onChange={onFormChange}
+          required
+          placeholder='주민등록번호'
+        />
+      </div>
+      <div>
+        
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={formValues.email}
+          onChange={onFormChange}
+          required
+          placeholder='이메일'
+        />
+      </div>
+      <div>
+      <Address /> 
+  <input
+    type="text"
+    id="detailaddress"
+    name="detailaddress"
+    value={formValues.detailaddress}
+    onChange={onFormChange}
+    required
+    placeholder='상세주소'
+  />
+   
+</div>
 
-//   const handleEmail = (e) => {
-//     setEmail(e.target.value);
-//     // eslint-disable-next-line
-//     const regex =  /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-//     if(regex.test(email)) {
-//       setemailValid(true);
-//     } else {
-//       setemailValid(false);
-//     }
-//   }
 
-//   const handlePassword = (e) => {
-//     setPw(e.target.value);
-//     // eslint-disable-next-line
-//     const regex = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
-//     if (regex.test(e.target.value)) {
-//       setPwValid(true);
-//     } else {
-//       setPwValid(false)
-//     }
-//   }
+<div>
+  <input
+    type="text"
+    id="ph"
+    name="ph"
+    value={formValues.ph}
+    onChange={onFormChange}
+    required
+    placeholder='핸드폰 번호'
+  />
+</div>
 
-//   const handlePasswordConfirm = (e) => {
-//     setPwConfirm(e.target.value);
-//     if (e.target.value === pw) {
-//       setPwConfirmValid(true);
-//     } else {
-//       setPwConfirmValid(false);
-//     }
-//   }
+      <div>
+        
+        <input
+          type="password"
+          id="pwd"
+          name="pwd"
+          value={formValues.pwd}
+          onChange={onFormChange}
+          required
+          placeholder='비밀번호'
+        />
+      </div>
+      <div>
+        
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          value={formValues.pwd}
+          onChange={onFormChange}
+          required
+          placeholder='비밀번호 확인'
+        />
+      </div>
+      <button type="submit">Sign Up</button>
+    </form>
+  );
+}
 
-//   const handleSignUp = (e) => {
-//     e.preventDefault();
-//     // 회원가입 로직 구현
-//   }
-
-//   const isAllValid = emailValid && pwValid && pwConfirmValid;
-
-//   return (
-    
-//       <Stack spacing={3}>
-//         <TextField
-//           name="email"
-//           label="이메일 주소"
-//           type="email"
-//           value={email}
-//           onChange={handleEmail}
-//           error={!emailValid && email.length > 0}
-//           helperText={!emailValid }
-//           />
-//         </Stack>
-//   )
-// }
-
-    
+SignUpForm.propTypes = {
+  formValues: PropTypes.shape({
+    mname: PropTypes.string.isRequired,
+    mid: PropTypes.string.isRequired,
+    regno: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    pwd: PropTypes.string.isRequired,
+    detailaddress: PropTypes.string.isRequired, // address 추가
+    ph: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired
+     // hp 추가
+  }).isRequired,
+  onFormSubmit: PropTypes.func.isRequired,
+  onFormChange: PropTypes.func.isRequired,
+};

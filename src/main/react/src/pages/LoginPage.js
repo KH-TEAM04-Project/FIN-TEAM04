@@ -76,7 +76,7 @@ export default function LoginPage() {
             <Typography variant="body2" sx={{ mb: 5 }}>
         계정이 없으신가요 ? {''}
 
-      <Link href="/SignUp" underline="hover">회원가입</Link>
+      <Link href="/SignUp" underline="hover">회원가입 </Link>
           </Typography>
 
             <Stack direction="row" spacing={2}>
