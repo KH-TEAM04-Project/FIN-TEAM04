@@ -21,16 +21,13 @@ public class QnaDTO {
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 
-/*    public static QnADTO toQnADTO(QnAEntity qnaEntiy) {
-
-    }*/
-
     public static QnaDTO toQnaDTO(Qna qna) {
         QnaDTO qnaDTO = new QnaDTO();
         qnaDTO.setTitle(qna.getTitle());
         qnaDTO.setContent(qna.getContent());
         qnaDTO.setSecret(qna.getSecret());
         qnaDTO.setHits(qna.getHits());
+        qnaDTO.setRegDate(qna.getRegDate());
 
         return qnaDTO;
     }

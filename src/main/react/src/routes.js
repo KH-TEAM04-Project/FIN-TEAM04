@@ -18,7 +18,6 @@ import RetryPage from './pages/RetryPage';
 // import FetchPage from './pages/FetchPage';
 import BoardReadPage from './pages/BoardReadPage';
 
-
 // ----------------------------------------------------------------------
 export default function Router() {
   const routes = useRoutes([
