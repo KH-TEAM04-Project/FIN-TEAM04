@@ -35,7 +35,6 @@ public class QnAController {
 
 
     @GetMapping("/re")
-
     public String qnaList() {
         System.out.println("컨트롤러 진입");
         // DB에서 전체 게시글 데이터를 가져와서 list.html에 보여준다.

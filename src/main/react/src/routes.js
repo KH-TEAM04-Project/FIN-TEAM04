@@ -65,10 +65,6 @@ export default function Router() {
       element: <BoardReadPage />
     },
     {
-      path: '/list',
-      element: <QnaListPage />
-    },
-    {
       element: <SimpleLayout />,
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
