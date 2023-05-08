@@ -33,13 +33,13 @@ public class QnAController {
         // 성공적으로 수행되면 "게시글이 작성되었습니다" 메시지와 함께 HttpStatus.OK(200) 상태 코드를 반환.
     }
 
-    @GetMapping("/le")
+    @GetMapping("/re")
     public String qnaList() {
         System.out.println("컨트롤러 진입");
         // DB에서 전체 게시글 데이터를 가져와서 list.html에 보여준다.
         List<QnaDTO> qnaDTOList = qnaService.findAll();
         System.out.println("qnaDTOList" + qnaDTOList );
-        return "/le";
+        return "/re";
         // list.html 로 간다.
     }
 

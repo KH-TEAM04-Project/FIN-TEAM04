@@ -18,9 +18,6 @@ import RetryPage from './pages/RetryPage';
 // import FetchPage from './pages/FetchPage';
 import BoardReadPage from './pages/BoardReadPage';
 
-// 성준 추가
-import QnaListPage from "./pages/QnaListPage";
-
 // ----------------------------------------------------------------------
 export default function Router() {
   const routes = useRoutes([
@@ -66,10 +63,6 @@ export default function Router() {
     {
       path: '/BoardReadPage',
       element: <BoardReadPage />
-    },
-    {
-      path: '/list',
-      element: <QnaListPage />
     },
     {
       element: <SimpleLayout />,
