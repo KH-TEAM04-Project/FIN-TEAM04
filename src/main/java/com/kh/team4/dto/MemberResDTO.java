@@ -24,7 +24,6 @@ public class MemberResDTO {
 
     public MemberResDTO(Member member){
         this.mno = member.getMno();
-        this.mtype = member.getMtype();
         this.mname = member.getMname();
         this.regno = member.getRegno();
         this.mid = member.getMid();
