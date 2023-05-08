@@ -30,7 +30,7 @@ export default function BlogPage() {
     
     // 웹에서 서버로 요청 >> 리스트전달해줘라진짜
     const getPosts = () => {
-    axios.get('localhost:3000/re').then((response)=> {
+    axios.get('/re').then((response)=> {
       setPosts(response.data);
     })
   }
