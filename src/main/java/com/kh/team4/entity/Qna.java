@@ -1,10 +1,10 @@
 package com.kh.team4.entity;
 
 import com.kh.team4.dto.QnaDTO;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +14,12 @@ import java.util.List;
 @ToString
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@DynamicInsert //Insert시 Null인 필드를 제외하기위해 사용
+@DynamicUpdate  //Update시 Null인 필드를 제외하기위해 사용
+
+
 @Table(name = "qna")
 @SequenceGenerator(
         name = "QNA_SEQ_GENERATOR"  //시퀀스 제너레이터 이름
@@ -44,7 +50,7 @@ public class Qna extends Base {
     private Integer hits;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_mno", nullable = false)
+    @JoinColumn(name = "member_mno")
     private Member writer;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -52,12 +58,12 @@ public class Qna extends Base {
 
     public static Qna dtoToEntity(QnaDTO qnaDTO, Member writer) {
 
+//        Member member = Member.builder().mno(qnaDTO.getWriter()).build();
         Qna qna = Qna.builder()
             .title(qnaDTO.getTitle())
             .content(qnaDTO.getContent())
             .secret(qnaDTO.getSecret())
             .hits(qnaDTO.getHits())
-            .writer(writer)
             .build();
         return qna;
     }
