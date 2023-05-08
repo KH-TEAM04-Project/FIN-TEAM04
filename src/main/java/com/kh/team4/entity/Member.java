@@ -1,12 +1,14 @@
 package com.kh.team4.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.QnaDTO;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -59,6 +61,15 @@ public class Member {
     @Column(columnDefinition = "varchar2(20)", nullable = false)
     private String ph;
 
+    @JsonIgnore
+    @Column(name = "activated")
+    public boolean activated; // 활성화 여부
+
+
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
+    public void setPwd(String pwd) { this.pwd = pwd; }
   /*  @Embedded
     private Address address;*/
 
