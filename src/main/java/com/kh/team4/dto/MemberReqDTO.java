@@ -1,10 +1,13 @@
 package com.kh.team4.dto;
 
+import com.kh.team4.entity.Authority;
 import com.kh.team4.entity.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.Id;
 
@@ -27,6 +30,18 @@ public class MemberReqDTO {
     public String toString(){
         return mid + pwd;
 
+    }
+
+    public Member toMember(PasswordEncoder passwordEncoder) {
+        return Member.builder()
+                .mid(mid)
+                .pwd(passwordEncoder.encode(pwd))
+                .authority(Authority.ROLE_USER)
+                .build();
+    }
+
+    public UsernamePasswordAuthenticationToken toAuthentication() {
+        return new UsernamePasswordAuthenticationToken(mid, pwd);
     }
 
 

@@ -40,4 +40,10 @@ public class MemberResDTO {
         dto.setPwd(member.getPwd());
         return dto;
     }
+
+    public static MemberResDTO of(Member member) {
+        return MemberResDTO.builder()
+                .mid(member.getMid())
+                .build();
+    }
 }

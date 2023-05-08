@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
 
-    @PostMapping("/sLogin")
+    /*@PostMapping("/sLogin")
     public String login(MemberReqDTO memberDTO) {
         MemberResDTO login = memberService.login(memberDTO);
         if (login != null) {
@@ -26,7 +26,7 @@ public class MemberController {
             // login 실패
             return "/login";
         }
-    }
+    }*/
 
     //회원가입 기능 구현
     @PostMapping("/SignUp2")

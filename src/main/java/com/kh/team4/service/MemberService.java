@@ -1,13 +1,10 @@
 package com.kh.team4.service;
 
 import com.kh.team4.dto.MemberReqDTO;
-import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.entity.Member;
 import com.kh.team4.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,11 +24,11 @@ public class MemberService {
 
 
 
-    public MemberResDTO login(MemberReqDTO memberReqDTO) {
-        /** 처리과정
+    /*public MemberResDTO login(MemberReqDTO memberReqDTO) {
+        *//** 처리과정
          * 1. 회원이 입력한 이메일로 DB에서 조회를 함
          * 2. DB에서 조회한 비밀번호와 사용자가 입력한 비밀번호가 일치하는지 판단
-         */
+         *//*
         Optional<Member> byMid = memberRepository.findByMid(memberReqDTO.getMid());
         if (byMid.isPresent()) {
             // 조회 결과가 있다(해당 이메일을 가진 회원 정보가 있다.)
@@ -60,7 +57,7 @@ public class MemberService {
 
         // Entity 객체는 Service 안에서만 사용
 
-    }
+    }*/
 
 
 }
