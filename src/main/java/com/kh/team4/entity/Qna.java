@@ -33,12 +33,12 @@ public class Qna extends Base {
             strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택
             , generator = "QNA_SEQ_GENERATOR" //식별자 생성기를 설정해놓은  USER_SEQ_GEN으로 설정
     )
-    private long qno;
+    private Long qno;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50)
     private String title;
 
-    @Column(nullable = false)
+    @Column
     private String content;
 
     @Column(length = 1)
@@ -60,11 +60,14 @@ public class Qna extends Base {
 
 //        Member member = Member.builder().mno(qnaDTO.getWriter()).build();
         Qna qna = Qna.builder()
+            .qno(qnaDTO.getQno())
             .title(qnaDTO.getTitle())
             .content(qnaDTO.getContent())
             .secret(qnaDTO.getSecret())
             .hits(qnaDTO.getHits())
+            .writer(qnaDTO.getWriter())
             .build();
         return qna;
     }
+
 }
