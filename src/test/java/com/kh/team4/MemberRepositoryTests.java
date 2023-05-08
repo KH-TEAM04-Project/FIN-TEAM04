@@ -22,13 +22,13 @@ public class MemberRepositoryTests {
 
         // 1. 회원 생성
         Member params = Member.builder()
-                .mname("이소연")
-                .ph("01012345678")
-                .mid("zao")
+                .mname("이소")
+                .ph("0101234568")
+                .mid("za")
                 .pwd("Cwsook97!")
                 .authority(ROLE_USER)
-                .email("lee6970808@naver.com")
-                .regno("97080821234123")
+                .email("lee690808@nave.com")
+                .regno("970882123412")
                 .build();
 
 

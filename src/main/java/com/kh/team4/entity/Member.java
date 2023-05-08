@@ -40,13 +40,10 @@ public class Member {
     )
     private Long mno;
 
-    @Column(name = "mtype", columnDefinition = "VARCHAR2(1) DEFAULT 'U'")
-    private String mtype;
-
-    @Column(columnDefinition = "varchar2(20)", nullable = false)
+    @Column(columnDefinition = "varchar2(20)")
     private String mname;
 
-    @Column(columnDefinition = "varchar2(20)", nullable = false, unique = true) // 주민번호
+    @Column(columnDefinition = "varchar2(20)", unique = true) // 주민번호
     private String regno;
 
     @Column(columnDefinition = "varchar2(20)", nullable = false, unique = true)
@@ -55,10 +52,10 @@ public class Member {
     @Column(columnDefinition = "varchar2(100)", nullable = false)
     private String pwd;
 
-    @Column(columnDefinition = "varchar2(100)", nullable = false, unique = true)
+    @Column(columnDefinition = "varchar2(100)", unique = true)
     private String email;
 
-    @Column(columnDefinition = "varchar2(20)", nullable = false)
+    @Column(columnDefinition = "varchar2(20)")
     private String ph;
 
     @JsonIgnore
@@ -94,7 +91,7 @@ public class Member {
                 .ph(memberReqDTO.getPh())
                 .regno(memberReqDTO.getRegno())
                 .mname(memberReqDTO.getMname())
-                .mtype(memberReqDTO.getMtype())
+                .authority(memberReqDTO.getAuthority())
                 .build();
         return member;
     }
