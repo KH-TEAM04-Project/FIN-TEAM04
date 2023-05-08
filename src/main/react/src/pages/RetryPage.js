@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet-async';
 
 // mock
 import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -13,6 +14,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+// ----------------------------------------------------------------------  // 수정 성준 추가
+import Button from '@mui/material/Button';
 
 
 import axios from 'axios';
@@ -25,19 +28,28 @@ import Scrollbar from '../components/scrollbar';
 
 // ----------------------------------------------------------------------
 
-export default function BlogPage() {
-  function Board1() {
-    
-    // 웹에서 서버로 요청 >> 리스트전달해줘라진짜
+export default function QnaPage() {
+    const [posts, setPosts] = useState([]);
+
     const getPosts = () => {
-    axios.get('/re').then((response)=> {
-      setPosts(response.data);
-    })
-  }
-  useEffect(getPosts,[]);
-  
-  }
-  const [posts, setPosts] = useState([]);
+        axios.get('/re').then((response) => {
+            setPosts(response.data);
+        });
+    };
+
+    // 성준 추가 (게시글 삭제 관련)
+      const handleDelete = (qno) => {
+        axios.get(`/delete/${qno}`).then((response) => {
+          console.log('게시글이 삭제되었습니다.');
+          // 삭제 후 게시글 리스트를 다시 불러옴
+          getPosts();
+        });
+      };
+
+      useEffect(() => {
+        getPosts();
+      }, []);
+
   return (
     <>
       <Helmet>
@@ -50,33 +62,40 @@ export default function BlogPage() {
         <TableHead>
           <TableRow>
             <TableCell>게시판 작성</TableCell>
+            <TableCell align="right">번호</TableCell>
             <TableCell align="right">제목</TableCell>
-            <TableCell align="right">작성자&nbsp;(g)</TableCell>
-            <TableCell align="right">내용&nbsp;(g)</TableCell>
-            <TableCell align="right">작성일&nbsp;(g)</TableCell>
+            <TableCell align="right">내용</TableCell>
+            <TableCell align="right">작성일</TableCell>
+            <TableCell align="right">조회수</TableCell>
+            <TableCell align="right">수정/삭제</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {posts.map((data) => (
             <TableRow
-              key={data.writer}
+              key={data.qno}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
                 {data.writer}
               </TableCell>
-              <TableCell align="right">{data.title}</TableCell>
+              <TableCell align="right">{data.qno}</TableCell>
+              <TableCell align="right">
+                <Link to={`/posts/${data.qno}`}>{data.title}</Link>
+              </TableCell>
               <TableCell align="right">{data.content}</TableCell>
               <TableCell align="right">{data.regDate}</TableCell>
               <TableCell align="right">{data.writer}</TableCell>
+              <TableCell align="right">
+                <button onClick={() => console.log('수정')}>수정</button>
+                <button onClick={() => handleDelete(data.qno)}>삭제</button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
   
- 
-      
     </>
   );
 }

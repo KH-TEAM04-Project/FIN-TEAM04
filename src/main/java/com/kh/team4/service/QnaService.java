@@ -23,8 +23,8 @@ public class QnaService {
 
     private final MemberRepository memberRepository;
 
-    public void register(QnaDTO qnaDTO) {
-        Long mno = 3L;
+    public void register(QnaDTO qnaDTO, Long mno) {
+//        Long mno = 21L;
         log.info("리액트에서 받아온" + qnaDTO);
         Member writer = memberRepository.findById(mno)
                 .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다." + mno));
@@ -36,6 +36,7 @@ public class QnaService {
     }
 
     public void delete(Long qno) {
+        System.out.println("서비스 진입");
         qnaRepository.deleteById(qno);
     }
 

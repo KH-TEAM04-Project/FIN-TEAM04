@@ -37,16 +37,6 @@ public class BoardRepositoryTests {
 
     }
 
-    @Test
-    public void testReadWithWriter(){
-        Object result = boardRepository.getBoardWithWriter(100L);
-
-        Object[] arr = (Object[]) result;
-
-        System.out.println("---------------");
-        System.out.println(Arrays.toString(arr));
-    }
-
 /*    @Test
     public void testTwoWayMapping() {
         Member member = memberRepository.findById(5L).get();
