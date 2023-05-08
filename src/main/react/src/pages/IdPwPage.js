@@ -10,7 +10,7 @@ const IdPwPage = () => {
 
   const handleFindId = async (name, ssn) => {
     try {
-      const response = await axios.get(`/api/find-id?name=${name}&ssn=${ssn}`);
+      const response = await axios.post(`/api/find-id?name=${name}&ssn=${ssn}`);
       setFoundId(response.data.id);
     } catch (error) {
       console.error(error);
@@ -19,7 +19,7 @@ const IdPwPage = () => {
 
   const handleFindPassword = async (id, name, ssn) => {
     try {
-      const response = await axios.get(`/api/find-password?id=${id}&name=${name}&ssn=${ssn}`);
+      const response = await axios.post(`/api/find-password?id=${id}&name=${name}&ssn=${ssn}`);
       setFoundPassword(response.data.password);
     } catch (error) {
       console.error(error);

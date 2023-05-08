@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-
-import { useState } from 'react';
+import { sentenceCase } from 'change-case';
+import React, {useEffect, useState} from 'react';
+import axios from "axios";
 // @mui
 import {
   Card,
@@ -12,26 +12,27 @@ import {
   Avatar,
   Button,
   Popover,
- 
   TableRow,
   MenuItem,
   TableBody,
   TableCell,
   Container,
   Typography,
+  Modal,
+  Box,
+  
   IconButton,
   TableContainer,
-  TablePagination
-  ,Modal,Box
+  TablePagination,
 } from '@mui/material';
 // components
-
+import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
-import { BoardListHead } from '../sections/@dashboard/board';
+import { BoardListHead, BoardListToolbar } from '../sections/@dashboard/board';
 // mock
-import board from '../_mock/board';
+import USERLIST from '../_mock/user';
 
 // ----------------------------------------------------------------------
 
@@ -48,14 +49,13 @@ const style = {
   px: 4,
   pb: 3
 };
-
 const TABLE_HEAD = [
-  { id: 'name', label: 'NAME', alignRight: false },
-  { id: 'company', label: '제목', alignRight: false },
-  { id: 'role', label: '작성자', alignRight: false },
-  { id: 'isVerified', label: '작성일자', alignRight: false },
-  { id: 'status', label: '조회수', alignRight: false },
-  { id: 'EDIT' }
+  { id: 'name', label: '제목', alignRight: false },
+  { id: 'company', label: '내용', alignRight: false },
+  { id: 'role', label: '조회수', alignRight: false },
+  // { id: 'isVerified', label: 'Verified', alignRight: false },
+  { id: 'status', label: 'Status', alignRight: false },
+  { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -90,20 +90,21 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function BoardPage() {
-  const [open1, setOpen1] = React.useState(false);
-  const handleOpen = () => {
-    setOpen1(true);
-  };
-  const handleClose = () => {
+ const handleClose = () => {
     setOpen1(false);
   };
 
-  const [open, setOpen] = useState(null);
+const [open1, setOpen1] = React.useState(false);
+  const handleOpen = () => {
+    setOpen1(true);
+  }; 
+ const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
 
+  const [selected, setSelected] = useState([]);
 
   const [orderBy, setOrderBy] = useState('name');
 
@@ -125,9 +126,30 @@ export default function BoardPage() {
     setOrderBy(property);
   };
 
- 
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = USERLIST.map((n) => n.name);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
 
-  
+  // const handleClick = (event, name) => {
+  //   const selectedIndex = selected.indexOf(name);
+  //   let newSelected = [];
+  //   if (selectedIndex === -1) {
+  //     newSelected = newSelected.concat(selected, name);
+  //   } else if (selectedIndex === 0) {
+  //     newSelected = newSelected.concat(selected.slice(1));
+  //   } else if (selectedIndex === selected.length - 1) {
+  //     newSelected = newSelected.concat(selected.slice(0, -1));
+  //   } else if (selectedIndex > 0) {
+  //     newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+  //   }
+  //   setSelected(newSelected);
+  // };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -142,56 +164,56 @@ export default function BoardPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - board.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
-  const filteredUsers = applySortFilter(board, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
+// 여기는 axios 스껄
+
 
   return (
     <>
-     <Helmet>
-     <title> 공지사항 | 꽁머니 </title>
-     </Helmet>
-        
-      
+      <Helmet>
+        <title> 게시판 | 꽁머니 </title>
+      </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            공지사항
+           게시판
           </Typography>
-
-          
-          <Button href='http://localhost:3000/CoardPage' startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Button href='http://localhost:3000/CoardPage' variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             게시글 작성하기
           </Button>
         </Stack>
 
         <Card>
-         
+          <BoardListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
-         
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 900 }}>
+            <TableContainer sx={{ minWidth: 800 }}>
               <Table>
                 <BoardListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={board.length}
-                  
+                  rowCount={USERLIST.length}
+                  numSelected={selected.length}
                   onRequestSort={handleRequestSort}
-                 
+                  onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role,  company, avatarUrl } = row;
-                    
+                    const { id, name, role, status, company, avatarUrl} = row;
+                    const selectedUser = selected.indexOf(name) !== -1;
+
                     return (
-                      <TableRow hover key={id} tabIndex={-1} >
+                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell >
-                          ya
+                        <Typography>
+                            number
+                          </Typography>
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
@@ -207,10 +229,10 @@ export default function BoardPage() {
 
                         <TableCell align="left">{role}</TableCell>
 
-                        <TableCell align="left">전화번호</TableCell>
+                        {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
 
                         <TableCell align="left">
-                         Yes
+                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
                         </TableCell>
 
                         <TableCell align="right">
@@ -238,13 +260,13 @@ export default function BoardPage() {
                           }}
                         >
                           <Typography variant="h6" paragraph>
-                            Not found
+                            못찾겠다 꾀꼬뤼~
                           </Typography>
 
                           <Typography variant="body2">
-                            No results found for &nbsp;
+                            못찾겠습니다. &nbsp;
                             <strong>&quot;{filterName}&quot;</strong>.
-                            <br /> Try checking for typos or using complete words.
+                            <br /> 다른 키워드로 찾아보세요구르트아줌마.
                           </Typography>
                         </Paper>
                       </TableCell>
@@ -258,7 +280,7 @@ export default function BoardPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={board.length}
+            count={USERLIST.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

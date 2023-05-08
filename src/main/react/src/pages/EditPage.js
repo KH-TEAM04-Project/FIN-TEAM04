@@ -40,11 +40,17 @@ const style = {
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 export default function Page404() {
+  
+
+
+
+
+
   // const [value, setValue] = React.useState<number ||  null>(2);
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/dashboard/b', { replace: true });
+    navigate('/board', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {

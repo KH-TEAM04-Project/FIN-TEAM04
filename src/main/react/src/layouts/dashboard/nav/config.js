@@ -9,27 +9,27 @@ sx={{ width: 1, height: 1 }} />;
 const navConfig = [
   {
     title: 'dashboard',
-    path: '/dashboard/app',
+    path: '/Main',
     icon: icon('ic_analytics'),
   },
   {
     title: '공지사항',
-    path: '/dashboard/b',
+    path: '/board',
     icon: icon('notice'),
   },
   {
     title: 'QNA',
-    path: '/dashboard/QnA',
+    path: '/QnA',
     icon: icon('qna'),
   },
   {
     title: 'product',
-    path: '/dashboard/products',
+    path: '/products',
     icon: icon('ic_cart'),
   },
   {
     title: 'blog',
-    path: '/dashboard/blog',
+    path: '/blog',
     icon: icon('ic_blog'),
   },
   {
@@ -44,7 +44,7 @@ const navConfig = [
   },
   {
     title: 'Test Page',
-    path: '/dashboard/test',
+    path: '/test',
     icon: icon('ic_cart'),
 
   },

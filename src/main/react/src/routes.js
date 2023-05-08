@@ -16,22 +16,22 @@ import SignUpPage from './pages/SignUpPage';
 import EditPage from './pages/EditPage';
 import RetryPage from './pages/RetryPage';
 // import FetchPage from './pages/FetchPage';
-
-
+import BoardReadPage from './pages/BoardReadPage';
 
 // ----------------------------------------------------------------------
 export default function Router() {
   const routes = useRoutes([
     {
-      path: '/dashboard',
+      path: '/',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
-        { path: 'QnA', element: <QnaPage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
-        { path: 'b', element: <BoardPage /> },
+
+        { element: <Navigate to="/Main" />, index: true },
+        { path: '/Main', element: <DashboardAppPage /> },
+        { path: '/QnA', element: <QnaPage /> },
+        { path: '/products', element: <ProductsPage /> },
+        { path: '/blog', element: <BlogPage /> },
+        { path: '/board', element: <BoardPage /> },
       
       ],
     },
@@ -45,15 +45,15 @@ export default function Router() {
     },
 
     {
-      path: 'Coardpage',
+      path: '/Coardpage',
       element: <CoardPage />,
     },
     {
-      path: 'Doardpage',
+      path: '/Doardpage',
       element: <DoardPage />,
     },
     {
-      path: 'EditPage',
+      path: '/EditPage',
       element: <EditPage />,
     },
     {
@@ -61,17 +61,21 @@ export default function Router() {
       element: <RetryPage />
     },
     {
+      path: '/BoardReadPage',
+      element: <BoardReadPage />
+    },
+    {
       element: <SimpleLayout />,
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: '404', element: <Page404 /> },
-        { path: '*', element: <Navigate to="/404" /> },
+        // { path: '*', element: <Navigate to="/404" /> },
       ],
     },
-    {
-      path: '*',
-      element: <Navigate to="/404" replace />,
-    },
+    // {
+    //   path: '*',
+    //   element: <Navigate to="/404" replace />,
+    // },
   ]);
 
   return routes;

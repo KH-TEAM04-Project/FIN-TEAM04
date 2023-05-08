@@ -1,6 +1,5 @@
 package com.kh.team4.service;
 
-
 import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.PageRequestDTO;
 import com.kh.team4.dto.PageResultDTO;
@@ -8,45 +7,80 @@ import com.kh.team4.entity.Base;
 import com.kh.team4.entity.Board;
 import com.kh.team4.entity.Member;
 import com.kh.team4.repository.BoardRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
+import static com.kh.team4.dto.BoardDTO.entityToDTO;
+import static com.kh.team4.entity.Board.dtoToEntity;
+
+
+@Service
+@RequiredArgsConstructor
+@Log4j2
 //재연
-//Controller에서 respsitory 직접 호출하지 않도록 설계하기 위해 service생성
-//BoardDTO 타입을 파라미터로 전달받고 생성된 게시물의 번호를 반환
-public interface BoardService {
-    Long register(BoardDTO dto);
+public class BoardService {
 
-    //PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO);
+    @Autowired
+    private final BoardRepository repository; //자동주입 final
 
-    //BoardDTO get(Long bno);
+    public Long register(BoardDTO dto) {
+        log.info("리액트에서 받아온" + dto);
+        Board board = dtoToEntity(dto);
 
-
-    //BoardDTO를 Board엔티티 타입으로 변환 위해 dtoToEntiy()작성
-    default Board dtoToEntity(BoardDTO dto) {
-        //작성자
-        Member member = Member.builder().mname(dto.getWriterName()).build();
-
-        Board board = Board.builder()
-                .bno(dto.getBno())
-                .title(dto.getTitle())
-                .content(dto.getContent())
-                .writer(member)
-                .build();
-        return board;
+        log.info("dto -> entity 완료" + board);
+        repository.save(board);
+        return board.getBno();
     }
 
-  default BoardDTO entityToDTO(Board board, Member member, Base base) {
+    //작성자 없이
+        public List<BoardDTO> findAll() {
+            log.info("서비스 진입");
 
-        BoardDTO boardDTO = BoardDTO.builder()
-                .bno(board.getBno())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .regDate(base.getRegDate())
-                .modDate(base.getModDate())
-                .writerName(member.getMname())
-                .hits(board.getHits())
-                .build();
-        return boardDTO;
+            List<Board> boardEntityList = repository.findAll();
+            log.info(boardEntityList);
+
+            List<BoardDTO>  boardDTOList = new ArrayList<>();
+
+            for(Board board: boardEntityList) {
+                boardDTOList.add(BoardDTO.entityToDTO(board));
+            }
+            log.info(boardDTOList);
+            return boardDTOList;
+        }
+
+    public void modify(BoardDTO boardDTO) {
+        // getOne() : 필요한 순간까지 로딩을 지연하는 방식
+        Board board = repository.getOne(boardDTO.getBno());
+
+        board.changeTitle(boardDTO.getTitle());
+        board.changeContent(boardDTO.getContent());
+
+        repository.save(board);
     }
 
+    /*@Override
+    public void delete(Long id) {
+        postRepository.findById(id).ifPresent(p -> {
+            if (p.getUser().getId() != SecurityUtil.getCurrentUserLogin().get().getId()) {
+                throw new BadRequestException("It's not a writer.");
+            }
+            postRepository.delete(p);
+        });
+    }*/
 
 }
+
+
+
+
+
+

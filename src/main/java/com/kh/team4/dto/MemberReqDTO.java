@@ -16,14 +16,15 @@ import javax.persistence.Id;
 @AllArgsConstructor // (@NoArgsConstructor 이거 쓰면서 @Builder 도 동시에 쓰기 위해 사용)
 public class MemberReqDTO {
     private Long mno;
-    private String mtype;
     private String mname;
-    private String regno;
     private String mid;
-    private String pwd;
+    private String regno;
     private String email;
-    private String ph;
+    private String pwd;
+    private String detailaddress;
     private String address;
+    private String ph;
+    private String mtype;
 
     @Override
     public String toString(){

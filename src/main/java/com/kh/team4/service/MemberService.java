@@ -1,21 +1,29 @@
 package com.kh.team4.service;
 
-import com.kh.team4.config.SecurityUtil;
-import com.kh.team4.dto.MemberResDTO;
+import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.entity.Member;
 import com.kh.team4.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class MemberService {
     //final 붙여야지 생성자 만들어줌
     private final MemberRepository memberRepository;
+
+    // 회원가입 기능 구현
+    public String regist(MemberReqDTO memberDTO){
+        System.out.println(memberDTO.toString());
+        Member entMember = Member.dtoToEntity(memberDTO);
+
+        memberRepository.save(entMember);
+        String aaa = "회원가입 성공";
+        return aaa;
+    }
+
+
+
     /*public MemberResDTO login(MemberReqDTO memberReqDTO) {
         *//** 처리과정
          * 1. 회원이 입력한 이메일로 DB에서 조회를 함
@@ -46,26 +54,10 @@ public class MemberService {
             System.out.println("해당 유저가 없습니다.");
             return null;
         }
+
+        // Entity 객체는 Service 안에서만 사용
+
     }*/
-
-    private final PasswordEncoder passwordEncoder;
-
-    public MemberResDTO getMyInfoBySecurity() {
-        return memberRepository.findById(SecurityUtil.getCurrentMemberId())
-                .map(MemberResDTO::of)
-                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
-    }
-
-
-    @Transactional
-    public MemberResDTO changeMemberPassword(String email, String exPassword, String newPassword) {
-        Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId()).orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
-        if (!passwordEncoder.matches(exPassword, member.getPwd())) {
-            throw new RuntimeException("비밀번호가 맞지 않습니다");
-        }
-        member.setPwd(passwordEncoder.encode((newPassword)));
-        return MemberResDTO.of(memberRepository.save(member));
-    }
 
 
 }

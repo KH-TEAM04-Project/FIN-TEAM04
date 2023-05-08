@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types';
+import Address from './Address';
+
 
 export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
   return (
@@ -8,9 +10,9 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
        
         <input
           type="text"
-          id="fullname"
-          name="fullname"
-          value={formValues.fullname}
+          id="mname"
+          name="mname"
+          value={formValues.mname}
           onChange={onFormChange}
           required
           placeholder='이름'
@@ -20,9 +22,9 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
         
         <input
           type="text"
-          id="id"
-          name="id"
-          value={formValues.id}
+          id="mid"
+          name="mid"
+          value={formValues.mid}
           onChange={onFormChange}
           required
           placeholder='아이디'
@@ -31,9 +33,9 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
       <div>
       <input
           type="text"
-          id="ssn"
-          name="ssn"
-          value={formValues.ssn}
+          id="regno"
+          name="regno"
+          value={formValues.regno}
           onChange={onFormChange}
           required
           placeholder='주민등록번호'
@@ -52,12 +54,39 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
         />
       </div>
       <div>
+      <Address /> 
+  <input
+    type="text"
+    id="detailaddress"
+    name="detailaddress"
+    value={formValues.detailaddress}
+    onChange={onFormChange}
+    required
+    placeholder='상세주소'
+  />
+   
+</div>
+
+
+<div>
+  <input
+    type="text"
+    id="ph"
+    name="ph"
+    value={formValues.ph}
+    onChange={onFormChange}
+    required
+    placeholder='핸드폰 번호'
+  />
+</div>
+
+      <div>
         
         <input
           type="password"
-          id="password"
-          name="password"
-          value={formValues.password}
+          id="pwd"
+          name="pwd"
+          value={formValues.pwd}
           onChange={onFormChange}
           required
           placeholder='비밀번호'
@@ -69,7 +98,7 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
           type="password"
           id="confirmPassword"
           name="confirmPassword"
-          value={formValues.confirmPassword}
+          value={formValues.pwd}
           onChange={onFormChange}
           required
           placeholder='비밀번호 확인'
@@ -82,13 +111,15 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
 
 SignUpForm.propTypes = {
   formValues: PropTypes.shape({
-    fullname: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    ssn: PropTypes.string.isRequired,
+    mname: PropTypes.string.isRequired,
+    mid: PropTypes.string.isRequired,
+    regno: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    password: PropTypes.string.isRequired,
-    confirmPassword: PropTypes.string.isRequired,
-    
+    pwd: PropTypes.string.isRequired,
+    detailaddress: PropTypes.string.isRequired, // address 추가
+    ph: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired
+     // hp 추가
   }).isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   onFormChange: PropTypes.func.isRequired,

@@ -43,7 +43,7 @@ export default function BoardListHead({
     <TableHead>
       <TableRow>
         <TableCell >
-         숫자
+         게시글 번호
         </TableCell>
         {headLabel.map((headCell) => (
           <TableCell
