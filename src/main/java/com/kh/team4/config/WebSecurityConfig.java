@@ -44,6 +44,8 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/sLogin").permitAll() // 주소지정.. 어떡해..?
+                .antMatchers("/re").permitAll() // 주소지정.. 어떡해..?
+                .antMatchers("/**").permitAll() // 주소지정.. 어떡해..?
                 .anyRequest().authenticated()
 
                 .and()
