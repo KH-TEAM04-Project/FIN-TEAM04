@@ -77,6 +77,7 @@ public class Member {
     public static Member dtoToEntity(MemberReqDTO memberReqDTO) {
 
         Member member = Member.builder()
+                .email(memberReqDTO.getEmail())
                 .mid(memberReqDTO.getMid())
                 .pwd(memberReqDTO.getPwd())
                 .ph(memberReqDTO.getPh())

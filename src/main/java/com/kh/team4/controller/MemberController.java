@@ -27,6 +27,13 @@ public class MemberController {
             return "/login";
         }
     }
+
+    //회원가입 기능 구현
+    @PostMapping("/SignUp2")
+    public String memberregist(@RequestBody MemberReqDTO memberDTO) {
+        System.out.println(memberDTO.toString());
+        return memberService.regist(memberDTO);
+    }
 }
 
 
