@@ -8,24 +8,24 @@ import SignUpForm from '../sections/auth/SignUp/SignUpForm';
 export default function SignUpPage() {
   
   const [formValues, setFormValues] = useState({
-    mname: '',
-    mid: '',
-    regno: '',
-    email: '',
-    pwd: '',
-    detailaddress: '',
-    address: '',
-    ph: '',
+    mname: "",
+    mid: "",
+    regno: "",
+    email: "",
+    pwd: "",
+    detailaddress: "",
+    address: "",
+    ph: "",
     
   });
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
     console.log('Submitted form:', formValues);
-    axios.post('/SignUp',formValues)
+    axios.post("/SignUp2",formValues)
 
     .then(response => {
-      console.log(response.data);
+      console.log(response.aaa);
       // 회원가입 성공 후 처리할 로직 작성
     })
     .catch(error => {

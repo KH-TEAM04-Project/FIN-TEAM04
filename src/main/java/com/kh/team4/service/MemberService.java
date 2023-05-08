@@ -15,6 +15,17 @@ public class MemberService {
     //final 붙여야지 생성자 만들어줌
     private final MemberRepository memberRepository;
 
+    // 회원가입 기능 구현
+    public String regist(MemberReqDTO memberDTO){
+        System.out.println(memberDTO.toString());
+        Member entMember = Member.dtoToEntity(memberDTO);
+
+        memberRepository.save(entMember);
+        String aaa = "회원가입 성공";
+        return aaa;
+    }
+
+
 
     public MemberResDTO login(MemberReqDTO memberReqDTO) {
         /** 처리과정
