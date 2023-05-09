@@ -1,9 +1,7 @@
 package com.kh.team4.service;
 
 import com.kh.team4.dto.QnaDTO;
-import com.kh.team4.entity.Member;
 import com.kh.team4.entity.Qna;
-import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,8 +18,6 @@ import java.util.Optional;
 @Log4j2
 public class QnaService {
     private final QnaRepository qnaRepository;
-
-    private final MemberRepository memberRepository;
 
     public void register(QnaDTO qnaDTO) {
         log.info("리액트에서 받아온" + qnaDTO);
@@ -41,7 +37,7 @@ public class QnaService {
     // findById 에서 toBoardDTO 를 호출하고 있음 toBoardDTO 안에서
     // boardEntity 가 boardFileEntity 를 접근하고 있기 떄문에 트렌젝션을 붙여줘야됨.
     public QnaDTO findById(Long qno) {
-        System.out.println(" 서비스 진입 ");
+        System.out.println(" findById 서비스 진입 ");
         Optional<Qna> optionalQna = qnaRepository.findById(qno);
         if ( optionalQna.isPresent()) {
             System.out.println("if문 진입");

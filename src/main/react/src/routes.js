@@ -64,15 +64,14 @@ export default function Router() {
       path: '/BoardReadPage',
 
     },
-     {
-      element: <QnaReadPage />,
-      path: '/QnaReadPage',
-        },
     {
-        element: <BoardReadPage />,
-        path: '/BoardReadPage:qno',
-
-          },
+      element: <QnaReadPage />,
+      path: '/QnaReadPage:qno',
+    },
+    {
+      element: <BoardReadPage />,
+      path: '/BoardReadPage:bno',
+    },
     {
       element: <SimpleLayout />,
       children: [

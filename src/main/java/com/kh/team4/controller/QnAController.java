@@ -46,9 +46,8 @@ public class QnAController {
     }
 
     // 상세보기 페이지
-    @GetMapping("/BoardReadPage/{qno}")    // id 값을 받아온다.
-    public ResponseEntity<QnaDTO> findById(@PathVariable Long qno,
-                                           @PageableDefault(page = 1) Pageable pageable) {
+    @GetMapping("/QnaReadPage/{qno}")    // id 값을 받아온다.
+    public ResponseEntity<QnaDTO> findById(@PathVariable Long qno) {
         log.info("상세보기 컨트롤러 진입");
         // 만약에 페이지 요청이 없는 경우도 있을 수 있으니 @PageableDefault 사용
         // 경로상의 값을 가져올 때는 @PathVariable 라는 어노테이션을 사용한다.
@@ -57,7 +56,7 @@ public class QnAController {
         log.info("findById 메소드 호출" + qnaDTO);
 
         if (qnaDTO != null) {
-            System.out.println("게시글이 존재하는 경우");
+            log.info("게시글이 존재하는 경우");
             return ResponseEntity.ok(qnaDTO); // 게시글이 존재하는 경우 200 OK 상태로 게시글 정보를 리턴
         } else {
             System.out.println("게시글이 존재하지 않은 경우");
