@@ -19,16 +19,37 @@ import Button from '@mui/material/Button';
 
 
 import axios from 'axios';
+import { Modal,Box,Container } from '@mui/material';
 import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
+
 // ----------------------------------------------------------------------
 
 
-
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3
+};
 // ----------------------------------------------------------------------
 
 export default function QnaPage() {
+   const handleClose = () => {
+        setOpen1(false);
+      };
+const [open1, setOpen1] = React.useState(false);
+      const handleOpen = () => {
+        setOpen1(true);
+      };
   const [posts, setPosts] = useState([]);
 
   const getPosts = () => {
@@ -82,16 +103,35 @@ export default function QnaPage() {
                     </TableCell>
                     <TableCell align="right">{data.bno}</TableCell>
                     <TableCell align="right">
-                      <Link to={`/posts/${data.bno}`}>{data.title}</Link>
+                      <Link to={`/BoardReadPage/${data.bno}`}>{data.title}</Link>
                     </TableCell>
                     <TableCell align="right">{data.content}</TableCell>
                     <TableCell align="right">{data.writer}</TableCell>
                     <TableCell align="right">{data.regDate}</TableCell>
                     <TableCell align="right">{data.hits}</TableCell>
                     <TableCell align="right">
-                      <button onClick={() => console.log('수정')}>수정</button>
-                      <button onClick={() => handleDelete(data.bno)}>삭제</button>
-                    </TableCell>
+              <Button href="http://localhost:3000/EditPage">
+                      <Iconify  icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                     글 수 정</Button>
+
+
+             <Button color='error' onClick={handleOpen}>
+                  <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />글 삭 제</Button>
+                  <Modal
+                    open={open1}
+                    onClose={handleClose}
+                    aria-labelledby="parent-modal-title"
+                    aria-describedby="parent-modal-description"
+                  >
+                    <Box sx={{ ...style, width: 400 }}>
+                      <h2 id="parent-modal-title">게시글 삭제</h2>
+                      <p id="parent-modal-description">
+                        진짜 글삭제 되는데요?
+                      </p>
+                      <Button href="http://localhost:3000/re" onClick={() => handleDelete(data.qno)}>진짜 삭제</Button>
+                    </Box>
+                     </Modal>
+                      </TableCell>
                   </TableRow>
               ))}
             </TableBody>
