@@ -27,14 +27,14 @@ export default function BlogPage() {
   const [posts, setPosts] = useState([]);
 
   const getPosts = () => {
-      axios.get('/re').then((response) => {
+      axios.get('/EoradPage').then((response) => {
           setPosts(response.data);
       });
   };
 
   // 성준 추가 (게시글 삭제 관련)
-    const handleDelete = (qno) => {
-      axios.get(`/delete/${qno}`).then((response) => {
+    const handleDelete = (bno) => {
+      axios.get(`/delete/${bno}`).then((response) => {
         console.log('게시글이 삭제되었습니다.');
         // 삭제 후 게시글 리스트를 다시 불러옴
         getPosts();
@@ -48,7 +48,7 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title> retry2 | Minimal UI </title>
+        <title> retry2 |꽁머니 </title>
       </Helmet>
 
   \

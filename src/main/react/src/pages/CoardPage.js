@@ -9,10 +9,6 @@ import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
-import { DemoContainer } from '@mui/x-e-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-datdate-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from "axios";
 // ----------------------------------------------------------------------
 
@@ -91,7 +87,7 @@ export default function CoardPage1() {
   };
   
 // 여기까지 axios
-  const [value, setValue] = React.useState('today');
+
  
   const navigate = useNavigate();
 
@@ -281,17 +277,7 @@ export default function CoardPage1() {
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
                   
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker', 'DatePicker']}>
-            <DatePicker
-                label="작성 날짜"
-                value={data.regDate}
-                defaultValue={value}
-                onChange={(newValue) => setValue(newValue)}
-                onChange={handleChange}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
+          
 
 
 
