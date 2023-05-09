@@ -20,7 +20,7 @@ public class BoardDTO {
     private Long bno;
     private String title;
     private String content;
-    private String writer; //작성자
+    private String writerName; //작성자
     private Integer hits; //조회수
     private LocalDateTime regDate;//작성일
     private LocalDateTime modDate;

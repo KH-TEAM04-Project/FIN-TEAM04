@@ -42,13 +42,36 @@ public class BoardController {
 
         return boardDTOList;
     }
+    @GetMapping("/boardDelete/{bno}")
+    public String delete(@PathVariable("bno") Long bno) {
+        System.out.println("삭제 컨트롤러");
+        service.delete(bno);
+        System.out.println("서비스에서 delete 함수 호출");
+        return "/delete";
+    }
 
-    /*@GetMapping("/boardRead/{bno}")
-    public String update(@PathVariable Long mno) {
+    @GetMapping({"/BoardReadPage/{bno}", "/modify/{bno}" })
+    public void read(@PathVariable("bno") Long bno){
+        log.info("상세페이지 컨트롤러");
+        /* 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함*/
+        log.info("bno: " + bno);
+        service.updateHits(bno);
+        BoardDTO boardDTO = service.findById(bno);
+
+        log.info(boardDTO);
+
+
+    }
+
+
+
+  /*  @GetMapping("/BoardReadPage/{bno}")
+    public String (@PathVariable Long mno) {
     BoardDTO boardDTO = service.findById(mno);
     return boardDTO;
-    }
-    @PostMapping("/boardUpdate/{bno}")
+    }*/
+    /*
+    @PostMapping("/BoardReadPage/{bno}")
     public String updateForm(@PathVariable BoardDTO boardDTO) {
         //BoardDTO board = service.modify(boardDTO);
         return board.toString();

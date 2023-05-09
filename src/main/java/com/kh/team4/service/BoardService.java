@@ -3,9 +3,11 @@ package com.kh.team4.service;
 import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.PageRequestDTO;
 import com.kh.team4.dto.PageResultDTO;
+import com.kh.team4.dto.QnaDTO;
 import com.kh.team4.entity.Base;
 import com.kh.team4.entity.Board;
 import com.kh.team4.entity.Member;
+import com.kh.team4.entity.Qna;
 import com.kh.team4.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.kh.team4.dto.BoardDTO.entityToDTO;
@@ -57,7 +60,35 @@ public class BoardService {
             return boardDTOList;
         }
 
-    public void modify(BoardDTO boardDTO) {
+    public void delete(Long bno) {
+        System.out.println("서비스 진입");
+        repository.deleteById(bno);
+    }
+
+
+    public BoardDTO findById(Long bno) {
+
+        Optional<Board> optionalBoard = repository.findById(bno);
+        if ( optionalBoard.isPresent()) {
+            System.out.println("if문 진입");
+            Board board = optionalBoard.get();
+            BoardDTO boardDTO = BoardDTO.entityToDTO(board);
+            System.out.println("boardDTO" + boardDTO);
+            return boardDTO;
+        } else {
+            System.out.println("return null");
+            return null;
+        }
+
+    }
+    @Transactional //레파지토리에서 쿼리문 지정해줬을 경우 일관성,영속성을 위해 @트랜잭션 사용
+    public void updateHits(Long bno) {
+        repository.updateHits(bno);
+
+    }
+
+
+/*    public void modify(BoardDTO boardDTO) {
         // getOne() : 필요한 순간까지 로딩을 지연하는 방식
         Board board = repository.getOne(boardDTO.getBno());
 
@@ -65,17 +96,8 @@ public class BoardService {
         board.changeContent(boardDTO.getContent());
 
         repository.save(board);
-    }
-
-    /*@Override
-    public void delete(Long id) {
-        postRepository.findById(id).ifPresent(p -> {
-            if (p.getUser().getId() != SecurityUtil.getCurrentUserLogin().get().getId()) {
-                throw new BadRequestException("It's not a writer.");
-            }
-            postRepository.delete(p);
-        });
     }*/
+
 
 }
 
