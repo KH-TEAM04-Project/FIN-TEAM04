@@ -33,7 +33,10 @@ export default function Router() {
         { path: '/products', element: <ProductsPage /> },
         { path: '/blog', element: <BlogPage /> },
         { path: '/board', element: <BoardPage /> },
-      
+       {
+            path: '/re',
+            element: <RetryPage />
+          },
       ],
     },
     {
@@ -61,10 +64,7 @@ export default function Router() {
       path: '/EditPage',
       element: <EditPage />,
     },
-    {
-      path: '/re',
-      element: <RetryPage />
-    },
+
     {
       path: '/BoardReadPage',
       element: <BoardReadPage />
