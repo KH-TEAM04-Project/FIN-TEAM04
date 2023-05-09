@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -40,10 +41,11 @@ class QnaServiceTest {
 
         // When
         QnaService qnaService = new QnaService(qnaRepository, memberRepository);
-//        qnaService.register(qnaDTO, 2L);
+        qnaService.register(qnaDTO, 21L);
 
         // Then
         verify(memberRepository, times(1)).findById(anyLong());
         verify(qnaRepository, times(1)).save(any(Qna.class));
+        verify(memberRepository).findById(Mockito.anyLong());
     }
 }

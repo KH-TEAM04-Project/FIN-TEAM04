@@ -97,3 +97,7 @@ WHERE sequence_owner = 'TEAM4'
 1. 프로젝트 개요 정리해서 멘토님한테 전달
 2. 질문사항 모아서 멘토님한테 물어보기
 3. react 폴더 정리 및 이름 변경
+
+#### QNA 관련 오라클 명령어
+INSERT INTO QNA (QNO, TITLE, content, regdate) VALUES (QNA_SEQ.NEXTVAL, '테스트2', '테스트2', TO_DATE('12:30:30', 'HH24:MI:SS'));
+
