@@ -44,7 +44,7 @@ public class QnaService {
     // findById 에서 toBoardDTO 를 호출하고 있음 toBoardDTO 안에서
     // boardEntity 가 boardFileEntity 를 접근하고 있기 떄문에 트렌젝션을 붙여줘야됨.
     public QnaDTO findById(Long qno) {
-        System.out.println(" 컨트롤러 진입 ");
+        System.out.println(" 서비스 진입 ");
         Optional<Qna> optionalQna = qnaRepository.findById(qno);
         if ( optionalQna.isPresent()) {
             System.out.println("if문 진입");
