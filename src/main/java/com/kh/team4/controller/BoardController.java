@@ -1,6 +1,7 @@
 package com.kh.team4.controller;
 
 import com.kh.team4.dto.BoardDTO;
+import com.kh.team4.dto.QnaDTO;
 import com.kh.team4.entity.Board;
 import com.kh.team4.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,15 @@ public class BoardController {
 
         log.info("저장 완료 BNO: " + bno);
         return ResponseEntity.ok(bno);
+    }
+
+    @GetMapping("/EoardPage")
+    public List<BoardDTO> boardList() {
+        System.out.println("컨트롤러 진입");
+        List<BoardDTO> boardDTOList = service.findAll();
+        System.out.println("BoardDTOList" + boardDTOList);
+
+        return boardDTOList;
     }
 
     /*@GetMapping("/boardRead/{bno}")
