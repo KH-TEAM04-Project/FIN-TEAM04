@@ -23,12 +23,9 @@ public class QnaService {
 
     private final MemberRepository memberRepository;
 
-    public void register(QnaDTO qnaDTO, Long mno) {
-//        Long mno = 21L;
+    public void register(QnaDTO qnaDTO) {
         log.info("리액트에서 받아온" + qnaDTO);
-        Member writer = memberRepository.findById(mno)
-                .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다." + mno));
-        Qna qna = Qna.dtoToEntity(qnaDTO, writer);
+        Qna qna = Qna.dtoToEntity(qnaDTO);
         log.info("entity 변환 완료" + qna);
         qnaRepository.save(qna);
         log.info("entity 저장 완료" + qna);
@@ -51,6 +48,7 @@ public class QnaService {
             Qna qna = optionalQna.get();
             QnaDTO qnaDTO = QnaDTO.toQnaDTO(qna);
             System.out.println("qnaDTO" + qnaDTO);
+
             return qnaDTO;
         } else {
             System.out.println("return null");
