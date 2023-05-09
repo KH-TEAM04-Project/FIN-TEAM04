@@ -40,7 +40,7 @@ class QnaServiceTest {
         when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
 
         // When
-        QnaService qnaService = new QnaService(qnaRepository, memberRepository);
+        QnaService qnaService = new QnaService(qnaRepository);
         qnaService.register(qnaDTO);
 
         // Then

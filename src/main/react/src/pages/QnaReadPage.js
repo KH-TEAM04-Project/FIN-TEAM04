@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-import React, { useEffect, useState } from 'react';
-import { Link,useParams ,useNavigate} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams ,useNavigate} from 'react-router-dom';
 import axios from 'axios';
 
 // @mui
@@ -44,26 +44,26 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 
-export default function Page404() {
+export default function QnaReadPage() {
     const { qno } = useParams();
      const [posts, setPosts] = useState([]);
 
-        const getPosts = (qno) => {
-            axios.get('/QnaReadPage/*').then((response) => {
+        const getPost = (qno) => {
+            axios.get(`/QnaReadPage/${qno}`).then((response) => {
                 setPosts(response.data);
                  console.log(response.data);
                  console.log("yaya");
             });
         };
 
-    useEffect(() => {
-            getPosts();
-          }, []);
+       useEffect(() => {
+           getPost(qno);
+         }, [qno]);
 
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/board', { replace: true });
+    navigate('/re', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
