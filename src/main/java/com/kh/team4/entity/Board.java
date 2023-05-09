@@ -46,7 +46,7 @@ public class Board extends Base {
     protected Integer hits;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "mno")
+    @JoinColumn(name = "member_mno")
     private Member writer;
 
 /*    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -73,12 +73,15 @@ public class Board extends Base {
         System.out.println("dtoToEntity 실행");
 
         //작성자
-        Member member = Member.builder().mid(dto.getWriter()).build();
+        //Member member = Member.builder().mname(dto.getWriterName()).build();
 
         Board board = Board.builder()
+                .bno(dto.getBno())
                 .title(dto.getTitle())
                 .content(dto.getContent())
+               // .writer(member)
                 .build();
+      //  System.out.println("member :" + member);
         System.out.println("보드 dto -> 엔티티 변환 :" + board);
         return board;
 
