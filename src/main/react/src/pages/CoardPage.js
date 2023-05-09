@@ -9,8 +9,8 @@ import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DemoContainer } from '@mui/x-e-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-datdate-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from "axios";
@@ -54,7 +54,7 @@ export default function CoardPage1() {
   const [data, setData] = useState({
     title: "",
     RegDate: "",
-    writer: "",
+    writer:  "",
     content: ""
   });
 

@@ -170,7 +170,13 @@ const [open1, setOpen1] = React.useState(false);
 
   const isNotFound = !filteredUsers.length && !!filterName;
 // 여기는 axios 스껄
-
+  // function Board1() {
+  //   const [data, setdata] = useState([]);
+  //   useEffect(() => {
+  //       axios.get('/api/list')
+  //           .then(response => setdata(response.data))
+  //           .catch(error => console.log(error))
+  //   }, []);
 
   return (
     <>
