@@ -41,7 +41,7 @@ class QnaServiceTest {
 
         // When
         QnaService qnaService = new QnaService(qnaRepository, memberRepository);
-        qnaService.register(qnaDTO, 21L);
+        qnaService.register(qnaDTO);
 
         // Then
         verify(memberRepository, times(1)).findById(anyLong());
