@@ -47,18 +47,18 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 export default function Page404() {
 
   const BoardDetail = () => {
-    const { idx } = useParams(); 
+    const { qno } = useParams();
     // /board/:idx와 동일한 변수명으로 데이터를 꺼낼 수 있습니다.
     const [loading, setLoading] = useState(true);
-    const [board, setBoard] = useState({});
-    const getBoard = async () => {
-      const resp = await (await axios.get(`//localhost:8080/board/${idx}`)).data;
-      setBoard(resp.data);
+    const [data, setData] = useState({});
+    const getData = async () => {
+      const resp = await (await axios.get(`/BoardReadPage/${qno}`)).data;
+      setData(resp.data);
       setLoading(false);
     };
   
     useEffect(() => {
-      getBoard();
+      getData();
     }, []);
   
 
@@ -233,11 +233,12 @@ export default function Page404() {
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
          
           <TextField name="text" label="제목" readOnly disabled
-          sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
+           sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
 
           <TextField color="secondary"   name="text" label="작성자" readOnly disabled
+
           sx={{my: {  xs: 3, sm: 5 ,mr: 1
-          } }}/>  
+          } }}> {data.writer} </TextField>
         
                 
             
@@ -248,8 +249,9 @@ export default function Page404() {
           label="내용"
           multiline
           rows={10}
+
           defaultValue=" 글 작성"
-        />
+        >{data.content}</TextField>
        
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
       <Button variant="contained" component="label">
