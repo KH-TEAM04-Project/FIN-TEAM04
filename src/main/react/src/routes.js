@@ -18,7 +18,7 @@ import EditPage from './pages/EditPage';
 import RetryPage from './pages/RetryPage';
 // import FetchPage from './pages/FetchPage';
 import BoardReadPage from './pages/BoardReadPage';
-
+import QnaReadPage from './pages/QnaReadPage';
 // ----------------------------------------------------------------------
 export default function Router() {
   const routes = useRoutes([
@@ -33,10 +33,9 @@ export default function Router() {
         { path: '/products', element: <ProductsPage /> },
         { path: '/blog', element: <BlogPage /> },
         { path: '/board', element: <BoardPage /> },
-       {
-            path: '/re',
-            element: <RetryPage />
-          },
+        { path: '/re', element: <RetryPage /> },
+        { path: 'EoardPage', element: <EoardPage/> }
+
       ],
     },
     {
@@ -57,10 +56,6 @@ export default function Router() {
       element: <DoardPage />,
     },
     {
-      path: '/Eoardpage',
-      element: <EoardPage />,
-    },
-    {
       path: '/EditPage',
       element: <EditPage />,
     },
@@ -69,9 +64,13 @@ export default function Router() {
       path: '/BoardReadPage',
 
     },
+     {
+      element: <QnaReadPage />,
+      path: '/QnaReadPage',
+        },
     {
-            element: <BoardReadPage />,
-            path: '/BoardReadPage:qno',
+        element: <BoardReadPage />,
+        path: '/BoardReadPage:qno',
 
           },
     {

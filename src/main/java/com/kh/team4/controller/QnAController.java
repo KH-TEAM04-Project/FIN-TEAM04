@@ -46,10 +46,10 @@ public class QnAController {
     }
 
     // 상세보기 페이지
-    @GetMapping("/{qno}")    // id 값을 받아온다.
+    @GetMapping("BoardReadPage/{qno}")    // id 값을 받아온다.
     public ResponseEntity<QnaDTO> findById(@PathVariable Long qno,
                                            @PageableDefault(page = 1) Pageable pageable) {
-        log.info("컨트롤러 진입");
+        log.info("컨트롤러 진입2");
         // 만약에 페이지 요청이 없는 경우도 있을 수 있으니 @PageableDefault 사용
         // 경로상의 값을 가져올 때는 @PathVariable 라는 어노테이션을 사용한다.
 
@@ -68,7 +68,7 @@ public class QnAController {
     // 게시글 삭제(DELETE)
     @GetMapping("/delete/{qno}")
     public String delete(@PathVariable("qno") Long qno) {
-        System.out.println("컨트롤러 진입");
+        System.out.println("컨트롤러 진입3");
         qnaService.delete(qno);
         System.out.println("서비스에서 delete 함수 호출");
         return "/delete";

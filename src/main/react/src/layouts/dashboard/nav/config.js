@@ -43,8 +43,8 @@ const navConfig = [
     icon: icon('ic_disabled'),
   },
   {
-    title: 'Test Page',
-    path: '/test',
+    title: 'EoardPage',
+    path: '/EoardPage',
     icon: icon('ic_cart'),
 
   },

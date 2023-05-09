@@ -49,7 +49,7 @@ export default function Page404() {
      const [posts, setPosts] = useState([]);
 
         const getPosts = (qno) => {
-            axios.get('/BoardReadPage/*').then((response) => {
+            axios.get('/QnaReadPage/*').then((response) => {
                 setPosts(response.data);
                  console.log(response.data);
                  console.log("yaya");
@@ -94,9 +94,9 @@ export default function Page404() {
   return (
     <>
       <Helmet>
-        <title> 게시글보기| 꽁머니 </title>
+        <title> QnA보기| 꽁머니 </title>
       </Helmet>
-   
+
       <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -224,7 +224,7 @@ export default function Page404() {
           <Typography variant="h5" paragraph  defaultValue="Normal">
             게시글 보세유
           </Typography>
-      
+
           <Typography sx={{ color: 'text.secondary' }}>
         무엇이든 보세유
           </Typography>
@@ -237,11 +237,11 @@ export default function Page404() {
           sx={{my: {  xs: 3, sm: 5 ,mr: 1
           } }}> {data.writer} </TextField>
 
-        
-                
-            
-           
-        
+
+
+
+
+
           <TextField readOnly disabled
           id="outlined-multiline-static"
           label="내용"
@@ -255,7 +255,7 @@ export default function Page404() {
       <Button variant="contained" component="label">
         재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
         <input hidden accept="image/*" multiple type="file" />
-        
+
       </Button>
       </Stack>
 

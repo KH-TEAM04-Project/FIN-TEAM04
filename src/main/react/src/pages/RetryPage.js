@@ -63,7 +63,7 @@ export default function QnaPage() {
         });
     };
 
-    // 성준 추가 (게시글 삭제 관련)
+    // 성준 추가 (게시글 삭제 관련
       const handleDelete = (qno) => {
         axios.get(`/delete/${qno}`).then((response) => {
           console.log('게시글이 삭제되었습니다.');
