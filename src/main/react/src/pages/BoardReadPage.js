@@ -1,6 +1,8 @@
 import { Helmet } from 'react-helmet-async';
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams ,useNavigate} from 'react-router-dom';
+import axios from 'axios';
+
 // @mui
 import { styled } from '@mui/material/styles';
 import { TextField, Typography, Container,Stack,Button,Box,Modal,
@@ -39,8 +41,27 @@ const style = {
 // ----------------------------------------------------------------------
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+
+
 export default function Page404() {
-  // const [value, setValue] = React.useState<number ||  null>(2);
+
+  const BoardDetail = () => {
+    const { idx } = useParams(); 
+    // /board/:idx와 동일한 변수명으로 데이터를 꺼낼 수 있습니다.
+    const [loading, setLoading] = useState(true);
+    const [board, setBoard] = useState({});
+    const getBoard = async () => {
+      const resp = await (await axios.get(`//localhost:8080/board/${idx}`)).data;
+      setBoard(resp.data);
+      setLoading(false);
+    };
+  
+    useEffect(() => {
+      getBoard();
+    }, []);
+  
+
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -262,4 +283,5 @@ export default function Page404() {
 
     </>
   );
+}
 }

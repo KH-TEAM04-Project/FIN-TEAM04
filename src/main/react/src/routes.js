@@ -12,6 +12,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import BoardPage from './pages/BoardPage';
 import CoardPage from './pages/CoardPage';
 import DoardPage from './pages/DoardPage';
+import EoardPage from './pages/EoardPage';
 import SignUpPage from './pages/SignUpPage';
 import EditPage from './pages/EditPage';
 import RetryPage from './pages/RetryPage';
@@ -51,6 +52,10 @@ export default function Router() {
     {
       path: '/Doardpage',
       element: <DoardPage />,
+    },
+    {
+      path: '/Eoardpage',
+      element: <EoardPage />,
     },
     {
       path: '/EditPage',
