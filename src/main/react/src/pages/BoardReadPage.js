@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import React, { useEffect, useState } from 'react';
-import { useParams ,useNavigate} from 'react-router-dom';
+import { Link,useParams ,useNavigate} from 'react-router-dom';
 import axios from 'axios';
 
 // @mui
@@ -45,22 +45,18 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 export default function Page404() {
+     const [posts, setPosts] = useState([]);
 
-  const BoardDetail = () => {
-    const { qno } = useParams();
-    // /board/:idx와 동일한 변수명으로 데이터를 꺼낼 수 있습니다.
-    const [loading, setLoading] = useState(true);
-    const [data, setData] = useState({});
-    const getData = async () => {
-      const resp = await (await axios.get(`/BoardReadPage/${qno}`)).data;
-      setData(resp.data);
-      setLoading(false);
-    };
-  
+        const getPosts = () => {
+            axios.get('/BoardReadPage/*').then((response) => {
+                setPosts(response.data);
+                 console.log(response.data);
+            });
+        };
+
     useEffect(() => {
-      getData();
-    }, []);
-  
+            getPosts();
+          }, []);
 
   const navigate = useNavigate();
 
@@ -220,8 +216,8 @@ export default function Page404() {
         </Toolbar>
       </Container>
     </AppBar>
-    
-      <Container Width="10000">
+     {posts.map((data) => (
+      <Container key={data.qno} Width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
             게시글 보세유
@@ -231,14 +227,14 @@ export default function Page404() {
         무엇이든 보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-         
+
           <TextField name="text" label="제목" readOnly disabled
            sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
 
-          <TextField color="secondary"   name="text" label="작성자" readOnly disabled
-
+          <TextField color="secondary"   name="text" label="작성자" disabled
           sx={{my: {  xs: 3, sm: 5 ,mr: 1
           } }}> {data.writer} </TextField>
+
         
                 
             
@@ -252,7 +248,7 @@ export default function Page404() {
 
           defaultValue=" 글 작성"
         >{data.content}</TextField>
-       
+
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
       <Button variant="contained" component="label">
         재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
@@ -260,8 +256,8 @@ export default function Page404() {
         
       </Button>
       </Stack>
-         
-      
+
+
       <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
       <Modal
         open={open}
@@ -279,11 +275,10 @@ export default function Page404() {
       </LoadingButton>
         </Box>
       </Modal>
-  
+
       </StyledContent2>
       </Container>
-
+ ))}
     </>
   );
-}
 }

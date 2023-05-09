@@ -16,10 +16,11 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 // ----------------------------------------------------------------------  // 수정 성준 추가
 import Button from '@mui/material/Button';
-import {Modal,Box} from '@mui/material';
+import { Modal,Box,Container } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 import Iconify from '../components/iconify';
-
-
 // ----------------------------------------------------------------------
 const style = {
   position: "absolute",
@@ -39,6 +40,11 @@ const style = {
 // ----------------------------------------------------------------------
 
 export default function QnaPage() {
+     const [page, setPage] = React.useState(1);
+     const handleChange = (event, value) => {
+        setPage(value);
+      };
+
      const handleClose = () => {
         setOpen1(false);
       };
@@ -53,6 +59,7 @@ export default function QnaPage() {
     const getPosts = () => {
         axios.get('/re').then((response) => {
             setPosts(response.data);
+            console.log(response.data);
         });
     };
 
@@ -91,6 +98,7 @@ export default function QnaPage() {
           </TableRow>
         </TableHead>
         <TableBody>
+
           {posts.map((data) => (
             <TableRow
               key={data.qno}
@@ -135,7 +143,12 @@ export default function QnaPage() {
         </TableBody>
       </Table>
     </TableContainer>
-  
+            <Container align="center">
+         <Stack spacing={3} >
+              <Typography  >Page: {page}</Typography>
+              <Pagination  count={10} page={page} onChange={handleChange} />
+            </Stack>
+            </Container>
     </>
   );
 }

@@ -64,11 +64,16 @@ export default function Router() {
       path: '/EditPage',
       element: <EditPage />,
     },
-
     {
+      element: <BoardReadPage />,
       path: '/BoardReadPage',
-      element: <BoardReadPage />
+
     },
+    {
+            element: <BoardReadPage />,
+            path: '/BoardReadPage:qno',
+
+          },
     {
       element: <SimpleLayout />,
       children: [
