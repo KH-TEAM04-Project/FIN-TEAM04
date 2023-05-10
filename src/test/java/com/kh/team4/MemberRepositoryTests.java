@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.stream.IntStream;
 
+import static com.kh.team4.entity.Authority.ROLE_USER;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -21,12 +22,13 @@ public class MemberRepositoryTests {
 
         // 1. 회원 생성
         Member params = Member.builder()
-                .mname("이소연")
-                .ph("01012345678")
-                .mid("zao2")
+                .mname("이소")
+                .ph("0101234568")
+                .mid("za")
                 .pwd("Cwsook97!")
-                .email("lee6970808@naver.com")
-                .regno("97080821234123")
+                .authority(ROLE_USER)
+                .email("lee690808@nave.com")
+                .regno("970882123412")
                 .build();
 
 

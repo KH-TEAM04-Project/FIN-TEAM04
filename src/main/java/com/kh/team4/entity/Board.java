@@ -11,7 +11,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-@ToString(exclude = "writer") //writer필드 제외
+@ToString(exclude = "writer") //fetch 방식이 Lazy일 경우 사용
+//Eager Loading(즉시로딩):특정 엔티티를 조회할 때 연관관계를 가진 모든 엔티티를 같이 로딩 -> 성능 저하
+// LAZY : 지연로딩,즉시로딩과 반대, 필요할 때만 사용, LAZY 사용하면 @ToString(exclude) 무조건 사용
+// @ToString(): 해당 클래스의 모든 멤버 변수를 출력
+//Board 객체의 @ToString()을 하면 writer 변수로 선언된 Member 객체도 함께 출력해야 하며
+// Member 객체를 출력하기 위해서는 Member 객체의 @ToString()이 호출되어야 하고 이때 DB 연결이 필요
+// -> exclude 지정
+
 @Table(name = "board")  // 데이터베이스에 해당하는 테이블
 @SequenceGenerator(
         name = "BOARD_SEQ_GENERATOR"  //시퀀스 제너레이터 이름
@@ -39,18 +46,19 @@ public class Board extends Base {
     protected Integer hits;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "mno")
-    private Member member;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "writer", referencedColumnName = "mid")
+    @JoinColumn(name = "member_mno")
     private Member writer;
 
+/*    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "writer", referencedColumnName = "mid")
+    private Member writer;*/
+
     /* 게시글 수정 */
-
-
-    public void update(String title, String content) {
+    public void changeTitle(String title){
         this.title = title;
+    }
+
+    public void changeContent(String content){
         this.content = content;
     }
 
@@ -60,4 +68,24 @@ public class Board extends Base {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<board> comment;
 */
+
+    public static Board dtoToEntity(BoardDTO dto) {
+        System.out.println("dtoToEntity 실행");
+
+        //작성자
+        //Member member = Member.builder().mname(dto.getWriterName()).build();
+
+        Board board = Board.builder()
+                .bno(dto.getBno())
+                .title(dto.getTitle())
+                .content(dto.getContent())
+               // .writer(member)
+                .build();
+      //  System.out.println("member :" + member);
+        System.out.println("보드 dto -> 엔티티 변환 :" + board);
+        return board;
+
+    }
+
+
 }

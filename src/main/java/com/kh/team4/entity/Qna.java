@@ -1,10 +1,10 @@
 package com.kh.team4.entity;
 
 import com.kh.team4.dto.QnaDTO;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +14,12 @@ import java.util.List;
 @ToString
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@DynamicInsert //Insert시 Null인 필드를 제외하기위해 사용
+@DynamicUpdate  //Update시 Null인 필드를 제외하기위해 사용
+
+
 @Table(name = "qna")
 @SequenceGenerator(
         name = "QNA_SEQ_GENERATOR"  //시퀀스 제너레이터 이름
@@ -27,12 +33,12 @@ public class Qna extends Base {
             strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택
             , generator = "QNA_SEQ_GENERATOR" //식별자 생성기를 설정해놓은  USER_SEQ_GEN으로 설정
     )
-    private long qno;
+    private Long qno;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50)
     private String title;
 
-    @Column(nullable = false)
+    @Column
     private String content;
 
     @Column(length = 1)
@@ -43,22 +49,26 @@ public class Qna extends Base {
     @ColumnDefault("0")
     private Integer hits;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_mno", nullable = false)
-    private Member writer;
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "member_mno", nullable = false)
+    @Column
+    private String writer;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replyList = new ArrayList<>();
 
-    public static Qna dtoToEntity(QnaDTO qnaDTO, Member writer) {
+    public static Qna dtoToEntity(QnaDTO qnaDTO) {
 
+//        Member member = Member.builder().mno(writer.getMno()).build();
         Qna qna = Qna.builder()
+            .qno(qnaDTO.getQno())
             .title(qnaDTO.getTitle())
             .content(qnaDTO.getContent())
             .secret(qnaDTO.getSecret())
             .hits(qnaDTO.getHits())
-            .writer(writer)
+            .writer(qnaDTO.getWriter())
             .build();
         return qna;
     }
+
 }

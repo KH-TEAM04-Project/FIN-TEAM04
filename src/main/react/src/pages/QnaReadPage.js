@@ -1,6 +1,8 @@
 import { Helmet } from 'react-helmet-async';
-import  React, {useState} from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams ,useNavigate} from 'react-router-dom';
+import axios from 'axios';
+
 // @mui
 import { styled } from '@mui/material/styles';
 import { TextField, Typography, Container,Stack,Button,Box,Modal,
@@ -9,7 +11,8 @@ import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
-import axios from "axios";
+// import { number } from 'prop-types';
+// import Clock from 'react-live-clock'
 // ----------------------------------------------------------------------
 
 const StyledContent2 = styled('div')(({ theme }) => ({
@@ -38,63 +41,37 @@ const style = {
 // ----------------------------------------------------------------------
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-export default function DoardPage() {
-  const [data, setData] = useState({
-    title: "",
-    RegDate: "",
-    writer: "",
-    content: ""
-  });
 
-  const handleChange = ({ target }) => {
-    const { value, name } = target;
-    setData((prevData) => ({
-        ...prevData,
-        [name]: value
-    }));
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const userData = {
-      title: data.title,
-      RegDate: data.RegDate,
-      writer: data.writer,
-      content: data.content
-    };
-    axios
-      .post("/DoardPage", userData)
-      .then((response) => {
-        console.log(response.status, response.data);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log("이거 에러인걸?");
-          console.log(userData);
-        } else if (error.request) {
-          console.log("network error");
-        } else {
-          console.log(error);
-        }
-      });
-  };
 
-  // const [value, setValue] = React.useState<number ||  null>(2);
+export default function QnaReadPage() {
+    const { qno } = useParams();
+     const [posts, setPosts] = useState([]);
+
+        const getPost = (qno) => {
+            axios.get(`/QnaReadPage/${qno}`).then((response) => {
+                setPosts(response.data);
+                 console.log(response.data);
+                 console.log("yaya");
+            });
+        };
+
+       useEffect(() => {
+           getPost(qno);
+         }, [qno]);
+
   const navigate = useNavigate();
 
-    const handleClick = () => {
-      navigate('/re', { replace: true });
-    };
-
-    const [open, setOpen] = useState(false);
-
-    const handleOpen = () => {
-      setOpen(true);
-    };
-
-    const handleClose = () => {
-      setOpen(false);
-    };
+  const handleClick = () => {
+    navigate('/re', { replace: true });
+  };
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -117,9 +94,9 @@ export default function DoardPage() {
   return (
     <>
       <Helmet>
-        <title> QnA 작성| 꽁머니 </title>
+        <title> QnA보기| 꽁머니 </title>
       </Helmet>
-   
+
       <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -241,47 +218,48 @@ export default function DoardPage() {
         </Toolbar>
       </Container>
     </AppBar>
-    <form onSubmit={handleSubmit}>
-      <Container width="10000">
+     {posts.map((data) => (
+      <Container key={data.qno} Width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            QnA 작성하세유
+            게시글 보세유
           </Typography>
-      
+
           <Typography sx={{ color: 'text.secondary' }}>
-        무엇이든 물어보세유 
+        무엇이든 보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-         {/* 여기서 부터 내용 */}
+
+          <TextField name="text" label="제목" readOnly disabled
+           sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
+
+          <TextField color="secondary"   name="text" label="작성자" disabled
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1
+          } }}> {data.writer} </TextField>
 
 
-         <TextField    name="title" label="제목" 
-          value={data.title}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
 
-          <TextField    name="writer" label="작성자" 
-          value={data.writer}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
 
-        <TextField    name="content" label="내용" 
-          value={data.content}
+
+
+          <TextField readOnly disabled
+          id="outlined-multiline-static"
+          label="내용"
           multiline
           rows={10}
-          onChange={handleChange}
+
           defaultValue=" 글 작성"
-         />
-       
+        >{data.content}</TextField>
+
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
       <Button variant="contained" component="label">
-        Upload  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
+        재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
         <input hidden accept="image/*" multiple type="file" />
-        
+
       </Button>
       </Stack>
-         
-      <div>
+
+
       <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
       <Modal
         open={open}
@@ -292,17 +270,17 @@ export default function DoardPage() {
         <Box sx={{ ...style, width: 500 }}>
           <h2 id="parent-modal-title">꽁 머 니</h2>
           <p id="parent-modal-description">
-           QnA이 작성됐습니다람쥐.
+            수정이 완료됐습니다람쥐.
           </p>
           <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
        등록
       </LoadingButton>
         </Box>
       </Modal>
-    </div>
+
       </StyledContent2>
       </Container>
-      </form>      
+ ))}
     </>
   );
 }

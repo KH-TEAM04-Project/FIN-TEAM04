@@ -5,12 +5,13 @@ import {Link, Stack, IconButton, InputAdornment, TextField, Checkbox} from '@mui
 import {LoadingButton} from '@mui/lab';
 import axios from "axios";
 // components
-
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
+
+
     const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
@@ -58,11 +59,11 @@ export default function LoginForm() {
                 console.log(response);
                 console.log("res.data.userId :: ", response.data);
                 localStorage.setItem('token', response.data.token);
-                if (response.data.token) {
-                    alert('환영합니다 ' + id + '님');
-                    navigate('/')
-                } else {
+                if (response.data.token ) {
                     alert('로그인에 실패하였습니다.');
+                } else {
+                    alert('환영합니다! ');
+                    navigate('/')
                 }
             })
             .catch(error => {

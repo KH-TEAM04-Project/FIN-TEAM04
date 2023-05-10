@@ -24,7 +24,6 @@ public class MemberResDTO {
 
     public MemberResDTO(Member member){
         this.mno = member.getMno();
-        this.mtype = member.getMtype();
         this.mname = member.getMname();
         this.regno = member.getRegno();
         this.mid = member.getMid();
@@ -39,5 +38,11 @@ public class MemberResDTO {
         dto.setMid(member.getMid());
         dto.setPwd(member.getPwd());
         return dto;
+    }
+
+    public static MemberResDTO of(Member member) {
+        return MemberResDTO.builder()
+                .mid(member.getMid())
+                .build();
     }
 }
