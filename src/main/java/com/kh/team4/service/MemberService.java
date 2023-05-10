@@ -21,8 +21,7 @@ public class MemberService {
     // 회원가입 기능 구현
     public String regist(MemberReqDTO memberDTO) {
         System.out.println(memberDTO.toString());
-        Member entMember = Member.dtoToEntity(memberDTO);
-
+        Member entMember = Member.dtoToEntity2(memberDTO, passwordEncoder);
         memberRepository.save(entMember);
         String aaa = "회원가입 성공";
         return aaa;

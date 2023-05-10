@@ -58,12 +58,13 @@ export default function LoginForm() {
             .then(response => {
                 console.log(response);
                 console.log("res.data.userId :: ", response.data);
-                localStorage.setItem('token', response.data.token);
-                if (response.data.token ) {
-                    alert('로그인에 실패하였습니다.');
-                } else {
+                localStorage.setItem('token', response.data.accessToken);
+                console.log('token', response.data.accessToken);
+                if (response.data.accessToken != null ) {
                     alert('환영합니다! ');
                     navigate('/')
+                } else if(response.data.accessToken === null || response.data.accessToken === undefined) {
+                    alert('로그인에 실패하였습니다.');
                 }
             })
             .catch(error => {
