@@ -66,11 +66,15 @@ export default function Router() {
     },
     {
       element: <QnaReadPage />,
-      path: '/QnaReadPage:qno',
+      path: '/QnaReadPage/:qno',
     },
     {
       element: <BoardReadPage />,
-      path: '/BoardReadPage:bno',
+      path: '/BoardReadPage/:bno',
+    },
+    {
+      element: <EditPage />,
+      path: '/EditPage/:bno',
     },
     {
       element: <SimpleLayout />,
