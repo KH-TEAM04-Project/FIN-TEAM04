@@ -49,16 +49,17 @@ public class Qna extends Base {
     @ColumnDefault("0")
     private Integer hits;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_mno")
-    private Member writer;
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "member_mno", nullable = false)
+    @Column
+    private String writer;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replyList = new ArrayList<>();
 
-    public static Qna dtoToEntity(QnaDTO qnaDTO, Member writer) {
+    public static Qna dtoToEntity(QnaDTO qnaDTO) {
 
-//        Member member = Member.builder().mno(qnaDTO.getWriter()).build();
+//        Member member = Member.builder().mno(writer.getMno()).build();
         Qna qna = Qna.builder()
             .qno(qnaDTO.getQno())
             .title(qnaDTO.getTitle())

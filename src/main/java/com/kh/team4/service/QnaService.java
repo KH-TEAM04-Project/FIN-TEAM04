@@ -1,9 +1,7 @@
 package com.kh.team4.service;
 
 import com.kh.team4.dto.QnaDTO;
-import com.kh.team4.entity.Member;
 import com.kh.team4.entity.Qna;
-import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,14 +19,9 @@ import java.util.Optional;
 public class QnaService {
     private final QnaRepository qnaRepository;
 
-    private final MemberRepository memberRepository;
-
-    public void register(QnaDTO qnaDTO, Long mno) {
-//        Long mno = 21L;
+    public void register(QnaDTO qnaDTO) {
         log.info("리액트에서 받아온" + qnaDTO);
-        Member writer = memberRepository.findById(mno)
-                .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다." + mno));
-        Qna qna = Qna.dtoToEntity(qnaDTO, writer);
+        Qna qna = Qna.dtoToEntity(qnaDTO);
         log.info("entity 변환 완료" + qna);
         qnaRepository.save(qna);
         log.info("entity 저장 완료" + qna);
@@ -44,13 +37,14 @@ public class QnaService {
     // findById 에서 toBoardDTO 를 호출하고 있음 toBoardDTO 안에서
     // boardEntity 가 boardFileEntity 를 접근하고 있기 떄문에 트렌젝션을 붙여줘야됨.
     public QnaDTO findById(Long qno) {
-        System.out.println(" 서비스 진입 ");
+        System.out.println(" findById 서비스 진입 ");
         Optional<Qna> optionalQna = qnaRepository.findById(qno);
         if ( optionalQna.isPresent()) {
             System.out.println("if문 진입");
             Qna qna = optionalQna.get();
             QnaDTO qnaDTO = QnaDTO.toQnaDTO(qna);
             System.out.println("qnaDTO" + qnaDTO);
+
             return qnaDTO;
         } else {
             System.out.println("return null");

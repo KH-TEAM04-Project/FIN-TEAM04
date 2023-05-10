@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 // import { Grid, Button, Container, Stack, Typography } from '@mui/material';
 // components
 // import Iconify from '../components/iconify';
-
+import axios from 'axios';
 // mock
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -16,14 +16,11 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 // ----------------------------------------------------------------------  // 수정 성준 추가
 import Button from '@mui/material/Button';
-
-
-import axios from 'axios';
 import { Modal,Box,Container } from '@mui/material';
-import Label from '../components/label';
+import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 import Iconify from '../components/iconify';
-import Scrollbar from '../components/scrollbar';
-
 // ----------------------------------------------------------------------
 
 
@@ -42,7 +39,7 @@ const style = {
 };
 // ----------------------------------------------------------------------
 
-export default function QnaPage() {
+export default function EoardPage() {
    const handleClose = () => {
         setOpen1(false);
       };
@@ -60,7 +57,7 @@ const [open1, setOpen1] = React.useState(false);
 
   // 성준 추가 (게시글 삭제 관련)
   const handleDelete = (bno) => {
-    axios.get(`/delete/${bno}`).then((response) => {
+    axios.get(`/boardDelete/${bno}`).then((response) => {
       console.log('게시글이 삭제되었습니다.');
       // 삭제 후 게시글 리스트를 다시 불러옴
       getPosts();
@@ -128,7 +125,11 @@ const [open1, setOpen1] = React.useState(false);
                       <p id="parent-modal-description">
                         진짜 글삭제 되는데요?
                       </p>
+<<<<<<< HEAD
                       <Button href="http://localhost:3000/EoardPage" onClick={() => handleDelete(data.qno)}>진짜 삭제</Button>
+=======
+                      <Button href="http://localhost:3000/EoardPage" onClick={() => handleDelete(data.bno)}>진짜 삭제</Button>
+>>>>>>> 65c25d68c6d4f122a032873efa12efb924b0a243
                     </Box>
                      </Modal>
                       </TableCell>

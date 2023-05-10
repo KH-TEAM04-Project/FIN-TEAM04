@@ -16,7 +16,7 @@ public class QnaDTO {
     private Long qno;
     private String title;
     private String content;
-    private Member writer;
+    private String writer;
     private Integer secret; // Boolean 타입으로 수정 확인해야됨
     private Integer hits;
     private LocalDateTime regDate;

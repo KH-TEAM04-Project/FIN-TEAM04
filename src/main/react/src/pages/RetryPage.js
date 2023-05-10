@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 // mock
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -109,7 +109,7 @@ export default function QnaPage() {
               </TableCell>
               <TableCell align="right">{data.qno}</TableCell>
               <TableCell align="right">
-                <Link to={`/BoardReadPage/${data.qno}`}>{data.title}</Link>
+                <Link to={`/QnaReadPage/${data.qno}`}>{data.title}</Link>
               </TableCell>
               <TableCell align="right">{data.content}</TableCell>
               <TableCell align="right">{data.regDate}</TableCell>
