@@ -45,6 +45,9 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 export default function Page404() {
+
+
+
    const { bno } = useParams();
    const [posts, setPosts] = useState([]);
 
@@ -68,10 +71,52 @@ export default function Page404() {
    useEffect(() => {
      getPosts();
    }, []);
+
+         const [data, setData] = useState({
+           title: "",
+           RegDate: "",
+           writer:  "",
+           content: ""
+         });
+       const handleChange = (e) => { const value = e.target.value;
+          setData({
+            ...data,
+            [e.target.name]: value
+          });
+        };
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            const userData = {
+              title: data.title,
+              RegDate: data.RegDate,
+              writer: data.writer,
+              content: data.content
+            };
+            axios
+              .post(`/EditPage/${bno}`, userData)
+              .then((response) => {
+                console.log(response.status, response.data);
+                console.log(response.data);
+              })
+              .catch((error) => {
+                if (error.response) {
+                  console.log("이거 포스트 에러인걸?");
+                  console.log(userData);
+                } else if (error.request) {
+                  console.log("network error");
+                } else {
+                  console.log(error);
+                }
+              });
+          };
+
+
+
+
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/EditPage/{bno}', { replace: true });
+    navigate('/EoardPage', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -226,8 +271,11 @@ export default function Page404() {
         </Toolbar>
       </Container>
     </AppBar>
+
+
      {posts.map((data) => (
-      <Container key={data.bno} Width="10000">
+     <form onSubmit={handleSubmit}>
+      <Container key={data.bno} width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
             게시글 수정 해보세유
@@ -238,23 +286,27 @@ export default function Page404() {
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
 
-          <TextField defaultValue={data.title} name="text" label="제목"
-           sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
+          <TextField  name="text" label="제목"
+          value={data.title}  onChange={handleChange}
+           sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
-          <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자"
+            <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일"
+           value={data.regDate} onChange={handleChange}
+            sx={{my: {  xs: 3, sm: 5 ,mr: 1
+            } }}> {data.regDate}
+            </TextField>
+
+            <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자"
+           value={data.writer} onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1
-          } }}> {data.writer} </TextField>
-
-          <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일"
-                    sx={{my: {  xs: 3, sm: 5 ,mr: 1
-                    } }}> {data.regDate} </TextField>
-
+          } }}> {data.writer}
+          </TextField>
 
 
 
           <TextField
           id="outlined-multiline-static"
-
+           value={data.content} onChange={handleChange}
           multiline
           rows={10}
           defaultValue={data.content}
@@ -282,7 +334,7 @@ export default function Page404() {
           <p id="parent-modal-description">
             수정이 완료됐습니다람쥐.
           </p>
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
+          <LoadingButton fullWidth size="large"  variant="contained" onClick={handleClick}>
        등록
       </LoadingButton>
         </Box>
@@ -290,7 +342,9 @@ export default function Page404() {
 
       </StyledContent2>
       </Container>
+      </form>
  ))}
+
     </>
   );
 }
