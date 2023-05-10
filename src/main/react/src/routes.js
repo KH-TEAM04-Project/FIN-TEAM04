@@ -17,6 +17,8 @@ import EditPage from './pages/EditPage';
 import RetryPage from './pages/RetryPage';
 // import FetchPage from './pages/FetchPage';
 import BoardReadPage from './pages/BoardReadPage';
+import MyPage from './pages/MyPage';
+
 
 
 // ----------------------------------------------------------------------
@@ -40,6 +42,11 @@ export default function Router() {
       path: '/login',
       element: <LoginPage />,
     },
+    {
+      path: '/MyPage',
+      element: <MyPage />
+    }
+    ,
     {
       path: '/SignUp',
       element: <SignUpPage />,

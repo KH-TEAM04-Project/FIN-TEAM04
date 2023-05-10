@@ -1,8 +1,15 @@
 import PropTypes from 'prop-types';
+
 import Address from './Address';
 
 
 export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
+  const { pwd, confirmPassword } =formValues;
+  const isPasswordMatch = pwd === confirmPassword;
+  
+
+  
+  
   return (
     
     <form onSubmit={onFormSubmit}>
@@ -54,7 +61,8 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
         />
       </div>
       <div>
-      <Address /> 
+      <Address
+        /> 
   <input
     type="text"
     id="detailaddress"
@@ -93,16 +101,16 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
         />
       </div>
       <div>
-        
         <input
           type="password"
           id="confirmPassword"
           name="confirmPassword"
-          value={formValues.pwd}
+          value={confirmPassword}
           onChange={onFormChange}
           required
-          placeholder='비밀번호 확인'
+          placeholder="비밀번호 확인"
         />
+        {!isPasswordMatch && <span style={{ color: "red" }}>비밀번호가 일치하지 않습니다.</span>}
       </div>
       <button type="submit">Sign Up</button>
     </form>
