@@ -51,7 +51,7 @@ public class BoardController {
     }
 
     @GetMapping({"/BoardReadPage/{bno}", "/modify/{bno}" })
-    public void read(@PathVariable("bno") Long bno){
+    public  ResponseEntity<BoardDTO> read(@PathVariable("bno") Long bno){
         log.info("상세페이지 컨트롤러");
         /* 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함*/
         log.info("bno: " + bno);
@@ -59,7 +59,7 @@ public class BoardController {
         BoardDTO boardDTO = service.findById(bno);
 
         log.info(boardDTO);
-
+        return ResponseEntity.ok(boardDTO);
 
     }
 
