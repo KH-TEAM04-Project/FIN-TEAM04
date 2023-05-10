@@ -76,7 +76,7 @@ public class Board extends Base {
         //Member member = Member.builder().mname(dto.getWriterName()).build();
 
         Board board = Board.builder()
-                .bno(dto.getBno())
+                //.bno(dto.getBno())
                 .title(dto.getTitle())
                 .content(dto.getContent())
                // .writer(member)
@@ -85,6 +85,18 @@ public class Board extends Base {
         System.out.println("보드 dto -> 엔티티 변환 :" + board);
         return board;
 
+    }
+
+    public static Board toUpdateEntity(BoardDTO boardDTO) {
+        Board board = Board.builder()
+                .bno(boardDTO.getBno())
+                .title(boardDTO.getTitle())
+                .content(boardDTO.getContent())
+                // .writer(member)
+                .build();
+        //  System.out.println("member :" + member);
+        System.out.println("보드 dto -> 엔티티 변환 :" + board);
+        return board;
     }
 
 

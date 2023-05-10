@@ -45,20 +45,20 @@ public class BoardService {
     }
 
     //작성자 없이
-        public List<BoardDTO> findAll() {
-            log.info("서비스 진입");
+    public List<BoardDTO> findAll() {
+        log.info("서비스 진입");
 
-            List<Board> boardEntityList = repository.findAll();
-            log.info(boardEntityList);
+        List<Board> boardEntityList = repository.findAll();
+        log.info(boardEntityList);
 
-            List<BoardDTO>  boardDTOList = new ArrayList<>();
+        List<BoardDTO> boardDTOList = new ArrayList<>();
 
-            for(Board board: boardEntityList) {
-                boardDTOList.add(BoardDTO.entityToDTO(board));
-            }
-            log.info(boardDTOList);
-            return boardDTOList;
+        for (Board board : boardEntityList) {
+            boardDTOList.add(BoardDTO.entityToDTO(board));
         }
+        log.info(boardDTOList);
+        return boardDTOList;
+    }
 
     public void delete(Long bno) {
         System.out.println("서비스 진입");
@@ -69,7 +69,7 @@ public class BoardService {
     public BoardDTO findById(Long bno) {
 
         Optional<Board> optionalBoard = repository.findById(bno);
-        if ( optionalBoard.isPresent()) {
+        if (optionalBoard.isPresent()) {
             System.out.println("if문 진입");
             Board board = optionalBoard.get();
             BoardDTO boardDTO = BoardDTO.entityToDTO(board);
@@ -81,22 +81,18 @@ public class BoardService {
         }
 
     }
+
     @Transactional //레파지토리에서 쿼리문 지정해줬을 경우 일관성,영속성을 위해 @트랜잭션 사용
     public void updateHits(Long bno) {
         repository.updateHits(bno);
 
     }
 
-
-/*    public void modify(BoardDTO boardDTO) {
-        // getOne() : 필요한 순간까지 로딩을 지연하는 방식
-        Board board = repository.getOne(boardDTO.getBno());
-
-        board.changeTitle(boardDTO.getTitle());
-        board.changeContent(boardDTO.getContent());
-
+    public Long update(BoardDTO boardDTO) {
+        Board board = Board.toUpdateEntity(boardDTO);
         repository.save(board);
-    }*/
+        return board.getBno();
+    }
 
 
 }

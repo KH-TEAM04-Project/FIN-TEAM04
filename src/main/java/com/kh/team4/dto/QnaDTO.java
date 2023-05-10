@@ -4,6 +4,7 @@ import com.kh.team4.entity.Member;
 import com.kh.team4.entity.Qna;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,8 +20,8 @@ public class QnaDTO {
     private String writer;
     private Integer secret; // Boolean 타입으로 수정 확인해야됨
     private Integer hits;
-    private LocalDateTime regDate;
-    private LocalDateTime modDate;
+    private LocalDate regDate;
+    private LocalDate modDate;
 
     public static QnaDTO toQnaDTO(Qna qna) {
         QnaDTO qnaDTO = new QnaDTO();
