@@ -35,9 +35,7 @@ public class MemberService {
     }
 
     private final AuthenticationManagerBuilder managerBuilder;
-    private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
 
