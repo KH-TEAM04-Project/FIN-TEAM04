@@ -16,13 +16,13 @@ const StyledContent = styled('div')(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 
-// ----------------------------------------------------------------------
+
 
 export default function Page404() {
   return (
     <>
       <Helmet>
-        <title> 404 Page Not Found | Minimal UI </title>
+        <title> 404 Page Not Found | 꽁머니 </title>
       </Helmet>
 
       <Container>
@@ -43,7 +43,7 @@ export default function Page404() {
           />
 
           <Button to="/" size="large" variant="contained" component={RouterLink}>
-            Go to Home
+           홈페이지로 돌아가기
           </Button>
         </StyledContent>
       </Container>

@@ -49,7 +49,7 @@ export default function Header({ onOpenNav }) {
         <IconButton
           onClick={onOpenNav}
           sx={{
-            mr: 1,
+            mr: 100,
             color: 'text.primary',
             display: { lg: 'none' },
           }}
@@ -58,7 +58,7 @@ export default function Header({ onOpenNav }) {
         </IconButton>
 
         <Searchbar />
-        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ flexGrow: 100 }} />
 
         <Stack
           direction="row"
