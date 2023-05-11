@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -20,8 +21,8 @@ public class QnaDTO {
     private String writer;
     private Integer secret; // Boolean 타입으로 수정 확인해야됨
     private Integer hits;
-    private LocalDate regDate;
-    private LocalDate modDate;
+    private String regDate;
+    private String modDate;
 
     public static QnaDTO toQnaDTO(Qna qna) {
         QnaDTO qnaDTO = new QnaDTO();
@@ -31,7 +32,7 @@ public class QnaDTO {
         qnaDTO.setWriter(qna.getWriter()); // writer 필드에 Member 객체를 설정
         qnaDTO.setSecret(qna.getSecret());
         qnaDTO.setHits(qna.getHits());
-        qnaDTO.setRegDate(qna.getRegDate());
+        qnaDTO.setRegDate(qna.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         return qnaDTO;
     }
