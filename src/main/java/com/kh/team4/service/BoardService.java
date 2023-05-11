@@ -1,8 +1,7 @@
 package com.kh.team4.service;
 
 import com.kh.team4.dto.BoardDTO;
-import com.kh.team4.dto.PageRequestDTO;
-import com.kh.team4.dto.PageResultDTO;
+
 import com.kh.team4.dto.QnaDTO;
 import com.kh.team4.entity.Base;
 import com.kh.team4.entity.Board;
