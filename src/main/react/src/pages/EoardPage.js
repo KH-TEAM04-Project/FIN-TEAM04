@@ -123,7 +123,7 @@ const [open1, setOpen1] = React.useState(false);
                       <Link to={`/BoardReadPage/${data.bno}`}>{data.title}</Link>
                     </TableCell>
                     <TableCell align="right">{data.content}</TableCell>
-                    <TableCell align="right">작성자들</TableCell>
+                    <TableCell align="right">{data.writer}</TableCell>
                     <TableCell align="right">{data.regDate}</TableCell>
                     <TableCell align="right">{data.hits}</TableCell>
                     <TableCell align="right">
