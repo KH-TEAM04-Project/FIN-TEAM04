@@ -1,9 +1,7 @@
 package com.kh.team4.service;
 
 import com.kh.team4.dto.MemberReqDTO;
-import com.kh.team4.dto.MemberResDTO;
-import com.kh.team4.dto.TokenDto;
-import com.kh.team4.entity.Member;
+import com.kh.team4.dto.TokenDTO;
 import com.kh.team4.entity.RefreshToken;
 import com.kh.team4.jwt.TokenProvider;
 import com.kh.team4.repository.MemberRepository;
@@ -26,18 +24,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
-   /* @Transactional
-    public MemberResDTO signup(MemberReqDTO reqDto) {
-        if (memberRepository.existsByMid(reqDto.getMid())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
-        }
-
-        Member member = reqDto.toMember(passwordEncoder);
-        return MemberResDTO.of(memberRepository.save(member));
-    }*/
 
     @Transactional
-    public TokenDto login(MemberReqDTO reqDto) {
+    public TokenDTO login(MemberReqDTO reqDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = reqDto.toAuthentication();
 
@@ -46,14 +35,14 @@ public class AuthService {
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
                 .key(authentication.getName())
                 .value(tokenDto.getRefreshToken())
                 .build();
-
+        System.out.println("힘들어 뒤질각" + refreshToken);
         refreshTokenRepository.save(refreshToken);
 
         // 5. 토큰 발급
@@ -61,7 +50,7 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto reissue(TokenDto tokenReqDTO) {
+    public TokenDTO reissue(TokenDTO tokenReqDTO) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(tokenReqDTO.getRefreshToken())) {
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
@@ -80,7 +69,7 @@ public class AuthService {
         }
 
         // 5. 새로운 토큰 생성
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 6. 저장소 정보 업데이트
         RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
