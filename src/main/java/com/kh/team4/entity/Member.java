@@ -6,6 +6,7 @@ import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.QnaDTO;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -96,4 +97,18 @@ public class Member {
         return member;
     }
 
+
+    public static Member dtoToEntity2(MemberReqDTO memberReqDTO, PasswordEncoder passwordEncoder) {
+
+        Member member = Member.builder()
+                .email(memberReqDTO.getEmail())
+                .mid(memberReqDTO.getMid())
+                .ph(memberReqDTO.getPh())
+                .regno(memberReqDTO.getRegno())
+                .mname(memberReqDTO.getMname())
+                .pwd(passwordEncoder.encode(memberReqDTO.getPwd()))
+                .authority(Authority.ROLE_USER)
+                .build();
+        return member;
+    }
 }

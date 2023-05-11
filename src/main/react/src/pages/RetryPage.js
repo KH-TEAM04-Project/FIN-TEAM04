@@ -60,7 +60,17 @@ export default function QnaPage() {
         axios.get('/re').then((response) => {
             setPosts(response.data);
             console.log(response.data);
-        });
+        })
+           .catch((error) => {
+                if (error.response) {
+                  console.log("이거 에러인걸?");
+
+                } else if (error.request) {
+                  console.log("network error");
+                } else {
+                  console.log(error);
+                }
+              });
     };
 
     // 성준 추가 (게시글 삭제 관련
@@ -78,10 +88,13 @@ export default function QnaPage() {
 
   return (
     <>
+
       <Helmet>
         <title> retry | Minimal UI </title>
       </Helmet>
-
+      <Button href='http://localhost:3000/DoardPage' variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+        QnA 작성하기
+      </Button>
   
     <TableContainer component={Paper} align="center">
       <Table sx={{ maxWidth: 2000 }} aria-label="simple table">
@@ -109,16 +122,20 @@ export default function QnaPage() {
               </TableCell>
               <TableCell align="right">{data.qno}</TableCell>
               <TableCell align="right">
-                <Link to={`/QnaReadPage/${data.qno}`}>{data.title}</Link>
+                <Link to={`/QnaReadPage/{data.qno}`}>{data.title}</Link>
               </TableCell>
               <TableCell align="right">{data.content}</TableCell>
               <TableCell align="right">{data.regDate}</TableCell>
               <TableCell align="right">조회수</TableCell>
               <TableCell align="right">{data.writer}</TableCell>
               <TableCell align="right">
-                  <Button href="http://localhost:3000/EditPage">
+
+                   <Link to={`/QnaReadPage/{data.qno}`}>
+                   <Button>
                           <Iconify  icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-                         글 수 정</Button>
+                         글 수 정
+                         </Button>
+                         </Link>
 
 
                  <Button color='error' onClick={handleOpen}>
@@ -143,12 +160,12 @@ export default function QnaPage() {
         </TableBody>
       </Table>
     </TableContainer>
-            <Container align="center">
-         <Stack spacing={3} >
+              <Container align="right">
+              <Stack alignItems="center" margin-top="auto" spacing={3} >
               <Typography  >Page: {page}</Typography>
               <Pagination  count={10} page={page} onChange={handleChange} />
-            </Stack>
-            </Container>
+              </Stack>
+              </Container>
     </>
   );
 }

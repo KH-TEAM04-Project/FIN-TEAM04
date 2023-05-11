@@ -42,6 +42,7 @@ public class BoardController {
 
         return boardDTOList;
     }
+
     @GetMapping("/boardDelete/{bno}")
     public String delete(@PathVariable("bno") Long bno) {
         System.out.println("삭제 컨트롤러");
@@ -50,8 +51,8 @@ public class BoardController {
         return "/delete";
     }
 
-    @GetMapping({"/BoardReadPage/{bno}", "/modify/{bno}" })
-    public void read(@PathVariable("bno") Long bno){
+    @GetMapping({"/BoardReadPage/{bno}", "/EditPage/{bno}"})
+    public ResponseEntity<BoardDTO> read(@PathVariable("bno") Long bno) {
         log.info("상세페이지 컨트롤러");
         /* 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함*/
         log.info("bno: " + bno);
@@ -59,31 +60,17 @@ public class BoardController {
         BoardDTO boardDTO = service.findById(bno);
 
         log.info(boardDTO);
-
+        return ResponseEntity.ok(boardDTO);
 
     }
 
+    @PostMapping("/EditPage/{bno}")
+    public ResponseEntity<Long> update(@RequestBody BoardDTO dto) {
+        log.info("업데이트 컨트롤러 진입");
+        //새로 추가된 엔티티의 번호
+        Long bno = service.update(dto);
 
-
-  /*  @GetMapping("/BoardReadPage/{bno}")
-    public String (@PathVariable Long mno) {
-    BoardDTO boardDTO = service.findById(mno);
-    return boardDTO;
-    }*/
-    /*
-    @PostMapping("/BoardReadPage/{bno}")
-    public String updateForm(@PathVariable BoardDTO boardDTO) {
-        //BoardDTO board = service.modify(boardDTO);
-        return board.toString();
-        return "redirect:/boardRead/" + boardDTO.getBno();
-    }*/
-
-/*    @GetMapping("/board")
-    public String boardList() {
-        log.info("컨트롤러 진입");
-    List<BoardDTO> boardDTOList = service.findAll();
-        return null ;
-    }*/
-
-
+        log.info("수정 완료 BNO: " + bno);
+        return ResponseEntity.ok(bno);
+    }
 }

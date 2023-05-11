@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
-import React, { useState, useEffect } from 'react';
-import { useParams ,useNavigate} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link,useParams ,useNavigate} from 'react-router-dom';
 import axios from 'axios';
-
+import TableCell from '@mui/material/TableCell';
 // @mui
 import { styled } from '@mui/material/styles';
 import { TextField, Typography, Container,Stack,Button,Box,Modal,
@@ -44,22 +44,30 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 
-export default function QnaReadPage() {
-    const { qno } = useParams();
-     const [posts, setPosts] = useState([]);
+export default function Page404() {
+   const { qno } = useParams();
+   const [posts, setPosts] = useState([]);
 
-        const getPost = (qno) => {
-            axios.get(`/QnaReadPage/${qno}`).then((response) => {
-                setPosts(response.data);
-                 console.log(response.data);
-                 console.log("yaya");
-            });
-        };
+   const getPosts = () => {
+     axios.get(`/BoardReadPage/${qno}`).then((response) => {
+       setPosts([response.data]); // 배열 형태로 설정
+       console.log(response.data);
+       console.log("yaya");
+     })
+     .catch((error) => {
+       if (error.response) {
+         console.log("이거 에러인걸?");
+       } else if (error.request) {
+         console.log("network error");
+       } else {
+         console.log(error);
+       }
+     });
+   };
 
-       useEffect(() => {
-           getPost(qno);
-         }, [qno]);
-
+   useEffect(() => {
+     getPosts();
+   }, []);
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -94,7 +102,7 @@ export default function QnaReadPage() {
   return (
     <>
       <Helmet>
-        <title> QnA보기| 꽁머니 </title>
+        <title> 게시글보기| 꽁머니 </title>
       </Helmet>
 
       <AppBar position="static">
@@ -222,7 +230,7 @@ export default function QnaReadPage() {
       <Container key={data.qno} Width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            게시글 보세유
+            QNA 보세유
           </Typography>
 
           <Typography sx={{ color: 'text.secondary' }}>
@@ -230,26 +238,28 @@ export default function QnaReadPage() {
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
 
-          <TextField name="text" label="제목" readOnly disabled
+          <TextField defaultValue={data.title} name="text" label="제목" readOnly disabled
            sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
 
-          <TextField color="secondary"   name="text" label="작성자" disabled
+          <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자" disabled
           sx={{my: {  xs: 3, sm: 5 ,mr: 1
           } }}> {data.writer} </TextField>
 
+          <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일" disabled
+                    sx={{my: {  xs: 3, sm: 5 ,mr: 1
+                    } }}> {data.regDate} </TextField>
 
 
 
 
-
-          <TextField readOnly disabled
+          <TextField
           id="outlined-multiline-static"
-          label="내용"
+
           multiline
           rows={10}
+          defaultValue={data.content}
 
-          defaultValue=" 글 작성"
-        >{data.content}</TextField>
+        ><TableCell >{data.content}</TableCell>}</TextField>
 
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
       <Button variant="contained" component="label">

@@ -1,6 +1,8 @@
 import { Helmet } from 'react-helmet-async';
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link,useParams ,useNavigate} from 'react-router-dom';
+import axios from 'axios';
+import TableCell from '@mui/material/TableCell';
 // @mui
 import { styled } from '@mui/material/styles';
 import { TextField, Typography, Container,Stack,Button,Box,Modal,
@@ -39,18 +41,82 @@ const style = {
 // ----------------------------------------------------------------------
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+
+
 export default function Page404() {
-  
+
+
+
+   const { bno } = useParams();
+   const [posts, setPosts] = useState([]);
+
+   const getPosts = () => {
+     axios.get(`/EditPage/${bno}`).then((response) => {
+       setPosts([response.data]); // 배열 형태로 설정
+       console.log(response.data);
+       console.log("yaya");
+     })
+     .catch((error) => {
+       if (error.response) {
+         console.log("이거 에러인걸?");
+       } else if (error.request) {
+         console.log("network error");
+       } else {
+         console.log(error);
+       }
+     });
+   };
+
+   useEffect(() => {
+     getPosts();
+   }, []);
+
+         const [data, setData] = useState({
+           title: "",
+           RegDate: "",
+           writer:  "",
+           content: ""
+         });
+       const handleChange = (e) => { const value = e.target.value;
+          setData({
+            ...data,
+            [e.target.name]: value
+          });
+        };
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            const userData = {
+              title: data.title,
+              RegDate: data.RegDate,
+              writer: data.writer,
+              content: data.content
+            };
+            axios
+              .post(`/EditPage/${bno}`, userData)
+              .then((response) => {
+                console.log(response.status, response.data);
+                console.log(response.data);
+              })
+              .catch((error) => {
+                if (error.response) {
+                  console.log("이거 포스트 에러인걸?");
+                  console.log(userData);
+                } else if (error.request) {
+                  console.log("network error");
+                } else {
+                  console.log(error);
+                }
+              });
+          };
 
 
 
 
-
-  // const [value, setValue] = React.useState<number ||  null>(2);
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/board', { replace: true });
+    navigate('/EoardPage', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -81,9 +147,9 @@ export default function Page404() {
   return (
     <>
       <Helmet>
-        <title> 게시글 수정| 꽁머니 </title>
+        <title> 게시글보기| 꽁머니 </title>
       </Helmet>
-   
+
       <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -92,7 +158,7 @@ export default function Page404() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href="/Main"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -205,46 +271,57 @@ export default function Page404() {
         </Toolbar>
       </Container>
     </AppBar>
-    
-      <Container Width="10000">
+
+
+     {posts.map((data) => (
+     <form onSubmit={handleSubmit}>
+      <Container key={data.bno} width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            게시글 수정하세유
+            게시글 수정 해보세유
           </Typography>
-      
+
           <Typography sx={{ color: 'text.secondary' }}>
-        무엇이든 물어보세유 
+        무엇이든 보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-         
-          <TextField name="text" label="제목"
-          sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
-          <TextField color="secondary"   name="text" label="작성자"
+          <TextField  name="text" label="제목"
+          value={data.title}  onChange={handleChange}
+           sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
+
+            <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일"
+           value={data.regDate} onChange={handleChange}
+            sx={{my: {  xs: 3, sm: 5 ,mr: 1
+            } }}> {data.regDate}
+            </TextField>
+
+            <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자"
+           value={data.writer} onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1
-          } }}/>  
-        
-                
-            
-           
-        
+          } }}> {data.writer}
+          </TextField>
+
+
+
           <TextField
           id="outlined-multiline-static"
-          label="내용"
+           value={data.content} onChange={handleChange}
           multiline
           rows={10}
-          defaultValue=" 글 작성"
-        />
-       
+          defaultValue={data.content}
+
+        ><TableCell >{data.content}</TableCell>}</TextField>
+
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
       <Button variant="contained" component="label">
         재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
         <input hidden accept="image/*" multiple type="file" />
-        
+
       </Button>
       </Stack>
-         
-      
+
+
       <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
       <Modal
         open={open}
@@ -257,14 +334,16 @@ export default function Page404() {
           <p id="parent-modal-description">
             수정이 완료됐습니다람쥐.
           </p>
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
+          <LoadingButton fullWidth size="large"  variant="contained" onClick={handleClick}>
        등록
       </LoadingButton>
         </Box>
       </Modal>
-  
+
       </StyledContent2>
       </Container>
+      </form>
+ ))}
 
     </>
   );
