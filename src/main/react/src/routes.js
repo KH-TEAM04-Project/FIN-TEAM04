@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
+
 import BoardPage from './pages/BoardPage';
 import CoardPage from './pages/CoardPage';
 import DoardPage from './pages/DoardPage';
@@ -18,8 +19,11 @@ import EditPage from './pages/EditPage';
 import RetryPage from './pages/RetryPage';
 // import FetchPage from './pages/FetchPage';
 import BoardReadPage from './pages/BoardReadPage';
+
 import MyPage from './pages/MyPage';
 import QnaReadPage from './pages/QnaReadPage';
+import IdPwPage from './pages/IdPwPage';
+
 
 // ----------------------------------------------------------------------
 export default function Router() {
@@ -45,15 +49,24 @@ export default function Router() {
       element: <LoginPage />,
     },
     {
+
+      path: '/login',
+      element: <LoginPage />,
+    },
+    {
       path: '/MyPage',
       element: <MyPage />
     }
     ,
     {
+
       path: '/SignUp',
       element: <SignUpPage />,
     },
-
+    {
+      path: '/IdPw',
+      element: <IdPwPage />,
+    },
     {
       path: '/Coardpage',
       element: <CoardPage />,
@@ -67,6 +80,7 @@ export default function Router() {
       element: <EditPage />,
     },
     {
+
       element: <BoardReadPage />,
       path: '/BoardReadPage',
 
@@ -82,6 +96,30 @@ export default function Router() {
     {
       element: <EditPage />,
       path: '/EditPage/:bno',
+    },
+    {
+
+      element: <BoardReadPage />,
+      path: '/BoardReadPage',
+
+    },
+    {
+      element: <QnaReadPage />,
+      path: '/QnaReadPage:qno',
+    },
+    {
+      element: <BoardReadPage />,
+      path: '/BoardReadPage:bno',
+    }
+    ,
+    {
+      path: '/re',
+      element: <RetryPage />
+    },
+    {
+      path: '/BoardReadPage',
+      element: <BoardReadPage />
+
     },
     {
       element: <SimpleLayout />,
