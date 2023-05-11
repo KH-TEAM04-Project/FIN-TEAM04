@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @ToString
 public class MemberController {
     private final MemberService memberService;
-    private final JavaMailSender javaMailSender;
+    // private final JavaMailSender javaMailSender;
 
 
     //회원가입 기능 구현

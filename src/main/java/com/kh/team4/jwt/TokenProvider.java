@@ -1,7 +1,7 @@
 package com.kh.team4.jwt;
 
 
-import com.kh.team4.dto.TokenDto;
+import com.kh.team4.dto.TokenDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -50,7 +50,7 @@ public class TokenProvider {
 
 
     // 토큰 생성
-    public TokenDto generateTokenDto(Authentication authentication) { // 매개변수 받아서 String으로 변환
+    public TokenDTO generateTokenDto(Authentication authentication) { // 매개변수 받아서 String으로 변환
         // 권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -77,7 +77,7 @@ public class TokenProvider {
                 .compact();
 
         System.out.println("토큰생성 ing~");
-        return TokenDto.builder()
+        return TokenDTO.builder()
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
                 .tokenExpiresIn(tokenExpiresIn.getTime())
