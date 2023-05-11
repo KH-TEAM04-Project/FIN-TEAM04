@@ -75,7 +75,7 @@ public class QnAController {
     }
 
     //재연 추가 수정
-    @PostMapping("/QEditPage/{bno}")
+    @PostMapping("/QEditPage/{qno}")
     public ResponseEntity<Long> update(@RequestBody QnaDTO qnaDTO) {
         log.info("업데이트 컨트롤러 진입");
         //새로 추가된 엔티티의 번호

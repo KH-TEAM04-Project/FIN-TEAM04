@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -64,13 +65,14 @@ public class BoardController {
 
     }
 
-    @PostMapping("/EditPage/{bno}")
-    public ResponseEntity<Long> update(@RequestBody BoardDTO dto) {
-        log.info("업데이트 컨트롤러 진입");
-        //새로 추가된 엔티티의 번호
-        Long bno = service.update(dto);
-        log.info("yayayaya y 서버오류?");
-        log.info("수정 완료 BNO: " + bno);
-        return ResponseEntity.ok(bno);
-    }
+
+        @PostMapping("/EditPage/{bno}")
+        public ResponseEntity<Long> update(@RequestBody BoardDTO dto) {
+            log.info("업데이트 컨트롤러 진입");
+            //새로 추가된 엔티티의 번호
+            Long bno = service.modify(dto);
+            log.info("수정 완료 BNO: " + bno);
+            return ResponseEntity.ok(bno);
+        }
+
 }

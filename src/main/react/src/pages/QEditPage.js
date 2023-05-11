@@ -58,7 +58,7 @@ export default function Page404() {
 
    const getPosts = useCallback(() => {
      axios
-       .get(`/EditPage/${qno}`)
+       .get(`/QEditPage/${qno}`)
        .then((response) => {
          setPosts([response.data]);
          console.log(response.data);
@@ -94,7 +94,7 @@ export default function Page404() {
          content: data.content,
        };
        axios
-         .post(`/EditPage/${qno}`, userData)
+         .post(`/QEditPage/${qno}`, userData)
          .then((response) => {
            console.log(response.status, response.data);
            console.log(response.data);

@@ -87,14 +87,26 @@ public class BoardService {
 
     }
 
-    public Long update(BoardDTO boardDTO) {
-        log.info("board DTO"+boardDTO);
-        Board board = Board.toUpdateEntity(boardDTO);
+    /*
+        public Long update(BoardDTO boardDTO) {
+            log.info("board DTO"+boardDTO);
+            Board board = Board.toUpdateEntity(boardDTO);
+            repository.save(board);
+            log.info("board: "+board);
+            return board.getBno();
+        }
+    */
+    @Transactional
+    public Long modify(BoardDTO boardDTO) {
+        // getOne() : 필요한 순간까지 로딩을 지연하는 방식
+        Board board = repository.getOne(boardDTO.getBno());
+
+        board.changeTitle(boardDTO.getTitle());
+        board.changeContent(boardDTO.getContent());
+
         repository.save(board);
-        log.info("board: "+board);
         return board.getBno();
     }
-
 
 }
 
