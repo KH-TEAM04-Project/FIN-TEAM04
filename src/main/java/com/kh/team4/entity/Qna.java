@@ -1,5 +1,6 @@
 package com.kh.team4.entity;
 
+import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.QnaDTO;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -71,4 +72,13 @@ public class Qna extends Base {
         return qna;
     }
 
+    public static Qna toUpdateEntity(QnaDTO qnaDTO) {
+        Qna qna = Qna.builder()
+                .qno(qnaDTO.getQno())
+                .title(qnaDTO.getTitle())
+                .content(qnaDTO.getContent())
+                .build();
+        System.out.println("보드 dto -> 엔티티 변환 :" + qna);
+        return qna;
+    }
 }

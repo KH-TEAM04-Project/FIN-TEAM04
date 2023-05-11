@@ -1,5 +1,6 @@
 package com.kh.team4.controller;
 
+import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.QnaDTO;
 import com.kh.team4.service.QnaService;
 import lombok.RequiredArgsConstructor;
@@ -46,9 +47,9 @@ public class QnAController {
     }
 
     // 상세보기 페이지
-    @GetMapping("/QnaReadPage/{qno}")    // id 값을 받아온다.
+    @GetMapping({"/QnaReadPage/{qno}", "/QEditPage/{qno}"})    // id 값을 받아온다.
     public ResponseEntity<QnaDTO> findById(@PathVariable Long qno) {
-        log.info("상세보기 컨트롤러 진입");
+        log.info("상세보기/수정 컨트롤러 진입");
         // 만약에 페이지 요청이 없는 경우도 있을 수 있으니 @PageableDefault 사용
         // 경로상의 값을 가져올 때는 @PathVariable 라는 어노테이션을 사용한다.
 
@@ -72,4 +73,16 @@ public class QnAController {
         System.out.println("서비스에서 delete 함수 호출");
         return "/delete";
     }
+
+    //재연 추가 수정
+    @PostMapping("/QEditPage/{bno}")
+    public ResponseEntity<Long> update(@RequestBody QnaDTO qnaDTO) {
+        log.info("업데이트 컨트롤러 진입");
+        //새로 추가된 엔티티의 번호
+        Long qno = qnaService.update(qnaDTO);
+
+        log.info("수정 완료 qna: " + qno);
+        return ResponseEntity.ok(qno);
+    }
+
 }

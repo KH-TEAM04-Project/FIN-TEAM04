@@ -1,6 +1,8 @@
 package com.kh.team4.service;
 
+import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.QnaDTO;
+import com.kh.team4.entity.Board;
 import com.kh.team4.entity.Qna;
 import com.kh.team4.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +73,17 @@ public class QnaService {
         }
         System.out.println("for문 완료, 컨트롤러로 리턴");
         return qnaDTOList;    // for 문이 끝나면 리스트를 컨트롤러로 리턴해준다.
+    }
+    @Transactional //레파지토리에서 쿼리문 지정해줬을 경우 일관성,영속성을 위해 @트랜잭션 사용
+    public void updateHits(Long qno) {
+        qnaRepository.updateHits(qno);
+
+    }
+
+    public Long update(QnaDTO qnaDTO) {
+        Qna qna = Qna.toUpdateEntity(qnaDTO);
+        qnaRepository.save(qna);
+        return qna.getQno();
     }
 
 
