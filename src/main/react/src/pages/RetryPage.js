@@ -122,7 +122,7 @@ export default function QnaPage() {
               </TableCell>
               <TableCell align="right">{data.qno}</TableCell>
               <TableCell align="right">
-                <Link to={`/QnaReadPage/{data.qno}`}>{data.title}</Link>
+                <Link to={`/QnaReadPage/${data.qno}`}>{data.title}</Link>
               </TableCell>
               <TableCell align="right">{data.content}</TableCell>
               <TableCell align="right">{data.regDate}</TableCell>
@@ -130,7 +130,7 @@ export default function QnaPage() {
               <TableCell align="right">{data.writer}</TableCell>
               <TableCell align="right">
 
-                   <Link to={`/QnaReadPage/{data.qno}`}>
+                   <Link to={`/QEditPage/${data.qno}`}>
                    <Button>
                           <Iconify  icon={'eva:edit-fill'} sx={{ mr: 2 }} />
                          글 수 정

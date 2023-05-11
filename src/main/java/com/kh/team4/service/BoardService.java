@@ -89,8 +89,10 @@ public class BoardService {
     }
 
     public Long update(BoardDTO boardDTO) {
+        log.info("board DTO"+boardDTO);
         Board board = Board.toUpdateEntity(boardDTO);
         repository.save(board);
+        log.info("board: "+board);
         return board.getBno();
     }
 

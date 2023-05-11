@@ -53,7 +53,7 @@ public class BoardController {
 
     @GetMapping({"/BoardReadPage/{bno}", "/EditPage/{bno}"})
     public ResponseEntity<BoardDTO> read(@PathVariable("bno") Long bno) {
-        log.info("상세페이지 컨트롤러");
+        log.info("상세페이지/수정 컨트롤러");
         /* 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함*/
         log.info("bno: " + bno);
         service.updateHits(bno);
@@ -69,7 +69,7 @@ public class BoardController {
         log.info("업데이트 컨트롤러 진입");
         //새로 추가된 엔티티의 번호
         Long bno = service.update(dto);
-
+        log.info("yayayaya y 서버오류?");
         log.info("수정 완료 BNO: " + bno);
         return ResponseEntity.ok(bno);
     }

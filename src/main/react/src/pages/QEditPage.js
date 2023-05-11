@@ -1,8 +1,7 @@
 import { Helmet } from 'react-helmet-async';
-import React, { useEffect, useState } from 'react';
-import { Link,useParams ,useNavigate} from 'react-router-dom';
+import React, {useCallback, useEffect, useState } from 'react';
+import { useParams ,useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import TableCell from '@mui/material/TableCell';
 // @mui
 import { styled } from '@mui/material/styles';
 import { TextField, Typography, Container,Stack,Button,Box,Modal,
@@ -46,32 +45,87 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function Page404() {
    const { qno } = useParams();
+
+   const [data, setData] = useState({
+     qno : "",
+     title: "",
+     regDate: "",
+     writer: "",
+     content: "",
+   });
+
    const [posts, setPosts] = useState([]);
 
-   const getPosts = () => {
-     axios.get(`/QnaReadPage/${qno}`).then((response) => {
-       setPosts([response.data]); // 배열 형태로 설정
-       console.log(response.data);
-       console.log("yaya");
-     })
-     .catch((error) => {
-       if (error.response) {
-         console.log("이거 에러인걸?");
-       } else if (error.request) {
-         console.log("network error");
-       } else {
-         console.log(error);
-       }
-     });
-   };
+   const getPosts = useCallback(() => {
+     axios
+       .get(`/EditPage/${qno}`)
+       .then((response) => {
+         setPosts([response.data]);
+         console.log(response.data);
+         console.log("yaya");
+       })
+       .catch((error) => {
+         if (error.response) {
+           console.log("이거 에러인걸?");
+         } else if (error.request) {
+           console.log("network error");
+         } else {
+           console.log(error);
+         }
+       });
+   }, [qno]);
+
+   const handleChange = useCallback((e) => {
+     const value = e.target.value;
+     setData((prevData) => ({
+       ...prevData,
+       [e.target.name]: value,
+     }));
+   }, []);
+
+   const handleSubmit = useCallback(
+     (e) => {
+       e.preventDefault();
+       const userData = {
+         qno: data.qno,
+         title: data.title,
+         regDate: data.regDate,
+         writer: data.writer,
+         content: data.content,
+       };
+       axios
+         .post(`/EditPage/${qno}`, userData)
+         .then((response) => {
+           console.log(response.status, response.data);
+           console.log(response.data);
+         })
+         .catch((error) => {
+           if (error.response) {
+             console.log("이거 포스트 에러인걸?");
+             console.log(userData);
+             console.log(error.response.data);
+           } else if (error.request) {
+             console.log("network error");
+           } else {
+             console.log(error);
+           }
+         });
+     },
+     [data, qno]
+   );
 
    useEffect(() => {
-     getPosts();
-   }, []);
+     if (qno) {
+       getPosts();
+     }
+   }, [qno, getPosts]);
+
+
+
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/re', { replace: true });
+    navigate('/EoardPage', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -226,40 +280,48 @@ export default function Page404() {
         </Toolbar>
       </Container>
     </AppBar>
+
+
      {posts.map((data) => (
-      <Container key={data.qno} Width="10000">
+<form onSubmit={handleSubmit} key={data.qno}>
+      <Container  width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            QNA 보세유
+            게시글 수정 해보세유
           </Typography>
 
           <Typography sx={{ color: 'text.secondary' }}>
         무엇이든 보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
+           <TextField name="qno" label="게시글 번호"
+                      defaultValue={data.qno} onChange={handleChange}
+                      sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
-          <TextField defaultValue={data.title} name="text" label="제목" readOnly disabled
-           sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
+          <TextField name="title" label="제목"
+            defaultValue={data.title} onChange={handleChange}
+            sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
-          <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자" disabled
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1
-          } }}> {data.writer} </TextField>
+          <TextField name="regDate" label="작성일"
+            defaultValue={data.regDate} onChange={handleChange}
+            sx={{my: {  xs: 3, sm: 5 ,mr: 1 } }}>
+            {data.regDate}
+          </TextField>
 
-          <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일" disabled
-                    sx={{my: {  xs: 3, sm: 5 ,mr: 1
-                    } }}> {data.regDate} </TextField>
-
-
-
+          <TextField name="writer" label="작성자"
+            defaultValue={data.writer} onChange={handleChange}
+            sx={{my: {  xs: 3, sm: 5 ,mr: 1 } }}>
+            {data.writer}
+          </TextField>
 
           <TextField
-          id="outlined-multiline-static"
-
-          multiline
-          rows={10}
-          defaultValue={data.content}
-
-        ><TableCell >{data.content}</TableCell>}</TextField>
+            id="outlined-multiline-static"
+            name="content"
+            defaultValue={data.content} onChange={handleChange}
+            multiline
+            rows={10}
+            >{data.content}
+          </TextField>
 
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
       <Button variant="contained" component="label">
@@ -282,7 +344,7 @@ export default function Page404() {
           <p id="parent-modal-description">
             수정이 완료됐습니다람쥐.
           </p>
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
+          <LoadingButton fullWidth size="large"  variant="contained" onClick={handleClick}>
        등록
       </LoadingButton>
         </Box>
@@ -290,7 +352,9 @@ export default function Page404() {
 
       </StyledContent2>
       </Container>
+</form>
  ))}
+
     </>
   );
 }
