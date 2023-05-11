@@ -13,11 +13,41 @@ import { SignUpPage } from '../sections/auth/SignUp';
 export default function SignUpPage() {
     const mdUp = useResponsive('up', 'md');
   
+<<<<<<< HEAD
     return (
       <>
         <Helmet>
           <title> Login | Minimal UI </title>
         </Helmet>
+=======
+  const [formValues, setFormValues] = useState({
+    mname: "",
+    mid: "",
+    regno: "",
+    email: "",
+    pwd: "",
+    detailaddress: "",
+    address: "",
+    ph: "",
+    
+  });
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    console.log('Submitted form:', formValues);
+    axios.post("/SignUp2",formValues)
+
+    .then(response => {
+      console.log(response.aaa);
+      // 회원가입 성공 후 처리할 로직 작성
+    })
+    .catch(error => {
+      console.error(error);
+      // 회원가입 실패 후 처리할 로직 작성
+    });
+  };
+
+>>>>>>> parent of 2234eb0 (회원삭제폼 추가)
   
         <StyledRoot>
           <Logo
