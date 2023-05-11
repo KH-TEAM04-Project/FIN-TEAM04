@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
-import * as React from 'react';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import axios from "axios";
 // @mui
 import {
   Card,
@@ -169,11 +169,19 @@ const [open1, setOpen1] = React.useState(false);
   const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
+// 여기는 axios 스껄
+  // function Board1() {
+  //   const [data, setdata] = useState([]);
+  //   useEffect(() => {
+  //       axios.get('/api/list')
+  //           .then(response => setdata(response.data))
+  //           .catch(error => console.log(error))
+  //   }, []);
 
   return (
     <>
       <Helmet>
-        <title> 게시판판 | 꽁머니 </title>
+        <title> 게시판 | 꽁머니 </title>
       </Helmet>
 
       <Container>

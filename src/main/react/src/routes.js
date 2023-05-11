@@ -9,20 +9,21 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+
 import BoardPage from './pages/BoardPage';
 import CoardPage from './pages/CoardPage';
 import DoardPage from './pages/DoardPage';
+import EoardPage from './pages/EoardPage';
 import SignUpPage from './pages/SignUpPage';
 import EditPage from './pages/EditPage';
 import RetryPage from './pages/RetryPage';
 // import FetchPage from './pages/FetchPage';
 import BoardReadPage from './pages/BoardReadPage';
->>>>>>> a92fe0addbddf82948087449d0e5b4e21940a557
 
-=======
+import MyPage from './pages/MyPage';
+import QnaReadPage from './pages/QnaReadPage';
+import IdPwPage from './pages/IdPwPage';
+
 import BoardPage from './pages/BoardPage';
 import CoardPage from './pages/CoardPage';
 import DoardPage from './pages/DoardPage';
@@ -34,7 +35,6 @@ import RetryPage from './pages/RetryPage';
 import BoardReadPage from './pages/BoardReadPage';
 import MyPage from './pages/MyPage';
 import QnaReadPage from './pages/QnaReadPage';
->>>>>>> parent of 2234eb0 (회원삭제폼 추가)
 
 // ----------------------------------------------------------------------
 export default function Router() {
@@ -50,7 +50,9 @@ export default function Router() {
         { path: '/products', element: <ProductsPage /> },
         { path: '/blog', element: <BlogPage /> },
         { path: '/board', element: <BoardPage /> },
-      
+        { path: '/re', element: <RetryPage /> },
+        { path: 'EoardPage', element: <EoardPage/> }
+
       ],
     },
     {
@@ -58,22 +60,23 @@ export default function Router() {
       element: <LoginPage />,
     },
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
+
       path: '/login',
       element: <LoginPage />,
-=======
+
       path: '/MyPage',
       element: <MyPage />
     }
     ,
     {
-=======
->>>>>>> a92fe0addbddf82948087449d0e5b4e21940a557
+
       path: '/SignUp',
       element: <SignUpPage />,
     },
-
+    {
+      path: '/IdPw',
+      element: <IdPwPage />,
+    },
     {
       path: '/Coardpage',
       element: <CoardPage />,
@@ -87,7 +90,24 @@ export default function Router() {
       element: <EditPage />,
     },
     {
-<<<<<<< HEAD
+
+      element: <BoardReadPage />,
+      path: '/BoardReadPage',
+
+    },
+    {
+      element: <QnaReadPage />,
+      path: '/QnaReadPage/:qno',
+    },
+    {
+      element: <BoardReadPage />,
+      path: '/BoardReadPage/:bno',
+    },
+    {
+      element: <EditPage />,
+      path: '/EditPage/:bno',
+
+
       element: <BoardReadPage />,
       path: '/BoardReadPage',
 
@@ -99,15 +119,14 @@ export default function Router() {
     {
       element: <BoardReadPage />,
       path: '/BoardReadPage:bno',
->>>>>>> parent of 2234eb0 (회원삭제폼 추가)
-=======
+
       path: '/re',
       element: <RetryPage />
     },
     {
       path: '/BoardReadPage',
       element: <BoardReadPage />
->>>>>>> a92fe0addbddf82948087449d0e5b4e21940a557
+
     },
     {
       element: <SimpleLayout />,

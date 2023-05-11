@@ -9,10 +9,6 @@ import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from "axios";
 // ----------------------------------------------------------------------
 
@@ -42,7 +38,7 @@ const style = {
 // ----------------------------------------------------------------------
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-export default function Page404() {
+export default function DoardPage() {
   const [data, setData] = useState({
     title: "",
     RegDate: "",
@@ -50,11 +46,12 @@ export default function Page404() {
     content: ""
   });
 
-  const handleChange = (e) => { const value = e.target.value;
-    setData({
-      ...data,
-      [e.target.name]: value
-    });
+  const handleChange = ({ target }) => {
+    const { value, name } = target;
+    setData((prevData) => ({
+        ...prevData,
+        [name]: value
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -82,22 +79,22 @@ export default function Page404() {
       });
   };
 
-
-  const [value, setValue] = React.useState('today');
-
   // const [value, setValue] = React.useState<number ||  null>(2);
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate('/QnA', { replace: true });
-  };
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+    const handleClick = () => {
+      navigate('/re', { replace: true });
+    };
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -263,27 +260,11 @@ export default function Page404() {
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
 
-           
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker', 'DatePicker']}>
-            <DatePicker
-                label="작성 날짜"
-                value={data.date}
-                defaultValue={value}
-                onChange={(newValue) => setValue(newValue)}
-                onChange={handleChange}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-
           <TextField    name="writer" label="작성자" 
           value={data.writer}
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
-        
-                
-            
-           
+
         <TextField    name="content" label="내용" 
           value={data.content}
           multiline

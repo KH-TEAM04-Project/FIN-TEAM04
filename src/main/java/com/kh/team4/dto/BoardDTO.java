@@ -1,6 +1,11 @@
 package com.kh.team4.dto;
 
+import com.kh.team4.entity.Base;
+import com.kh.team4.entity.Board;
+import com.kh.team4.entity.Member;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 // DTO(Data Transfer Object), VO, Bean,
@@ -16,8 +21,23 @@ public class BoardDTO {
     private Long bno;
     private String title;
     private String content;
-    private String writerId; //작성자
-    private Integer hits;
-    private LocalDateTime regDate;
-    private LocalDateTime modDate;
-    }
+    private String writerName; //작성자
+    private Integer hits; //조회수
+    private LocalDate regDate;//작성일
+    private LocalDate modDate;
+
+
+
+    public static BoardDTO entityToDTO(Board board) {
+
+            BoardDTO boardDTO = BoardDTO.builder()
+                    .bno(board.getBno())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .regDate(board.getRegDate())
+                    .hits(board.getHits())
+                    .build();
+            return boardDTO;
+        }
+
+}

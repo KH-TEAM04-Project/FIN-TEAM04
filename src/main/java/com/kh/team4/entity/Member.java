@@ -1,16 +1,19 @@
 package com.kh.team4.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.QnaDTO;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor // (@NoArgsConstructor 이거 쓰면서 @Builder 도 동시에 쓰기 위해 사용)
 @Table(name = "members")
 @SequenceGenerator(
@@ -38,13 +41,10 @@ public class Member {
     )
     private Long mno;
 
-    @Column(name = "mtype", columnDefinition = "VARCHAR2(1) DEFAULT 'U'")
-    private String mtype;
-
-    @Column(columnDefinition = "varchar2(20)", nullable = false)
+    @Column(columnDefinition = "varchar2(20)")
     private String mname;
 
-    @Column(columnDefinition = "varchar2(20)", nullable = false, unique = true) // 주민번호
+    @Column(columnDefinition = "varchar2(20)", unique = true) // 주민번호
     private String regno;
 
     @Column(columnDefinition = "varchar2(20)", nullable = false, unique = true)
@@ -53,12 +53,21 @@ public class Member {
     @Column(columnDefinition = "varchar2(100)", nullable = false)
     private String pwd;
 
-    @Column(columnDefinition = "varchar2(100)", nullable = false, unique = true)
+    @Column(columnDefinition = "varchar2(100)", unique = true)
     private String email;
 
-    @Column(columnDefinition = "varchar2(20)", nullable = false)
+    @Column(columnDefinition = "varchar2(20)")
     private String ph;
 
+    @JsonIgnore
+    @Column(name = "activated")
+    public boolean activated; // 활성화 여부
+
+
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
+    public void setPwd(String pwd) { this.pwd = pwd; }
   /*  @Embedded
     private Address address;*/
 
@@ -77,14 +86,29 @@ public class Member {
     public static Member dtoToEntity(MemberReqDTO memberReqDTO) {
 
         Member member = Member.builder()
+                .email(memberReqDTO.getEmail())
                 .mid(memberReqDTO.getMid())
                 .pwd(memberReqDTO.getPwd())
                 .ph(memberReqDTO.getPh())
                 .regno(memberReqDTO.getRegno())
                 .mname(memberReqDTO.getMname())
-                .mtype(memberReqDTO.getMtype())
+                .authority(memberReqDTO.getAuthority())
                 .build();
         return member;
     }
 
+
+    public static Member dtoToEntity2(MemberReqDTO memberReqDTO, PasswordEncoder passwordEncoder) {
+
+        Member member = Member.builder()
+                .email(memberReqDTO.getEmail())
+                .mid(memberReqDTO.getMid())
+                .ph(memberReqDTO.getPh())
+                .regno(memberReqDTO.getRegno())
+                .mname(memberReqDTO.getMname())
+                .pwd(passwordEncoder.encode(memberReqDTO.getPwd()))
+                .authority(Authority.ROLE_USER)
+                .build();
+        return member;
+    }
 }
