@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 // DTO(Data Transfer Object), VO, Bean,
 // Entity - 다른 목적을 가진 클래스, 하나의 객체에 담아서 주고 받는 용도
@@ -23,8 +24,9 @@ public class BoardDTO {
     private String content;
     private String writerName; //작성자
     private Integer hits; //조회수
-    private LocalDate regDate;//작성일
-    private LocalDate modDate;
+    private String regDate;//작성일
+    private String modDate;
+    private boolean isWritten; //작성여부
 
 
 
@@ -34,7 +36,7 @@ public class BoardDTO {
                     .bno(board.getBno())
                     .title(board.getTitle())
                     .content(board.getContent())
-                    .regDate(board.getRegDate())
+                    .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .hits(board.getHits())
                     .build();
             return boardDTO;

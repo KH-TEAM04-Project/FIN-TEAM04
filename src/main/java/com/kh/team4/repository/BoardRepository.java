@@ -1,7 +1,6 @@
 package com.kh.team4.repository;
 
 import com.kh.team4.dto.BoardDTO;
-import com.kh.team4.dto.PageResultDTO;
 import com.kh.team4.entity.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
