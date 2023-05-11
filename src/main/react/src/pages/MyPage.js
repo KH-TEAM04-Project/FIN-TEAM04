@@ -23,6 +23,23 @@ function MyPage() {
     setPh(ph);
   };
 
+  // 회원 삭제 함수
+  const handleDelete = (password) => {
+    if (password === pwd) {
+      setMname("");
+      setMid("");
+      setRegno("");
+      setEmail("");
+      setPwd("");
+      setDetailAddress("");
+      setAddress("");
+      setPh("");
+      alert("회원 정보가 삭제되었습니다.");
+    } else {
+      alert("비밀번호가 일치하지 않습니다.");
+    }
+  };
+
   return (
     <div>
       <h1>마이페이지</h1>
@@ -33,9 +50,29 @@ function MyPage() {
       <p>패스워드: {pwd}</p>
       <p>주소: {address}</p>
       <p>상세주소: {detailaddress}</p>
-      
       <p>휴대폰번호: {ph}</p>
+
       <MyPageForm onSave={handleSave} />
+
+      
+      {/* 회원 삭제 폼 */}
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        handleDelete(e.target.password.value);
+      }}>
+        <div>
+          <label htmlFor="password">비밀번호입력</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+          />
+        </div>
+        <button type="submit">회원 삭제</button>
+      </form>
+
+      {/* 회원 정보 수정 폼 */}
+      
     </div>
   );
 }

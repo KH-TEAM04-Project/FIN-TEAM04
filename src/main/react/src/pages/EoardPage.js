@@ -125,11 +125,10 @@ const [open1, setOpen1] = React.useState(false);
                       <p id="parent-modal-description">
                         진짜 글삭제 되는데요?
                       </p>
-<<<<<<< HEAD
-                      <Button href="http://localhost:3000/EoardPage" onClick={() => handleDelete(data.qno)}>진짜 삭제</Button>
-=======
+
+                  
                       <Button href="http://localhost:3000/EoardPage" onClick={() => handleDelete(data.bno)}>진짜 삭제</Button>
->>>>>>> 65c25d68c6d4f122a032873efa12efb924b0a243
+
                     </Box>
                      </Modal>
                       </TableCell>

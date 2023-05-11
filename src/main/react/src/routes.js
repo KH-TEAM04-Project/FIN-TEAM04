@@ -20,6 +20,8 @@ import RetryPage from './pages/RetryPage';
 import BoardReadPage from './pages/BoardReadPage';
 import MyPage from './pages/MyPage';
 import QnaReadPage from './pages/QnaReadPage';
+import IdPwPage from './pages/IdPwPage';
+
 
 // ----------------------------------------------------------------------
 export default function Router() {
@@ -53,7 +55,10 @@ export default function Router() {
       path: '/SignUp',
       element: <SignUpPage />,
     },
-
+    {
+      path: '/IdPw',
+      element: <IdPwPage />,
+    },
     {
       path: '/Coardpage',
       element: <CoardPage />,
