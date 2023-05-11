@@ -71,7 +71,7 @@ export default function Page404() {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/board', { replace: true });
+    navigate('/EoardPage', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -270,7 +270,8 @@ export default function Page404() {
       </Stack>
 
 
-      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
+      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}
+      onClick={handleClick}>목록으로 돌아가기</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -280,11 +281,9 @@ export default function Page404() {
         <Box sx={{ ...style, width: 500 }}>
           <h2 id="parent-modal-title">꽁 머 니</h2>
           <p id="parent-modal-description">
-            수정이 완료됐습니다람쥐.
+            목록가즈아ㅏㅏㅏ
           </p>
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
-       등록
-      </LoadingButton>
+
         </Box>
       </Modal>
 
