@@ -59,7 +59,9 @@ export default function LoginForm() {
                 console.log(response);
                 console.log("res.data.userId :: ", response.data);
                 localStorage.setItem('token', response.data.accessToken);
+                localStorage.setItem('token', response.data.refreshToken);
                 console.log('token', response.data.accessToken);
+                console.log('token', response.data.refreshToken);
                 if (response.data.accessToken != null ) {
                     alert('환영합니다! ');
                     navigate('/')
