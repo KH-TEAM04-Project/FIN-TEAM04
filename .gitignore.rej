@@ -1,0 +1,8 @@
+diff a/.gitignore b/.gitignore	(rejected hunks)
+@@ -819,4 +819,4 @@
+ ### VisualStudio Patch ###
+ # Additional files built by Visual Studio
+ 
+-# End of https://www.toptal.com/developers/gitignore/api/java,python,windows,eclipse,intellij+all,macos,visualstudio,react
+\ No newline at end of file
++# End of https://www.toptal.com/developers/gitignore/api/java,python,windows,eclipse,intellij+all,macos,visualstudio,react

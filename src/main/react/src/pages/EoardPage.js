@@ -40,10 +40,12 @@ const style = {
 // ----------------------------------------------------------------------
 
 export default function EoardPage() {
+
 const [page, setPage] = React.useState(1);
  const handleChange = (event, value) => {
         setPage(value);
       };
+
    const handleClose = () => {
         setOpen1(false);
       };
@@ -56,6 +58,7 @@ const [open1, setOpen1] = React.useState(false);
   const getPosts = () => {
     axios.get('/EoardPage').then((response) => {
       setPosts(response.data);
+
       console.log(response.data);
     })
      .catch((error) => {
@@ -69,6 +72,7 @@ const [open1, setOpen1] = React.useState(false);
             }
           });
       };
+
 
 
   // 성준 추가 (게시글 삭제 관련)
@@ -95,6 +99,7 @@ const [open1, setOpen1] = React.useState(false);
                     게시글 작성하기
                   </Button>
 
+
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -106,7 +111,9 @@ const [open1, setOpen1] = React.useState(false);
                 <TableCell align="right">작성자</TableCell>
                 <TableCell align="right">작성일</TableCell>
                 <TableCell align="right">조회수</TableCell>
+
                 <TableCell align="center">수정/삭제</TableCell>
+
               </TableRow>
             </TableHead>
             <TableBody>
@@ -128,10 +135,10 @@ const [open1, setOpen1] = React.useState(false);
                     <TableCell align="right">{data.hits}</TableCell>
                     <TableCell align="right">
 
-
                <Button component={Link} to={`/EditPage/${data.bno}`}>
                <Iconify  icon={'eva:edit-fill'} sx={{ mr: 2 }} />
               글 수 정</Button>
+
 
 
              <Button color='error' onClick={handleOpen}>
@@ -147,14 +154,11 @@ const [open1, setOpen1] = React.useState(false);
                       <p id="parent-modal-description">
                         진짜 글삭제 되는데요?
                       </p>
-<<<<<<< HEAD
 
                   
                       <Button href="http://localhost:3000/EoardPage" onClick={() => handleDelete(data.bno)}>진짜 삭제</Button>
 
-=======
-                      <Button href="http://localhost:3000/EoardPage" onClick={() => handleDelete(data.qno)}>진짜 삭제</Button>
->>>>>>> 774f6013dd9bdbbf9c8c3365c46fd46e4848d9a1
+
                     </Box>
                      </Modal>
                       </TableCell>

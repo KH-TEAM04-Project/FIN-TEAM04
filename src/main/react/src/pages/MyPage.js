@@ -72,7 +72,10 @@ function MyPage() {
       </form>
 
       {/* 회원 정보 수정 폼 */}
+
       
+      <p>휴대폰번호: {ph}</p>
+      <MyPageForm onSave={handleSave} />
     </div>
   );
 }
