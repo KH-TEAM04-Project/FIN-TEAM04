@@ -87,12 +87,12 @@ public class Board extends Base {
 
     }
 
-    public static Board toUpdateEntity(BoardDTO boardDTO) {
+    public static Board toUpdateEntity(BoardDTO boardDTO ) {
         Board board = Board.builder()
                 .bno(boardDTO.getBno())
                 .title(boardDTO.getTitle())
                 .content(boardDTO.getContent())
-                // .writer(member)
+                .hits(boardDTO.getHits())
                 .build();
         //  System.out.println("member :" + member);
         System.out.println("보드 dto -> 엔티티 변환 :" + board);

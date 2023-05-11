@@ -44,17 +44,23 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 export default function Page404() {
-
-
-
    const { bno } = useParams();
+
+   const [data, setData] = useState({
+   bno : "",
+     title: "",
+     regDate: "",
+     writer: "",
+     content: "",
+   });
+
    const [posts, setPosts] = useState([]);
 
    const getPosts = useCallback(() => {
      axios
        .get(`/EditPage/${bno}`)
        .then((response) => {
-         setPosts([response.data]); // 배열 형태로 설정
+         setPosts([response.data]);
          console.log(response.data);
          console.log("yaya");
        })
@@ -69,17 +75,6 @@ export default function Page404() {
        });
    }, [bno]);
 
-   useEffect(() => {
-     getPosts();
-   }, [getPosts]);
-
-   const [data, setData] = useState({
-     title: "",
-     regDate: "",
-     writer: "",
-     content: "",
-   });
-
    const handleChange = useCallback((e) => {
      const value = e.target.value;
      setData((prevData) => ({
@@ -92,6 +87,7 @@ export default function Page404() {
      (e) => {
        e.preventDefault();
        const userData = {
+         bno: data.bno,
          title: data.title,
          regDate: data.regDate,
          writer: data.writer,
@@ -118,6 +114,11 @@ export default function Page404() {
      [data, bno]
    );
 
+   useEffect(() => {
+     if (bno) {
+       getPosts();
+     }
+   }, [bno, getPosts]);
 
 
 
@@ -283,7 +284,7 @@ export default function Page404() {
 
      {posts.map((data) => (
 <form onSubmit={handleSubmit} key={data.bno}>
-      <Container key={data.bno} width="10000">
+      <Container  width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
             게시글 수정 해보세유
@@ -293,6 +294,9 @@ export default function Page404() {
         무엇이든 보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
+           <TextField name="bno" label="게시글 번호"
+                      defaultValue={data.bno} onChange={handleChange}
+                      sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
           <TextField name="title" label="제목"
             defaultValue={data.title} onChange={handleChange}
