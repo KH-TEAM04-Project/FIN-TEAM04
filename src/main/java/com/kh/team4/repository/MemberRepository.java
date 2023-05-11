@@ -9,9 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-// public interface MemberRepository{
 
-    //  MemberResDTO findByMidAndPwd(final String mid, final String pwd);
+    MemberResDTO findByMidAndPwd(final String mid, final String pwd);
 
     Optional<Member> findByMid(String mid);
 
