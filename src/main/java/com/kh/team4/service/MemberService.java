@@ -33,7 +33,7 @@ public class MemberService {
         System.out.println(memberDTO.toString());
         Member entMember = Member.dtoToEntity2(memberDTO, passwordEncoder);
         memberRepository.save(entMember);
-        String aaa = "회원가입 성공";
+        String aaa = "success";
         return aaa;
     }
 

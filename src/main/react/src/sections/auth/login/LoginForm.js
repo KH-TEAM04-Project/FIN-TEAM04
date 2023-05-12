@@ -63,7 +63,7 @@ export default function LoginForm() {
                 localStorage.setItem('token', response.data.accessToken);
                 localStorage.setItem('token', response.data.refreshToken);
                 
-                console.log('acessToken', response.data.accessToken);
+                console.log('accessToken', response.data.accessToken);
                 console.log('refreshToken', response.data.refreshToken);
 
                 const decoded1 = jwtDecode(response.data.accessToken);
