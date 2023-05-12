@@ -111,4 +111,9 @@ public class Member {
                 .build();
         return member;
     }
+
+    public String confirm(){
+        return "Mno : " + this.mno + ",  Email : " + this.email + ",  Ph : " + this.ph;
+    }
+
 }

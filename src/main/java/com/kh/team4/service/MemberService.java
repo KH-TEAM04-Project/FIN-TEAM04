@@ -1,9 +1,11 @@
 package com.kh.team4.service;
 
 import com.kh.team4.config.SecurityUtil;
+import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TokenDTO;
+import com.kh.team4.entity.Board;
 import com.kh.team4.entity.Member;
 import com.kh.team4.entity.RefreshToken;
 import com.kh.team4.jwt.TokenProvider;
@@ -17,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,39 @@ public class MemberService {
         String aaa = "회원가입 성공";
         return aaa;
     }
+
+    public void delete(Long mno) {
+        System.out.println("받은 값 : " + mno);
+        memberRepository.deleteById(mno);
+    }
+
+    public MemberResDTO Update(MemberReqDTO memberDTO) throws Exception {
+        // 05.12 시점에 수정할만한 컬럼 목록 3가지만 설정
+        String password = memberDTO.getPwd();
+        String email = memberDTO.getEmail();
+        String ph = memberDTO.getPh();
+        // 찾는 용도의 Mno를 써야하는군..
+        Long mno = memberDTO.getMno();
+
+        Member entMember = Member.dtoToEntity2(memberDTO, passwordEncoder);
+
+        memberRepository.updateMember(password, email, ph);
+
+        Optional<Member> updatingMember = memberRepository.findById(mno); // 업데이트 된 값을 서치해서 다시 가져와서  ResDTO 에 넣고 리턴.
+        System.out.println("수정된 값 확인 : " + updatingMember.get().confirm());
+
+        if (updatingMember.isPresent()) {
+            System.out.println("존재 확인 작업");
+            Member member = updatingMember.get();
+            MemberResDTO memberResDTO = MemberResDTO.of(member);
+            return memberResDTO;
+        } else {
+            System.out.println("return null");
+            return null;
+        }
+
+    }
+
 
     private final AuthenticationManagerBuilder managerBuilder;
     private final RefreshTokenRepository refreshTokenRepository;
