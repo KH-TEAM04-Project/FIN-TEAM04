@@ -43,6 +43,12 @@ public class MemberResDTO {
     public static MemberResDTO of(Member member) {
         return MemberResDTO.builder()
                 .mid(member.getMid())
+                .mno(member.getMno())
+                .mname(member.getMname())
+                .regno(member.getRegno())
+                .email(member.getEmail())
+                .ph(member.getPh())
+
                 .build();
     }
 }
