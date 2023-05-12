@@ -58,7 +58,7 @@ const [open1, setOpen1] = React.useState(false);
   const getPosts = () => {
     axios.get('/EoardPage').then((response) => {
       setPosts(response.data);
-
+      console.log(page.length);
       console.log(response.data);
     })
      .catch((error) => {
@@ -155,7 +155,7 @@ const [open1, setOpen1] = React.useState(false);
                         진짜 글삭제 되는데요?
                       </p>
 
-                  
+
                       <Button href="http://localhost:3000/EoardPage" onClick={() => handleDelete(data.bno)}>진짜 삭제</Button>
 
 
@@ -169,7 +169,7 @@ const [open1, setOpen1] = React.useState(false);
         </TableContainer>
              <Container align="right">
               <Stack alignItems="center" margin-top="auto" spacing={3} >
-              <Typography  >Page: {page}</Typography>
+              <Typography fontSize={32} >Page: {page.length}</Typography>
               <Pagination  count={10} page={page} onChange={handleChange} />
               </Stack>
               </Container>

@@ -125,7 +125,7 @@ export default function Page404() {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/EoardPage', { replace: true });
+    navigate('/re', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
