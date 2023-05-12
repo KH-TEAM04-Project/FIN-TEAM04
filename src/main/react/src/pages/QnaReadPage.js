@@ -257,7 +257,7 @@ export default function Page404() {
 
           multiline
           rows={10}
-          defaultValue={data.content}
+          value={data.content}
 
         ><TableCell >{data.content}</TableCell>}</TextField>
 
