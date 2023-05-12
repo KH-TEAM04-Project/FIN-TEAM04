@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional()
 public class MemberService {
     //final 붙여야지 생성자 만들어줌
     private final MemberRepository memberRepository;
@@ -101,7 +102,7 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResDTO changeMemberPassword(String email, String exPassword, String newPassword) {
+    public MemberResDTO changeMemberPassword(String email, String uname, String exPassword, String newPassword) {
         Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId()).orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
         if (!passwordEncoder.matches(exPassword, member.getPwd())) {
             throw new RuntimeException("비밀번호가 맞지 않습니다");
