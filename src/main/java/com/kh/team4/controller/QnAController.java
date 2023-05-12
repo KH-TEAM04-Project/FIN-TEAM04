@@ -79,9 +79,8 @@ public class QnAController {
     public ResponseEntity<Long> update(@RequestBody QnaDTO qnaDTO) {
         log.info("업데이트 컨트롤러 진입");
         //새로 추가된 엔티티의 번호
-        Long qno = qnaService.update(qnaDTO);
-
-        log.info("수정 완료 qna: " + qno);
+        Long qno = qnaService.modify(qnaDTO);
+        log.info("수정 완료 qno: " + qno);
         return ResponseEntity.ok(qno);
     }
 

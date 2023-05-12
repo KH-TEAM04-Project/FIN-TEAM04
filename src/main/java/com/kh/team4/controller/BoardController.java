@@ -34,7 +34,7 @@ public class BoardController {
         log.info("저장 완료 BNO: " + bno);
         return ResponseEntity.ok(bno);
     }
-
+    //게시글 목록
     @GetMapping("/EoardPage")
     public List<BoardDTO> boardList() {
         System.out.println("컨트롤러 진입");
@@ -43,7 +43,7 @@ public class BoardController {
 
         return boardDTOList;
     }
-
+    //게시글 삭제
     @GetMapping("/boardDelete/{bno}")
     public String delete(@PathVariable("bno") Long bno) {
         System.out.println("삭제 컨트롤러");
@@ -51,7 +51,7 @@ public class BoardController {
         System.out.println("서비스에서 delete 함수 호출");
         return "/delete";
     }
-
+    //게시글 상세조회/수정 불러오기
     @GetMapping({"/BoardReadPage/{bno}", "/EditPage/{bno}"})
     public ResponseEntity<BoardDTO> read(@PathVariable("bno") Long bno) {
         log.info("상세페이지/수정 컨트롤러");
@@ -64,8 +64,7 @@ public class BoardController {
         return ResponseEntity.ok(boardDTO);
 
     }
-
-
+    //게시글 수정 등록
         @PostMapping("/EditPage/{bno}")
         public ResponseEntity<Long> update(@RequestBody BoardDTO dto) {
             log.info("업데이트 컨트롤러 진입");
