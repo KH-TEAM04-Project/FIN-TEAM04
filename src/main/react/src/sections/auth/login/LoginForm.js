@@ -1,9 +1,11 @@
 import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
+import jwtDecode from 'jwt-decode'; // jwt-decode 모듈 추가
 // @mui
 import {Link, Stack, IconButton, InputAdornment, TextField, Checkbox} from '@mui/material';
 import {LoadingButton} from '@mui/lab';
 import axios from "axios";
+
 // components
 import Iconify from '../../../components/iconify';
 
@@ -42,7 +44,7 @@ export default function LoginForm() {
             setPwValid(false)
         }
 
-    }
+    };
     // ----------------------------------------------------------------
 
     const handleClick = () => {
@@ -60,8 +62,16 @@ export default function LoginForm() {
                 console.log("res.data.userId :: ", response.data);
                 localStorage.setItem('token', response.data.accessToken);
                 localStorage.setItem('token', response.data.refreshToken);
-                console.log('token', response.data.accessToken);
-                console.log('token', response.data.refreshToken);
+                
+                console.log('acessToken', response.data.accessToken);
+                console.log('refreshToken', response.data.refreshToken);
+
+                const decoded1 = jwtDecode(response.data.accessToken);
+                const decoded2 = jwtDecode(response.data.refreshToken); // 디코딩
+
+                console.log(decoded1); // 디코딩된 토큰 출력
+                console.log(decoded2);
+
                 if (response.data.accessToken != null ) {
                     alert('환영합니다! ');
                     navigate('/')

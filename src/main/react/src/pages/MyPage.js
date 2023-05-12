@@ -1,5 +1,28 @@
 import React, { useState } from "react";
+import axios from 'axios';
 import MyPageForm from "../sections/auth/MyPage/MyPageForm";
+
+
+
+const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 값을 가져옴
+
+const decodedToken = JSON.parse(atob(token.split('.')[1])); // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
+
+axios.post('/MyPageCont', {
+  MNO: decodedToken.sub, // payload에서 MNO 값을 추출하여 서버로 보냄
+}, {
+  headers: { Authorization: `Bearer ${token}` }
+})
+  .then(response => {
+    // 사용자 데이터를 성공적으로 가져온 경우
+    console.log(response.data);
+  })
+  .catch(error => {
+    // API 호출 중 에러 발생한 경우
+    console.error(error);
+  });
+
+
 
 function MyPage() {
   const [mname, setMname] = useState(""); // 이름 상태
@@ -71,11 +94,9 @@ function MyPage() {
         <button type="submit">회원 삭제</button>
       </form>
 
-      {/* 회원 정보 수정 폼 */}
 
       
-      <p>휴대폰번호: {ph}</p>
-      <MyPageForm onSave={handleSave} />
+      
     </div>
   );
 }

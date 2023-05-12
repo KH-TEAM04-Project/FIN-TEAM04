@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class BoardController {
         log.info("저장 완료 BNO: " + bno);
         return ResponseEntity.ok(bno);
     }
-
+    //게시글 목록
     @GetMapping("/EoardPage")
     public List<BoardDTO> boardList() {
         System.out.println("컨트롤러 진입");
@@ -42,7 +43,7 @@ public class BoardController {
 
         return boardDTOList;
     }
-
+    //게시글 삭제
     @GetMapping("/boardDelete/{bno}")
     public String delete(@PathVariable("bno") Long bno) {
         System.out.println("삭제 컨트롤러");
@@ -50,10 +51,10 @@ public class BoardController {
         System.out.println("서비스에서 delete 함수 호출");
         return "/delete";
     }
-
+    //게시글 상세조회/수정 불러오기
     @GetMapping({"/BoardReadPage/{bno}", "/EditPage/{bno}"})
     public ResponseEntity<BoardDTO> read(@PathVariable("bno") Long bno) {
-        log.info("상세페이지 컨트롤러");
+        log.info("상세페이지/수정 컨트롤러");
         /* 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함*/
         log.info("bno: " + bno);
         service.updateHits(bno);
@@ -63,14 +64,14 @@ public class BoardController {
         return ResponseEntity.ok(boardDTO);
 
     }
+    //게시글 수정 등록
+        @PostMapping("/EditPage/{bno}")
+        public ResponseEntity<Long> update(@RequestBody BoardDTO dto) {
+            log.info("업데이트 컨트롤러 진입");
+            //새로 추가된 엔티티의 번호
+            Long bno = service.modify(dto);
+            log.info("수정 완료 BNO: " + bno);
+            return ResponseEntity.ok(bno);
+        }
 
-    @PostMapping("/EditPage/{bno}")
-    public ResponseEntity<Long> update(@RequestBody BoardDTO dto) {
-        log.info("업데이트 컨트롤러 진입");
-        //새로 추가된 엔티티의 번호
-        Long bno = service.update(dto);
-
-        log.info("수정 완료 BNO: " + bno);
-        return ResponseEntity.ok(bno);
-    }
 }

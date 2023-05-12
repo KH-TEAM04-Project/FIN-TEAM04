@@ -1,5 +1,6 @@
 package com.kh.team4.entity;
 
+import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.QnaDTO;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -58,8 +59,6 @@ public class Qna extends Base {
     private List<Reply> replyList = new ArrayList<>();
 
     public static Qna dtoToEntity(QnaDTO qnaDTO) {
-
-//        Member member = Member.builder().mno(writer.getMno()).build();
         Qna qna = Qna.builder()
             .qno(qnaDTO.getQno())
             .title(qnaDTO.getTitle())
@@ -71,4 +70,11 @@ public class Qna extends Base {
         return qna;
     }
 
+    public void updateTitle(String title){
+        this.title = title;
+    }
+
+    public void updateContent(String content){
+        this.content = content;
+    }
 }

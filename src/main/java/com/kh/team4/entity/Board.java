@@ -54,50 +54,26 @@ public class Board extends Base {
     private Member writer;*/
 
     /* 게시글 수정 */
-    public void changeTitle(String title){
+    public void updateTitle(String title){
         this.title = title;
     }
 
-    public void changeContent(String content){
+    public void updateContent(String content){
         this.content = content;
     }
 
-    /*   댓글 리스트 : 최상위 객체인 게시글이 삭제되면 그 게시글의 댓글 모두 삭제
-      여기서 중요한건 mappedBy = "post"를 하지 않으면, 연관관계의 주인이 설정되지 않아 게시글을 삭제할경우 참조키 제약조건 위반으로 예외가 생김*/
-/*
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<board> comment;
-*/
-
     public static Board dtoToEntity(BoardDTO dto) {
         System.out.println("dtoToEntity 실행");
-
-        //작성자
-        //Member member = Member.builder().mname(dto.getWriterName()).build();
-
         Board board = Board.builder()
-                //.bno(dto.getBno())
+                .bno(dto.getBno())
                 .title(dto.getTitle())
                 .content(dto.getContent())
-               // .writer(member)
+                //.writer()
                 .build();
       //  System.out.println("member :" + member);
         System.out.println("보드 dto -> 엔티티 변환 :" + board);
         return board;
 
     }
-
-    public static Board toUpdateEntity(BoardDTO boardDTO) {
-        Board board = Board.builder()
-                .bno(boardDTO.getBno())
-                .title(boardDTO.getTitle())
-                .content(boardDTO.getContent())
-                // .writer(member)
-                .build();
-        //  System.out.println("member :" + member);
-        System.out.println("보드 dto -> 엔티티 변환 :" + board);
-        return board;
-    }
-
 
 }

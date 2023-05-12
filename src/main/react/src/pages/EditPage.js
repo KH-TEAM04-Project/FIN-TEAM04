@@ -1,8 +1,7 @@
 import { Helmet } from 'react-helmet-async';
-import React, { useEffect, useState } from 'react';
-import { Link,useParams ,useNavigate} from 'react-router-dom';
+import React, {useCallback, useEffect, useState } from 'react';
+import { useParams ,useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import TableCell from '@mui/material/TableCell';
 // @mui
 import { styled } from '@mui/material/styles';
 import { TextField, Typography, Container,Stack,Button,Box,Modal,
@@ -45,71 +44,81 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 export default function Page404() {
-
-
-
    const { bno } = useParams();
+
+   const [data, setData] = useState({
+   bno : "",
+     title: "",
+     regDate: "",
+     writer: "",
+     content: "",
+   });
+
    const [posts, setPosts] = useState([]);
 
-   const getPosts = () => {
-     axios.get(`/EditPage/${bno}`).then((response) => {
-       setPosts([response.data]); // 배열 형태로 설정
-       console.log(response.data);
-       console.log("yaya");
-     })
-     .catch((error) => {
-       if (error.response) {
-         console.log("이거 에러인걸?");
-       } else if (error.request) {
-         console.log("network error");
-       } else {
-         console.log(error);
-       }
-     });
-   };
+   const getPosts = useCallback(() => {
+     axios
+       .get(`/EditPage/${bno}`)
+       .then((response) => {
+         setPosts([response.data]);
+         console.log(response.data);
+         console.log("yaya");
+       })
+       .catch((error) => {
+         if (error.response) {
+           console.log("이거 에러인걸?");
+         } else if (error.request) {
+           console.log("network error");
+         } else {
+           console.log(error);
+         }
+       });
+   }, [bno]);
 
-   useEffect(() => {
-     getPosts();
+   const handleChange = useCallback((e) => {
+     const value = e.target.value;
+     setData((prevData) => ({
+       ...prevData,
+       [e.target.name]: value,
+     }));
    }, []);
 
-         const [data, setData] = useState({
-           title: "",
-           RegDate: "",
-           writer:  "",
-           content: ""
+   const handleSubmit = useCallback(
+     (e) => {
+       e.preventDefault();
+       const userData = {
+         bno: data.bno,
+         title: data.title,
+         regDate: data.regDate,
+         writer: data.writer,
+         content: data.content,
+       };
+       axios
+         .post(`/EditPage/${bno}`, userData)
+         .then((response) => {
+           console.log(response.status, response.data);
+           console.log(response.data);
+         })
+         .catch((error) => {
+           if (error.response) {
+             console.log("이거 포스트 에러인걸?");
+             console.log(userData);
+             console.log(error.response.data);
+           } else if (error.request) {
+             console.log("network error");
+           } else {
+             console.log(error);
+           }
          });
-       const handleChange = (e) => { const value = e.target.value;
-          setData({
-            ...data,
-            [e.target.name]: value
-          });
-        };
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            const userData = {
-              title: data.title,
-              RegDate: data.RegDate,
-              writer: data.writer,
-              content: data.content
-            };
-            axios
-              .post(`/EditPage/${bno}`, userData)
-              .then((response) => {
-                console.log(response.status, response.data);
-                console.log(response.data);
-              })
-              .catch((error) => {
-                if (error.response) {
-                  console.log("이거 포스트 에러인걸?");
-                  console.log(userData);
-                } else if (error.request) {
-                  console.log("network error");
-                } else {
-                  console.log(error);
-                }
-              });
-          };
+     },
+     [data, bno]
+   );
 
+   useEffect(() => {
+     if (bno) {
+       getPosts();
+     }
+   }, [bno, getPosts]);
 
 
 
@@ -274,8 +283,8 @@ export default function Page404() {
 
 
      {posts.map((data) => (
-     <form onSubmit={handleSubmit}>
-      <Container key={data.bno} width="10000">
+<form onSubmit={handleSubmit} key={data.bno}>
+      <Container  width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
             게시글 수정 해보세유
@@ -285,33 +294,34 @@ export default function Page404() {
         무엇이든 보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
+           <TextField name="bno" label="게시글 번호"
+                      defaultValue={data.bno} onChange={handleChange}
+                      sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
-          <TextField  name="text" label="제목"
-          value={data.title}  onChange={handleChange}
-           sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
+          <TextField name="title" label="제목"
+            defaultValue={data.title} onChange={handleChange}
+            sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
-            <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일"
-           value={data.regDate} onChange={handleChange}
-            sx={{my: {  xs: 3, sm: 5 ,mr: 1
-            } }}> {data.regDate}
-            </TextField>
-
-            <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자"
-           value={data.writer} onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1
-          } }}> {data.writer}
+          <TextField name="regDate" label="작성일"
+            defaultValue={data.regDate} onChange={handleChange}
+            sx={{my: {  xs: 3, sm: 5 ,mr: 1 } }}>
+            {data.regDate}
           </TextField>
 
-
+          <TextField name="writer" label="작성자"
+            defaultValue={data.writer} onChange={handleChange}
+            sx={{my: {  xs: 3, sm: 5 ,mr: 1 } }}>
+            {data.writer}
+          </TextField>
 
           <TextField
-          id="outlined-multiline-static"
-           value={data.content} onChange={handleChange}
-          multiline
-          rows={10}
-          defaultValue={data.content}
-
-        ><TableCell >{data.content}</TableCell>}</TextField>
+            id="outlined-multiline-static"
+            name="content"
+            defaultValue={data.content} onChange={handleChange}
+            multiline
+            rows={10}
+            >{data.content}
+          </TextField>
 
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
       <Button variant="contained" component="label">
@@ -342,7 +352,7 @@ export default function Page404() {
 
       </StyledContent2>
       </Container>
-      </form>
+</form>
  ))}
 
     </>

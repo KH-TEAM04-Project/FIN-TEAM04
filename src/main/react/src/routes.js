@@ -16,6 +16,7 @@ import DoardPage from './pages/DoardPage';
 import EoardPage from './pages/EoardPage';
 import SignUpPage from './pages/SignUpPage';
 import EditPage from './pages/EditPage';
+import QEditPage from './pages/QEditPage';
 import RetryPage from './pages/RetryPage';
 // import FetchPage from './pages/FetchPage';
 import BoardReadPage from './pages/BoardReadPage';
@@ -79,11 +80,22 @@ export default function Router() {
       path: '/EditPage',
       element: <EditPage />,
     },
+     {
+      element: <EditPage />,
+      path: '/EditPage/:bno',
+    },
+      {
+          path: '/QEditPage',
+          element: <QEditPage />,
+        },
+         {
+          element: <QEditPage />,
+          path: '/QEditPage/:qno',
+        },
     {
 
       element: <BoardReadPage />,
       path: '/BoardReadPage',
-
     },
     {
       element: <QnaReadPage />,
@@ -93,10 +105,7 @@ export default function Router() {
       element: <BoardReadPage />,
       path: '/BoardReadPage/:bno',
     },
-    {
-      element: <EditPage />,
-      path: '/EditPage/:bno',
-    },
+
     {
 
       element: <BoardReadPage />,
