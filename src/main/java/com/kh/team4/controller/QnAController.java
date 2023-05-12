@@ -52,7 +52,7 @@ public class QnAController {
         log.info("상세보기/수정 컨트롤러 진입");
         // 만약에 페이지 요청이 없는 경우도 있을 수 있으니 @PageableDefault 사용
         // 경로상의 값을 가져올 때는 @PathVariable 라는 어노테이션을 사용한다.
-
+        qnaService.updateHits(qno);
         QnaDTO qnaDTO = qnaService.findById(qno); // 서비스클래스의 findById 메소드 호출해서 boardDTO 객체로 가져옴.
         log.info("findById 메소드 호출" + qnaDTO);
 

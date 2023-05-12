@@ -46,8 +46,7 @@ public class Qna extends Base {
     @ColumnDefault("0")
     private Integer secret;
 
-    @Column
-    @ColumnDefault("0")
+    @Column(columnDefinition = "integer default 0", nullable = false)
     private Integer hits;
 
 //    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

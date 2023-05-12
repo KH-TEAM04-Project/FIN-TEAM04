@@ -26,20 +26,19 @@ public class BoardDTO {
     private Integer hits; //조회수
     private String regDate;//작성일
     private String modDate;
-    private boolean isWritten; //작성여부
+   // private boolean isWritten; //작성여부
 
 
 
     public static BoardDTO entityToDTO(Board board) {
-
             BoardDTO boardDTO = BoardDTO.builder()
                     .bno(board.getBno())
                     .title(board.getTitle())
                     .content(board.getContent())
                     .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .hits(board.getHits())
+                    //.isWritten(bool)
                     .build();
             return boardDTO;
         }
-
 }
