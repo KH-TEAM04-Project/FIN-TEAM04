@@ -1,7 +1,10 @@
 package com.kh.team4.jwt;
 
 
+import com.kh.team4.dto.MemberReqDTO;
+import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TokenDTO;
+import com.kh.team4.entity.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -16,10 +19,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
+
+
 
 @Component
 @Slf4j
@@ -35,12 +38,8 @@ public class TokenProvider {
     private final Key key;
 
 
-    // 주의점: 여기서 @Value는 `springframework.beans.factory.annotation.Value`소속이다! lombok의 @Value와 착각하지 말것!
-    //     * @param secretKey
-    /*public TokenProvider(@Value("${spring.jwt.secret}") String secretKey) {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
-    }*/
+
+
 
     // @value 어노테이션으로 yml에 있는 secretKey가져온다음 디코딩 해서 의존성 주입된 키 값으로 설정
     public TokenProvider(@Value("${spring.jwt.secret}") String secretKey) {
@@ -62,6 +61,9 @@ public class TokenProvider {
         Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 만료시간 설정
 
         System.out.println(tokenExpiresIn);
+
+        //payload 부분 설정
+
 
         String accessToken = Jwts.builder() // 토큰dto에 정보 담아
                 .setSubject(authentication.getName())
@@ -85,6 +87,46 @@ public class TokenProvider {
                 .build();
     }
 
+
+    public TokenDTO generateTokenDto(Authentication authentication, Long mno) { // 매개변수 받아서 String으로 변환
+        // 권한 가져오기
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+
+
+        Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 만료시간 설정
+
+        System.out.println(tokenExpiresIn);
+
+        //payload 부분 설정
+        Map<String, Object> payloads = new HashMap<>();
+        payloads.put("mno", mno);
+
+        String accessToken = Jwts.builder() // 토큰dto에 정보 담아
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities)
+                .setClaims(payloads)
+                .setExpiration(tokenExpiresIn)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
+        // Refresh Token 생성
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
+        System.out.println("토큰생성 ing~");
+        return TokenDTO.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(accessToken)
+                .tokenExpiresIn(tokenExpiresIn.getTime())
+                .refreshToken(refreshToken)
+                .build();
+    }
     public Authentication getAuthentication(String accessToken) { // 토큰의 인증을 꺼내는 메소드
         // 토큰 복호화
         Claims claims = parseClaims(accessToken); // String형태의 토큰을 claims형태로 생성

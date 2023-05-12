@@ -71,7 +71,10 @@ public class Member {
   /*  @Embedded
     private Address address;*/
 
- /*   @Builder // 생성자 대신 이용하는 친구 (@NoArgsConstructor 이거 쓰면 @Builder 못쓰는데 @AllArgsConstructor 사용해서 사용가능.)
+    public Member(Long mno) {
+        this.mno = mno;
+    }
+/*   @Builder // 생성자 대신 이용하는 친구 (@NoArgsConstructor 이거 쓰면 @Builder 못쓰는데 @AllArgsConstructor 사용해서 사용가능.)
     public Member(String mtype, String mname, String regno, String mid, String pwd, String email, String ph) {
         this.mtype = mtype;  //
         this.mname = mname; //이름

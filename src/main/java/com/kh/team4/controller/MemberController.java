@@ -1,5 +1,6 @@
 package com.kh.team4.controller;
 
+import com.kh.team4.dto.ChangePasswordRequestDto;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TokenDTO;
@@ -56,6 +57,11 @@ public class MemberController {
         System.out.println("컨트롤러에 집입하였습니다. " + requestDto.toString());
         return ResponseEntity.ok(memberService.login(requestDto));
     }
+
+   /* @PostMapping("/password")
+    public ResponseEntity<MemberResDTO> setMemberPassword(@RequestBody ChangePasswordRequestDto request) {
+        return ResponseEntity.ok(memberService.changeMemberPassword(request.getExPassword(), request.getNewPassword()));
+    }*/
 
 }
 
