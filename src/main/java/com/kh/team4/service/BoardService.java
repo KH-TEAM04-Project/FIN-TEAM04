@@ -2,26 +2,22 @@ package com.kh.team4.service;
 
 import com.kh.team4.dto.BoardDTO;
 
+import com.kh.team4.dto.PageResponseDTO;
 import com.kh.team4.dto.QnaDTO;
-import com.kh.team4.entity.Base;
-import com.kh.team4.entity.Board;
-import com.kh.team4.entity.Member;
-import com.kh.team4.entity.Qna;
+import com.kh.team4.entity.*;
 import com.kh.team4.repository.BoardRepository;
+import com.kh.team4.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-
-import static com.kh.team4.dto.BoardDTO.entityToDTO;
 import static com.kh.team4.entity.Board.dtoToEntity;
 
 
@@ -33,6 +29,7 @@ public class BoardService {
 
     @Autowired
     private final BoardRepository repository; //자동주입 final
+    private final MemberRepository memberRepository; //자동주입 final
 
     //게시글 등록
     public Long register(BoardDTO dto) {
@@ -44,7 +41,8 @@ public class BoardService {
         return board.getBno();
     }
 
-    //작성자 없이
+
+    //게시글 목록 작성자 없이
     public List<BoardDTO> findAll() {
         log.info("서비스 진입");
 
@@ -67,7 +65,6 @@ public class BoardService {
 
     //게시글 상세조회
     public BoardDTO findById(Long bno) {
-
         Optional<Board> optionalBoard = repository.findById(bno);
         if (optionalBoard.isPresent()) {
             System.out.println("if문 진입");
@@ -79,13 +76,25 @@ public class BoardService {
             System.out.println("return null");
             return null;
         }
-
     }
+/*    public BoardDTO findById (Long id) {
+
+        Board board = repository.findById(id).orElseThrow(() -> new RuntimeException("글이 없습니다."));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // SecurityUtil에서 SecurityContext에 유저정보가 저장
+        if (authentication == null || authentication.getPrincipal() == "anonymousUser") {
+            // 인증정보가 없거나, 익명유저 값일 경우
+            return BoardDTO.entityToDTO(board, false);
+            //Board 객체와 false 합쳐서 BoardDTO생성
+        } else { //인증정보가 존재할 경우, 인증정보에 있는 id를 추출해 내어 member객체를 찾아내고, Board의 Member객체와 일치 여부 boolean 값을 얻어옴
+            Member member = memberRepository.findById(Long.parseLong(authentication.getName())).orElseThrow();
+            boolean result = board.getMember().equals(member);
+            return BoardDTO.entityToDTO(board, result);
+        }
+    }*/
     //조회수
     @Transactional //레파지토리에서 쿼리문 지정해줬을 경우 일관성,영속성을 위해 @트랜잭션 사용
     public void updateHits(Long bno) {
         repository.updateHits(bno);
-
     }
     //글 수정
     @Transactional

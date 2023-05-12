@@ -51,6 +51,7 @@ export default function CoardPage1() {
     title: "",
     RegDate: "",
     writer:  "",
+    hits :Number,
     content: ""
   });
 

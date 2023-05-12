@@ -59,10 +59,8 @@ public class BoardController {
         log.info("bno: " + bno);
         service.updateHits(bno);
         BoardDTO boardDTO = service.findById(bno);
-
         log.info(boardDTO);
         return ResponseEntity.ok(boardDTO);
-
     }
     //게시글 수정 등록
         @PostMapping("/EditPage/{bno}")

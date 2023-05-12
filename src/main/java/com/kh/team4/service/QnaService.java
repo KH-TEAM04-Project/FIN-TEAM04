@@ -74,12 +74,11 @@ public class QnaService {
         System.out.println("for문 완료, 컨트롤러로 리턴");
         return qnaDTOList;    // for 문이 끝나면 리스트를 컨트롤러로 리턴해준다.
     }
-    //조회수
-/*    @Transactional //레파지토리에서 쿼리문 지정해줬을 경우 일관성,영속성을 위해 @트랜잭션 사용
+    //재연 조회수 추가
+    @Transactional //레파지토리에서 쿼리문 지정해줬을 경우 일관성,영속성을 위해 @트랜잭션 사용
     public void updateHits(Long qno) {
         qnaRepository.updateHits(qno);
-
-    }*/
+    }
     @Transactional
     public Long modify(QnaDTO qnaDTO) {
         // getOne() : 필요한 순간까지 로딩을 지연하는 방식

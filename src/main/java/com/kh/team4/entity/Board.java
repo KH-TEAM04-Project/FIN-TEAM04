@@ -41,17 +41,13 @@ public class Board extends Base {
     private String content;
 
 
-    @Column
-    @ColumnDefault("0")
-    protected Integer hits;
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private Integer hits;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_mno")
-    private Member writer;
+    private Member member;
 
-/*    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "writer", referencedColumnName = "mid")
-    private Member writer;*/
 
     /* 게시글 수정 */
     public void updateTitle(String title){
@@ -65,15 +61,15 @@ public class Board extends Base {
     public static Board dtoToEntity(BoardDTO dto) {
         System.out.println("dtoToEntity 실행");
         Board board = Board.builder()
-                .bno(dto.getBno())
+              //  .bno(dto.getBno())
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                //.writer()
+                .hits(dto.getHits())
+               // .member(dto.getMember().getMname())
                 .build();
       //  System.out.println("member :" + member);
         System.out.println("보드 dto -> 엔티티 변환 :" + board);
         return board;
-
     }
 
 }
