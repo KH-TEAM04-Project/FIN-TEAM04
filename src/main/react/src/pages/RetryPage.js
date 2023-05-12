@@ -17,8 +17,7 @@ import Paper from '@mui/material/Paper';
 // ----------------------------------------------------------------------  // 수정 성준 추가
 import Button from '@mui/material/Button';
 import { Modal,Box,Container } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Pagination from '@mui/material/Pagination';
+import TablePagination from '@mui/material/TablePagination';
 import Stack from '@mui/material/Stack';
 import Iconify from '../components/iconify';
 // ----------------------------------------------------------------------
@@ -40,10 +39,17 @@ const style = {
 // ----------------------------------------------------------------------
 
 export default function QnaPage() {
-     const [page, setPage] = React.useState(1);
-     const handleChange = (event, value) => {
-        setPage(value);
-      };
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const handleChangePage = (event:React.ChangeEvent<any>, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
      const handleClose = () => {
         setOpen1(false);
@@ -97,10 +103,10 @@ export default function QnaPage() {
       </Button>
   
     <TableContainer component={Paper} align="center">
-      <Table sx={{ maxWidth: 2000 }} aria-label="simple table">
+      <Table sx={{ maxWidth: 2000 ,overflow: 'hidden' }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>게시판 작성</TableCell>
+            <TableCell>게시판</TableCell>
             <TableCell align="right">번호</TableCell>
             <TableCell align="right">제목</TableCell>
             <TableCell align="right">내용</TableCell>
@@ -111,14 +117,14 @@ export default function QnaPage() {
           </TableRow>
         </TableHead>
         <TableBody>
-
-          {posts.map((data) => (
+        {posts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((data) => (
             <TableRow
               key={data.qno}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {data.writer}
+              -
               </TableCell>
               <TableCell align="right">{data.qno}</TableCell>
               <TableCell align="right">
@@ -160,10 +166,18 @@ export default function QnaPage() {
         </TableBody>
       </Table>
     </TableContainer>
-              <Container align="right">
+             <Container align="right">
               <Stack alignItems="center" margin-top="auto" spacing={3} >
-              <Typography  >Page: {page}</Typography>
-              <Pagination  count={10} page={page} onChange={handleChange} />
+
+              <TablePagination
+                     rowsPerPageOptions={[10, 25, 100]}
+                     component="div"
+                     count={posts.length}
+                     rowsPerPage={rowsPerPage}
+                     page={page}
+                     onPageChange={handleChangePage}
+                     onRowsPerPageChange={handleChangeRowsPerPage}
+                   />
               </Stack>
               </Container>
     </>

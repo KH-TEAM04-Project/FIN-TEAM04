@@ -14,11 +14,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import TablePagination from '@mui/material/TablePagination';
 // ----------------------------------------------------------------------  // 수정 성준 추가
 import Button from '@mui/material/Button';
 import { Modal,Box,Container } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import Iconify from '../components/iconify';
 // ----------------------------------------------------------------------
@@ -40,11 +39,18 @@ const style = {
 // ----------------------------------------------------------------------
 
 export default function EoardPage() {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-const [page, setPage] = React.useState(1);
- const handleChange = (event, value) => {
-        setPage(value);
-      };
+  const handleChangePage = (event:React.ChangeEvent<any>, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
 
    const handleClose = () => {
         setOpen1(false);
@@ -58,8 +64,8 @@ const [open1, setOpen1] = React.useState(false);
   const getPosts = () => {
     axios.get('/EoardPage').then((response) => {
       setPosts(response.data);
-      console.log(page.length);
-      console.log(response.data);
+
+      console.log(response.data.length);
     })
      .catch((error) => {
             if (error.response) {
@@ -101,37 +107,36 @@ const [open1, setOpen1] = React.useState(false);
 
 
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table sx={{ minWidth: 650 ,overflow: 'hidden'}} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell> </TableCell>
-                <TableCell align="right">번호</TableCell>
-                <TableCell align="right">제목</TableCell>
-                <TableCell align="right">내용</TableCell>
-                <TableCell align="right">작성자</TableCell>
-                <TableCell align="right">작성일</TableCell>
-                <TableCell align="right">조회수</TableCell>
-
-                <TableCell align="center">수정/삭제</TableCell>
-
+            <TableCell>QNA</TableCell>
+            <TableCell align="right">번호</TableCell>
+            <TableCell align="right">제목</TableCell>
+            <TableCell align="right">내용</TableCell>
+            <TableCell align="right">작성일</TableCell>
+            <TableCell align="right">조회수</TableCell>
+            <TableCell align="right">작성자</TableCell>
+            <TableCell align="right">수정/삭제</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {posts.map((data) => (
+            {posts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((data) => (
                   <TableRow
                       key={data.bno}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {data.writer}
+                     ""
                     </TableCell>
                     <TableCell align="right">{data.bno}</TableCell>
                     <TableCell align="right">
                       <Link to={`/BoardReadPage/${data.bno}`}>{data.title}</Link>
                     </TableCell>
                     <TableCell align="right">{data.content}</TableCell>
-                    <TableCell align="right">{data.writer}</TableCell>
                     <TableCell align="right">{data.regDate}</TableCell>
+                    <TableCell align="right">{data.writer}</TableCell>
                     <TableCell align="right">{data.hits}</TableCell>
                     <TableCell align="right">
 
@@ -169,8 +174,16 @@ const [open1, setOpen1] = React.useState(false);
         </TableContainer>
              <Container align="right">
               <Stack alignItems="center" margin-top="auto" spacing={3} >
-              <Typography fontSize={32} >Page: {page.length}</Typography>
-              <Pagination  count={10} page={page} onChange={handleChange} />
+
+              <TablePagination
+                     rowsPerPageOptions={[10, 25, 100]}
+                     component="div"
+                     count={posts.length}
+                     rowsPerPage={rowsPerPage}
+                     page={page}
+                     onPageChange={handleChangePage}
+                     onRowsPerPageChange={handleChangeRowsPerPage}
+                   />
               </Stack>
               </Container>
 
