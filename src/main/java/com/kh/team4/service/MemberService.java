@@ -86,7 +86,9 @@ public class MemberService {
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
+        Long midex1 = reqDto.getMno();
+         TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication, midex1);
+        //TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
