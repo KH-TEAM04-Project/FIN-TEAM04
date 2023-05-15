@@ -13,11 +13,12 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
+
     MemberResDTO findByMidAndPwd(final String mid, final String pwd);
 
     Optional<Member> findByMid(String mid);
 
-    boolean existsByMid(String mid); // 중복가입방지
+    boolean existsByEmail(String email); // 중복가입방지
 
     @Modifying // select 문이 아님을 나타낸다
     @Query(value = "UPDATE Member m set (m.password, m.email, m.ph) = (:password, :email, :ph) where m.email = :email", nativeQuery = true)

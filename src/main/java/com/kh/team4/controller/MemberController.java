@@ -6,12 +6,16 @@ import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TokenDTO;
 import com.kh.team4.entity.Member;
 import com.kh.team4.service.MemberService;
+import com.kh.team4.service.RegisterMail;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 
 @CrossOrigin(origins = "localhost:3000")
@@ -21,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @ToString
 public class MemberController {
     private final MemberService memberService;
-    // private final JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
 
     //회원가입 기능 구현
@@ -58,10 +62,25 @@ public class MemberController {
         return ResponseEntity.ok(memberService.login(requestDto));
     }
 
-   /* @PostMapping("/password")
+    @Value("${spring.mail.username}")
+    private String from;
+
+    @PostMapping("/password")
     public ResponseEntity<MemberResDTO> setMemberPassword(@RequestBody ChangePasswordRequestDto request) {
-        return ResponseEntity.ok(memberService.changeMemberPassword(request.getExPassword(), request.getNewPassword()));
-    }*/
+        return ResponseEntity.ok(memberService.changeMemberPassword(request.getEmail(), request.getExPassword(), request.getNewPassword()));
+    }
+
+    @Autowired
+    RegisterMail registerMail;
+
+    //127.0.0.1:8080/ROOT/api/mail/confirm.json?email
+    @PostMapping(value = "/email")
+    public String mailConfirm(@RequestParam(name = "email") String email, String mname) throws Exception{
+        String code = registerMail.sendSimpleMessage(email);
+        System.out.println("사용자에게 발송한 인증코드 ==> " + code);
+
+        return code;
+    }
 
 }
 

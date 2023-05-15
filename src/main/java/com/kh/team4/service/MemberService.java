@@ -12,6 +12,10 @@ import com.kh.team4.jwt.TokenProvider;
 import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -87,7 +91,7 @@ public class MemberService {
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         Long midex1 = reqDto.getMno();
-         TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication, midex1);
+        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication, midex1);
         //TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 4. RefreshToken 저장
@@ -140,13 +144,19 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResDTO changeMemberPassword(String email, String uname, String exPassword, String newPassword) {
+    public MemberResDTO changeMemberPassword(String email, String exPassword, String newPassword) {
         Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId()).orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
         if (!passwordEncoder.matches(exPassword, member.getPwd())) {
             throw new RuntimeException("비밀번호가 맞지 않습니다");
         }
         member.setPwd(passwordEncoder.encode((newPassword)));
         return MemberResDTO.of(memberRepository.save(member));
+    }
+
+    private final JavaMailSender javaMailSender;
+    @Async
+    public void sendEmail(SimpleMailMessage emil){
+        javaMailSender.send(emil);
     }
 }
 
