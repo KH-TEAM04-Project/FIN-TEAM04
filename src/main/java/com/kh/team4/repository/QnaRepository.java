@@ -14,7 +14,7 @@ public interface QnaRepository extends JpaRepository<Qna, Long> {
         //entity 를 기준으로 했을 때는 약어(b)를 쓰는게 필수 BoardEntity = b 로 약칭을 줌
         //(@Param("id") 이 부분과 (15행 마지막) b.id=:id 이 부분이 매칭이 됨.
     void Hits(@Param("id") Long id);*/
-@Modifying
-@Query(value = "update Qna q set q.hits=q.hits+1 where q.qno=:qno")
-void updateHits(@Param("qno") Long qno);
+    @Modifying
+    @Query(value = "update Qna q set q.hits=q.hits+1 where q.qno=:qno")
+    void updateHits(@Param("qno") Long qno);
 }

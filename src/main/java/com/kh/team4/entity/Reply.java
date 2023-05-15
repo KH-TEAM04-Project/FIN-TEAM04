@@ -24,10 +24,6 @@ public class Reply extends Base {
     )
     private long rno;
 
-    @JoinColumn(name = "member_mno")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Member member;
-
     @Column
     private String content;
 
@@ -35,7 +31,7 @@ public class Reply extends Base {
     @JoinColumn(name = "qna_qno")
     private Qna qna;
 
-    public static Reply dtoToEntity(ReplyDTO replyDTO, Qna writer) {
+    public static Reply toSaveEntity(ReplyDTO replyDTO, Qna writer) {
 
         Reply reply = Reply.builder()
                 .rno(replyDTO.getRno())
