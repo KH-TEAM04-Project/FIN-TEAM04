@@ -48,41 +48,44 @@ export default function LoginForm() {
     // ----------------------------------------------------------------
 
     const handleClick = () => {
-        console.log("click login");
-        console.log("ID : ", id);
-        console.log("PW : ", pw);
-        axios.post("/sLogin", null, {
-            params: {
-                mid: id,
-                pwd: pw
-            }
+      console.log("click login");
+      console.log("ID : ", id);
+      console.log("PW : ", pw);
+      axios.post("/sLogin", null, {
+        params: {
+          mid: id,
+          pwd: pw
+        }
+      })
+        .then(response => {
+          console.log(response);
+          console.log("res.data.userId :: ", response.data);
+          localStorage.setItem('accessToken', response.data.accessToken);
+          localStorage.setItem('refreshToken', response.data.refreshToken);
+
+          console.log('accessToken', response.data.accessToken);
+          console.log('refreshToken', response.data.refreshToken);
+
+          const decoded1 = jwtDecode(response.data.accessToken);
+          const decoded2 = jwtDecode(response.data.refreshToken); // 디코딩
+
+          console.log(decoded1); // 디코딩된 토큰 출력
+          console.log(decoded2);
+
+          if (response.data.accessToken) {
+            alert('환영합니다!');
+            navigate('/');
+          } else {
+            alert('로그인에 실패하였습니다.');
+          }
         })
-            .then(response => {
-                console.log(response);
-                console.log("res.data.userId :: ", response.data);
-                localStorage.setItem('token', response.data.accessToken);
-                localStorage.setItem('token', response.data.refreshToken);
-                
-                console.log('accessToken', response.data.accessToken);
-                console.log('refreshToken', response.data.refreshToken);
-
-                const decoded1 = jwtDecode(response.data.accessToken);
-                const decoded2 = jwtDecode(response.data.refreshToken); // 디코딩
-
-                console.log(decoded1); // 디코딩된 토큰 출력
-                console.log(decoded2);
-
-                if (response.data.accessToken != null ) {
-                    alert('환영합니다! ');
-                    navigate('/')
-                } else if(response.data.accessToken === null || response.data.accessToken === undefined) {
-                    alert('로그인에 실패하였습니다.');
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        .catch(error => {
+          console.log(error);
+          alert('아이디 혹은 비밀번호를 확인해주세요.');
+        });
     };
+
+
 // ----------------------------------------------------------------
     useEffect(() => {
 
@@ -134,7 +137,9 @@ export default function LoginForm() {
 
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{my: 2}}>
                 <Checkbox name="remember" label="Remember me">아이디저장</Checkbox>
-                <Link href="/IdPw" underline="hover">아이디 비밀번호 찾기 </Link>
+                <Link href="/IdPw" underline="hover">아이디</Link>
+                <Link href="/IdPw2" underline="hover">비밀번호 찾기</Link>
+
 
             </Stack>
 

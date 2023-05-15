@@ -45,7 +45,7 @@ export default function SignUpPage() {
 
   return (
     <div>
-      <h1>회원가입</h1>
+      <h1>꽁 머 니</h1>
       <SignUpForm
         formValues={formValues}
         onFormSubmit={handleFormSubmit}
