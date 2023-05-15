@@ -1,6 +1,32 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import PopupDom from './PopupDom';
 import PopupPostCode from './PopupPostCode';
+
+const AddressWrapper = styled.div`
+  display: flex;
+  align-items: left;
+  margin-bottom: 10px;
+`;
+
+const AddressInput = styled.input`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 300px;
+`;
+
+const AddressButton = styled.button`
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+  margin-right: 10px; /* 주소 입력칸과 오른쪽에 공간을 주기 위한 우측 마진 추가 */
+`;
+
 
 const Address = () => {
   // 주소 상태 관리
@@ -42,27 +68,20 @@ const Address = () => {
     closePostCode();
   };
 
-  const postCodeStyle = {
-    display: "block",
-    position: "absolute",
-    top: "10%",
-    width: "600px",
-    height: "600px",
-    padding: "7px",
-  };
-
   return(
     <div>
-      <input
-        type="text"
-        id="address"
-        name="address"
-        value={address}
-        onChange={handleAddressChange}
-        required
-        placeholder='주소'
-      />
-      <button type='button' onClick={openPostCode}>주소 검색</button>
+      <AddressWrapper>
+        <AddressInput
+          type="text"
+          id="address"
+          name="address"
+          value={address}
+          onChange={handleAddressChange}
+          required
+          placeholder='주소'
+        />
+        <AddressButton type='button' onClick={openPostCode}>주소 검색</AddressButton>
+      </AddressWrapper>
       <div id='popupDom'>
         {isPopupOpen && (
           <PopupDom>
@@ -70,9 +89,8 @@ const Address = () => {
           </PopupDom>
         )}
       </div>
-     
     </div>
-  )
+  );
 };
 
 export default Address;
