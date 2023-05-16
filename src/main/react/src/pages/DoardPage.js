@@ -255,7 +255,7 @@ export default function DoardPage() {
          {/* 여기서 부터 내용 */}
 
 
-         <TextField    name="title" label="제목" 
+         <TextField    name="title" label="제목"
           value={data.title}
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
