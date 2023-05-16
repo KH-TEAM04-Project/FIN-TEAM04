@@ -72,6 +72,8 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
+
+
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
@@ -104,10 +106,10 @@ public class TokenProvider {
         //payload 부분 설정
         Map<String, Object> payloads = new HashMap<>();
         payloads.put("mno", mno);
+        payloads.put("sub", authentication.getName());
+        payloads.put("auth", authorities);
 
         String accessToken = Jwts.builder() // 토큰dto에 정보 담아
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
                 .setClaims(payloads)
                 .setExpiration(tokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
