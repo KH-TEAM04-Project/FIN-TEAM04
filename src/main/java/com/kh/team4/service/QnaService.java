@@ -54,7 +54,6 @@ public class QnaService {
         }
     }
     @Transactional  // toBoardDTO 를 사용하고 있기 때문에
-    // 트랜잭션이 안붙으면 에러가 발생함.
     public List<QnaDTO> findAll() {
         System.out.println("qnaservice 진입");
         List<Qna> qnaEntityList = qnaRepository.findAll();
@@ -74,11 +73,7 @@ public class QnaService {
         System.out.println("for문 완료, 컨트롤러로 리턴");
         return qnaDTOList;    // for 문이 끝나면 리스트를 컨트롤러로 리턴해준다.
     }
-    //재연 조회수 추가
-    @Transactional //레파지토리에서 쿼리문 지정해줬을 경우 일관성,영속성을 위해 @트랜잭션 사용
-    public void updateHits(Long qno) {
-        qnaRepository.updateHits(qno);
-    }
+    // 수정 관련
     @Transactional
     public Long modify(QnaDTO qnaDTO) {
         // getOne() : 필요한 순간까지 로딩을 지연하는 방식
@@ -90,6 +85,11 @@ public class QnaService {
         qnaRepository.save(qna);
         return qna.getQno();
     }
+    // 조회수 처리 메소드
+    @Transactional
+    public void updateHits(Long qno) {
+        qnaRepository.updateHits(qno); // 레파지토리에서 업데이트히츠 메소드를 호출
 
+    }
 
 }

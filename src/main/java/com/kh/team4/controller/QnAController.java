@@ -2,7 +2,10 @@ package com.kh.team4.controller;
 
 import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.QnaDTO;
+import com.kh.team4.entity.Qna;
 import com.kh.team4.service.QnaService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +25,7 @@ import java.util.List;
 public class QnAController {
     private final QnaService qnaService;
 
-    // 게시글 작성(CREATE)
+/*    // 게시글 작성(CREATE) JWT 적용전
     @PostMapping("/DoardPage")
     public ResponseEntity<String> register(@RequestBody QnaDTO qnaDTO) {
         System.out.println("게시글 작성 컨트롤러 진입");
@@ -32,7 +35,31 @@ public class QnAController {
         // register() 메서드에서는 QnaDTO를 이용하여 게시글을 작성하고, Qna 객체를 데이터베이스에 저장.
         return new ResponseEntity<>("게시글이 작성되었습니다.", HttpStatus.OK);
         // 성공적으로 수행되면 "게시글이 작성되었습니다" 메시지와 함께 HttpStatus.OK(200) 상태 코드를 반환.
+    }*/
+    @PostMapping("/DoardPage")
+    public ResponseEntity<QnaDTO> createQna(@RequestBody QnaDTO qnaDTO, @RequestHeader("Authorization") String token) {
+        log.info("게시글작성 컨트롤러 진입");
+        // JWT 검증 및 사용자 정보 추출
+        String jwt = token.substring(7); // "Bearer " 접두사 제거
+        Claims claims = Jwts.parser().setSigningKey("yourSecretKey").parseClaimsJws(jwt).getBody();
+        String userMno = claims.getSubject(); // 사용자 아이디 추출
+        log.info("사용자 아이디 추출 완료");
+
+    // 게시글 작성
+        Qna qna = Qna.builder()
+            .title(qnaDTO.getTitle())
+            .content(qnaDTO.getContent())
+            .writer(userMno) // JWT에서 추출한 사용자 아이디를 작성자로 설정
+            .secret(qnaDTO.getSecret())
+            .build();
+
+    // 작성자 정보를 포함한 응답 DTO 생성
+        QnaDTO responseDTO = QnaDTO.toQnaDTO(qna);
+        log.info("QnaDTO" + qnaDTO);
+
+        return ResponseEntity.ok(responseDTO);
     }
+
 
     // 게시글 리스트 불러오기
     @GetMapping("/re")
@@ -74,14 +101,16 @@ public class QnAController {
         return "/delete";
     }
 
-    //재연 추가 수정
     @PostMapping("/QEditPage/{qno}")
-    public ResponseEntity<Long> update(@RequestBody QnaDTO qnaDTO) {
+    public ResponseEntity<Long> update(@PathVariable Long qno, @RequestBody QnaDTO qnaDTO) {
+        // @PathVariable Long qno를 추가하여 qno 값을 메서드에 직접 전달하고
+        // qnaDTO.setQno(qno)를 통해 qnaDTO 객체에도 qno 값을 설정.
         log.info("업데이트 컨트롤러 진입");
-        //새로 추가된 엔티티의 번호
-        Long qno = qnaService.modify(qnaDTO);
-        log.info("수정 완료 qno: " + qno);
-        return ResponseEntity.ok(qno);
+        qnaDTO.setQno(qno);  // qno 값을 qnaDTO에 설정
+        Long updateQno = qnaService.modify(qnaDTO);
+        log.info("수정 완료 qno: " + updateQno);
+        return ResponseEntity.ok(updateQno);
     }
+
 
 }
