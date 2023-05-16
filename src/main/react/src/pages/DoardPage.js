@@ -39,10 +39,15 @@ const style = {
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 export default function DoardPage() {
+
+  const token = localStorage.getItem('accessToken');
+  const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+  
+  
   const [data, setData] = useState({
     title: "",
     RegDate: "",
-    writer: "",
+    writer: sub, // writer 필드의 기본값을 sub로 설정
     content: ""
   });
 
@@ -113,9 +118,14 @@ export default function DoardPage() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  
+  
+
+  
 
   return (
     <>
+    
       <Helmet>
         <title> QnA 작성| 꽁머니 </title>
       </Helmet>
@@ -260,10 +270,10 @@ export default function DoardPage() {
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
 
-          <TextField    name="writer" label="작성자" 
-          value={data.writer}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
+         <TextField    name="writer" label="작성자"
+          value={sub}
+          InputProps={{  readOnly: true,  }}
+           sx={{ my: { xs: 3, sm: 5, mr: 1 } }}/>
 
         <TextField    name="content" label="내용" 
           value={data.content}

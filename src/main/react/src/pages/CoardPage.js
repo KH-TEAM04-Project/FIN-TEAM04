@@ -47,10 +47,15 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function CoardPage1() {
 
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem('accessToken');
+  const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+  
   const [data, setData] = useState({
     title: "",
     RegDate: "",
-    writer:  "",
+    writer:  sub,
     hits :Number,
     content: ""
   });
@@ -90,7 +95,7 @@ export default function CoardPage1() {
 // 여기까지 axios
 
  
-  const navigate = useNavigate();
+  
 
   const handleClick = () => {
     navigate('/EoardPage', { replace: true });
@@ -284,12 +289,11 @@ export default function CoardPage1() {
 
           
 
-          <TextField    name="writer" label="작성자" 
-
-          value={data.writer}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
-        
+                   
+<TextField    name="writer" label="작성자"
+          value={sub}
+          InputProps={{  readOnly: true,  }}
+           sx={{ my: { xs: 3, sm: 5, mr: 1 } }}/>
                 
             
            
