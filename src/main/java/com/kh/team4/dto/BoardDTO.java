@@ -22,11 +22,11 @@ public class BoardDTO {
     private Long bno;
     private String title;
     private String content;
-    private String writerName; //작성자
+    private String writerID; //작성자
     private Integer hits; //조회수
     private String regDate;//작성일
     private String modDate;
-   // private boolean isWritten; //작성여부
+    private boolean isWritten; //작성여부
 
 
 
@@ -41,4 +41,24 @@ public class BoardDTO {
                     .build();
             return boardDTO;
         }
+/*    public static PageResponseDto  of(Board board) {
+        return PageResponseDto.builder()
+                .bno(board.getBno())
+                .title(board.getTitle())
+                .writerID(board.getMember().getMid())
+                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
+    }*/
+
+    public static BoardDTO of(Board board, boolean bool) {
+        return BoardDTO.builder()
+                .bno(board.getBno())
+                .writerID(board.getMember().getMid())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .modDate(board.getModDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .isWritten(bool)
+                .build();
+    }
 }
