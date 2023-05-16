@@ -25,7 +25,7 @@ import java.util.List;
 public class QnAController {
     private final QnaService qnaService;
 
-/*    // 게시글 작성(CREATE) JWT 적용전
+    // 게시글 작성(CREATE) JWT 적용전
     @PostMapping("/DoardPage")
     public ResponseEntity<String> register(@RequestBody QnaDTO qnaDTO) {
         System.out.println("게시글 작성 컨트롤러 진입");
@@ -35,8 +35,8 @@ public class QnAController {
         // register() 메서드에서는 QnaDTO를 이용하여 게시글을 작성하고, Qna 객체를 데이터베이스에 저장.
         return new ResponseEntity<>("게시글이 작성되었습니다.", HttpStatus.OK);
         // 성공적으로 수행되면 "게시글이 작성되었습니다" 메시지와 함께 HttpStatus.OK(200) 상태 코드를 반환.
-    }*/
-    @PostMapping("/DoardPage")
+    }
+ /*   @PostMapping("/DoardPage")
     public ResponseEntity<QnaDTO> createQna(@RequestBody QnaDTO qnaDTO, @RequestHeader("Authorization") String token) {
         log.info("게시글작성 컨트롤러 진입");
         // JWT 검증 및 사용자 정보 추출
@@ -58,7 +58,7 @@ public class QnAController {
         log.info("QnaDTO" + qnaDTO);
 
         return ResponseEntity.ok(responseDTO);
-    }
+    }*/
 
 
     // 게시글 리스트 불러오기
