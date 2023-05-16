@@ -45,12 +45,16 @@ public class Board extends Base {
     @JoinColumn(name = "member_mno")
     private Member member;
 
+    @Column
+    private Integer fileAttached; //파일 첨부 여부 (첨부 1, 미첨부 0)
+
 
     public static Board createBoard(String title, String content, Member member) {
         Board board = new Board();
         board.title = title;
         board.content = content;
         board.member = member;
+        //board.fileAttached = 0; // 0 = 파일 없음
         return board;
     }
     /* 게시글 수정 */

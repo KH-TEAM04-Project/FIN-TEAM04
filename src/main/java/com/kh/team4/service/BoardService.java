@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,16 +66,16 @@ public class BoardService {
     }
 
     /* 게시글 등록 */
-   @Transactional
-   public BoardDTO postBoard(String title, String content) {
-       log.info("postBoard서비스");
-       Member member = isMemberCurrent();
-       log.info("member : " + member);
-       Board board = Board.createBoard(title, content, member);
-       log.info("board : " + board);
-       return BoardDTO.of(repository.save(board), true);
-       //인증정보에서 Member의 id를 추출해, Member 객체를 생성해내어, Repository를 거쳐 DB로
-   }
+    @Transactional
+    public BoardDTO postBoard(String title, String content) {
+        log.info("postBoard서비스");
+        Member member = isMemberCurrent();
+        log.info("member : " + member);
+        Board board = Board.createBoard(title, content, member);
+        log.info("board : " + board);
+        return BoardDTO.of(repository.save(board), true);
+        //인증정보에서 Member의 id를 추출해, Member 객체를 생성해내어, Repository를 거쳐 DB로
+    }
 
     /* 게시글 수정 */
     @Transactional
@@ -82,6 +83,7 @@ public class BoardService {
         Board board = authorizationArticleWriter(bno);
         return BoardDTO.of(repository.save(Board.changeBoard(board, title, content)), true);
     }
+
     /* 게시글 삭제 */
     @Transactional
     public void deleteBoard(Long bno) {
