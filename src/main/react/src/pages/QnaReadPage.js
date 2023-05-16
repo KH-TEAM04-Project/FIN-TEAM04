@@ -6,7 +6,7 @@ import TableCell from '@mui/material/TableCell';
 // @mui
 import { styled } from '@mui/material/styles';
 import { TextField, Typography, Container,Stack,Button,Box,Modal,
-AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem} from '@mui/material';
+AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem,Table,TableHead,TableBody,TableRow} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -97,6 +97,53 @@ export default function Page404() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const [replys, setReplys] = useState([]);
+  const [reply, setReply] = useState({
+    title: "",
+    RegDate: "",
+    writer: "",
+    content: ""
+  });
+
+  const handleChange = ({ target }) => {
+    const { value, name } = target;
+    setReply((prevReply) => ({
+      ...prevReply,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const userReply = {
+      title: reply.title,
+      RegDate: reply.RegDate,
+      writer: reply.writer,
+      content: reply.content
+    };
+    axios
+      .post(`/QnaReadPage/${qno}`, userReply)
+      .then((response) => {
+        console.log(response.status, response.replys);
+        // 새로운 댓글을 추가하는 함수 호출
+        addReply(response.replys);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log("이거  댓글 에러인걸?");
+          console.log(userReply);
+        } else if (error.request) {
+          console.log("network error");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
+  const addReply = (newReply) => {
+    setReplys((prevReplys) => [...prevReplys, newReply]);
   };
 
   return (
@@ -254,7 +301,7 @@ export default function Page404() {
 
           <TextField
           id="outlined-multiline-static"
-
+            disabled
           multiline
           rows={10}
           value={data.content}
@@ -269,18 +316,58 @@ export default function Page404() {
       </Button>
       </Stack>
 
+        <form onSubmit={handleSubmit}>
+              <li className='comment-from'>
+                <span className='ps_box'>
+                  <TextField
+                    fullWidth
+                    type='text'
+                    name='content'
+                    className='int'
+                    value={replys.content}
+                    onChange={handleChange}
+                    placeholder='댓글을 입력해주세요~'
+                  />
+                </span>
+                <Stack direction='row-reverse' sx={{ my: { xs: 1, mr: 12 } }}>
+                  <Button variant='contained' type='submit' className='btn'>
+                    등록
+                  </Button>
+                </Stack>
+              </li>
+            </form>
 
-      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
+         <Table sx={{ maxWidth: 2000, overflow: 'hidden' }} aria-label='simple table'>
+              <TableHead>
+                <TableCell>번호</TableCell>
+                <TableCell>내용</TableCell>
+                <TableCell>작성자</TableCell>
+                <TableCell>수정/삭제</TableCell>
+              </TableHead>
+
+              <TableBody>
+                {replys.map((reply, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{reply.rno}</TableCell>
+                    <TableCell>{reply.content}</TableCell>
+                    <TableCell>작성자</TableCell>
+                    <TableCell>수정/삭제</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+
+      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>목록으로 돌아가기</Button>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >
-        <Box sx={{ ...style, width: 500 }}>
+        <Box sx={{ ...style, width: 1500 }}>
           <h2 id="parent-modal-title">꽁 머 니</h2>
           <p id="parent-modal-description">
-            수정이 완료됐습니다람쥐.
+            목록가즈아ㅏㅏㅏ
           </p>
           <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
        등록

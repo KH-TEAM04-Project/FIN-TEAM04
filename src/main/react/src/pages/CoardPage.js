@@ -92,7 +92,7 @@ export default function CoardPage1() {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/board', { replace: true });
+    navigate('/EoardPage', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
 

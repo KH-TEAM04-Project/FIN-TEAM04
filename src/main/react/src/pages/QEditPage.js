@@ -77,8 +77,8 @@ export default function Page404() {
 
    const handleChange = useCallback((e) => {
      const value = e.target.value;
-     setData((prevData) => ({
-       ...prevData,
+     setData((Data) => ({
+       ...Data,
        [e.target.name]: value,
      }));
    }, []);
@@ -283,7 +283,7 @@ export default function Page404() {
 
 
      {posts.map((data) => (
-<form onSubmit={handleSubmit} key={data.qno}>
+<form onSubmit={handleSubmit} key={data.writer}>
       <Container  width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
@@ -295,7 +295,7 @@ export default function Page404() {
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
            <TextField name="qno" label="게시글 번호"
-                      defaultValue={data.qno} onChange={handleChange}
+                      value={data.qno}
                       sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
           <TextField name="title" label="제목"

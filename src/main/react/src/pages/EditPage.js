@@ -295,7 +295,7 @@ export default function Page404() {
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
            <TextField name="bno" label="게시글 번호"
-                      defaultValue={data.bno} onChange={handleChange}
+                      defaultValue={data.bno}
                       sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
           <TextField name="title" label="제목"

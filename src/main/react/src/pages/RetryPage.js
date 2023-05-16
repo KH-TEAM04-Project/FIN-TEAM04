@@ -91,7 +91,11 @@ export default function QnaPage() {
       useEffect(() => {
         getPosts();
       }, []);
+const compareFunction = (a, b) => {
 
+    return b.qno - a.qno;
+};
+posts.sort(compareFunction);
   return (
     <>
 
