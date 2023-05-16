@@ -18,6 +18,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByMid(String mid);
 
+    @Query(value = "SELECT mno from members where mid = :mid", nativeQuery = true)
+    Long findByMid2(@Param("mid")String mid);
+
     boolean existsByEmail(String email); // 중복가입방지
 
     @Modifying // select 문이 아님을 나타낸다
