@@ -62,8 +62,8 @@ public class MemberController {
         return ResponseEntity.ok(memberService.login(requestDto));
     }
 
-    @Value("${spring.mail.username}")
-    private String from;
+    //@Value("${spring.mail.username}")
+   // private String from;
 
     @PostMapping("/password")
     public ResponseEntity<MemberResDTO> setMemberPassword(@RequestBody ChangePasswordRequestDto request) {
