@@ -4,7 +4,6 @@ import com.kh.team4.dto.ChangePasswordRequestDto;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TokenDTO;
-import com.kh.team4.entity.Member;
 import com.kh.team4.service.MemberService;
 import com.kh.team4.service.RegisterMail;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +61,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.login(requestDto));
     }
 
-    @Value("${spring.mail.username}")
+  /*  @Value("${spring.mail.username}")
     private String from;
 
     @PostMapping("/password")
@@ -80,7 +79,7 @@ public class MemberController {
         System.out.println("사용자에게 발송한 인증코드 ==> " + code);
 
         return code;
-    }
+    }*/
 
 }
 

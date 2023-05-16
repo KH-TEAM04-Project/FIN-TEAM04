@@ -23,6 +23,14 @@ public class RegisterMail implements MailServiceInter {
 
     private String ePw; // 인증번호
 
+
+    // createMessage: 메일 내용 작성하는 클래스
+    // createEy(): 랜덤한 8자리 인증 코드 작성하는 메서드
+    // sendSimpleMessage:실제로 메일 발송하는 메서드
+    // ePw: 리턴하는데 메일로 보낸 인증 코드 서버에서 저장하고 있따가 인증용도
+
+
+
     // 메일 내용 작성
     @Override
     public MimeMessage creatMessage(String to) throws MessagingException, UnsupportedEncodingException {

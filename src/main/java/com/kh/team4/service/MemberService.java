@@ -6,6 +6,7 @@ import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TokenDTO;
 import com.kh.team4.entity.Board;
+import com.kh.team4.entity.ConfirmationToken;
 import com.kh.team4.entity.Member;
 import com.kh.team4.entity.RefreshToken;
 import com.kh.team4.jwt.TokenProvider;
@@ -153,10 +154,9 @@ public class MemberService {
         return MemberResDTO.of(memberRepository.save(member));
     }
 
-    private final JavaMailSender javaMailSender;
-    @Async
-    public void sendEmail(SimpleMailMessage emil){
-        javaMailSender.send(emil);
-    }
+
+
+
+
 }
 
