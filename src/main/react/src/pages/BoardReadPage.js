@@ -1,15 +1,16 @@
 import { Helmet } from 'react-helmet-async';
 import React, { useEffect, useState } from 'react';
-import { Link,useParams ,useNavigate} from 'react-router-dom';
+import { useParams ,useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import TableCell from '@mui/material/TableCell';
 // @mui
 import { styled } from '@mui/material/styles';
-import { TextField, Typography, Container,Stack,Button,Box,Modal,
+import { TextField,Typography, Container,Stack,Button,Box,Modal,
 AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem} from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
+
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
 // import { number } from 'prop-types';
 // import Clock from 'react-live-clock'
@@ -45,6 +46,8 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 export default function Page404() {
+
+
    const { bno } = useParams();
    const [posts, setPosts] = useState([]);
 
@@ -227,7 +230,7 @@ export default function Page404() {
       </Container>
     </AppBar>
      {posts.map((data) => (
-      <Container key={data.bno} Width="10000">
+      <Container key={data.bno} width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
             게시글 보세유
@@ -270,6 +273,8 @@ export default function Page404() {
       </Stack>
 
 
+
+
       <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}
       onClick={handleClick}>목록으로 돌아가기</Button>
       <Modal
@@ -286,6 +291,7 @@ export default function Page404() {
 
         </Box>
       </Modal>
+
 
       </StyledContent2>
       </Container>

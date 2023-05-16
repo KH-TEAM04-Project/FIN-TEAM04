@@ -39,6 +39,8 @@ const style = {
 // ----------------------------------------------------------------------
 
 export default function EoardPage() {
+
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -93,6 +95,13 @@ const [open1, setOpen1] = React.useState(false);
   useEffect(() => {
     getPosts();
   }, []);
+const compareFunction = (a, b) => {
+
+  return b.bno - a.bno;
+};
+
+
+posts.sort(compareFunction);
 
   return (
       <>
@@ -110,7 +119,7 @@ const [open1, setOpen1] = React.useState(false);
           <Table sx={{ minWidth: 650 ,overflow: 'hidden'}} aria-label="simple table">
             <TableHead>
               <TableRow>
-            <TableCell>QNA</TableCell>
+            <TableCell>게시판</TableCell>
             <TableCell align="right">번호</TableCell>
             <TableCell align="right">제목</TableCell>
             <TableCell align="right">내용</TableCell>
