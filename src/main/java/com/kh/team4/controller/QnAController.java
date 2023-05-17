@@ -2,8 +2,10 @@ package com.kh.team4.controller;
 
 import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.QnaDTO;
+import com.kh.team4.dto.ReplyDTO;
 import com.kh.team4.entity.Qna;
 import com.kh.team4.service.QnaService;
+import com.kh.team4.service.ReplyService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +28,8 @@ import java.util.List;
 
 public class QnAController {
     private final QnaService qnaService;
+
+    private final ReplyService replyService;
 
     // 게시글 작성(CREATE) JWT 적용전
     @PostMapping("/DoardPage")
@@ -75,7 +81,7 @@ public class QnAController {
 
     // 상세보기 페이지
     @GetMapping({"/QnaReadPage/{qno}", "/QEditPage/{qno}"})    // id 값을 받아온다.
-    public ResponseEntity<QnaDTO> findById(@PathVariable Long qno) {
+    public ResponseEntity<Map<String, Object>> findById(@PathVariable Long qno) {
         log.info("상세보기/수정 컨트롤러 진입");
         // 만약에 페이지 요청이 없는 경우도 있을 수 있으니 @PageableDefault 사용
         // 경로상의 값을 가져올 때는 @PathVariable 라는 어노테이션을 사용한다.
@@ -83,12 +89,21 @@ public class QnAController {
         QnaDTO qnaDTO = qnaService.findById(qno); // 서비스클래스의 findById 메소드 호출해서 boardDTO 객체로 가져옴.
         log.info("findById 메소드 호출" + qnaDTO);
 
+        /* 댓글 목록 가져오기 */
+        List<ReplyDTO> replyDTOList = replyService.findAll(qno);
+        log.info("댓글 목록 가져오기");
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("qnaDTO", qnaDTO);
+        response.put("replyList", replyDTOList);
+
+
         if (qnaDTO != null) {
             log.info("게시글이 존재하는 경우");
-            return ResponseEntity.ok(qnaDTO); // 게시글이 존재하는 경우 200 OK 상태로 게시글 정보를 리턴
+            return ResponseEntity.ok(response); // 게시글이 존재하는 경우 200 OK 상태로 게시글 정보를 리턴
         } else {
             System.out.println("게시글이 존재하지 않은 경우");
-            return ResponseEntity.notFound().build(); // 게시글이 존재하지 않는 경우 404 Not Found 상태를 리턴
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // 게시글이 존재하지 않는 경우 404 Not Found 상태를 리턴
         }
     }
 
@@ -111,6 +126,5 @@ public class QnAController {
         log.info("수정 완료 qno: " + updateQno);
         return ResponseEntity.ok(updateQno);
     }
-
 
 }

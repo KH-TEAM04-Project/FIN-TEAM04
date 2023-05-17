@@ -34,7 +34,6 @@ public class Reply extends Base {
     public static Reply toSaveEntity(ReplyDTO replyDTO, Qna writer) {
 
         Reply reply = Reply.builder()
-                .rno(replyDTO.getRno())
                 .content(replyDTO.getContent())
                 .build();
         return reply;
