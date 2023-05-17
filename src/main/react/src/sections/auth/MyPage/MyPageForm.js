@@ -18,33 +18,7 @@ function MyPageForm(props) {
 
   return (
     <form onSubmit={handleSave}>
-      {/* <div>
-        <label htmlFor="mname">이름</label>
-        <input
-          type="text"
-          id="mname"
-          value={mname}
-          onChange={(e) => setMname(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="mid">아이디</label>
-        <input
-          type="text"
-          id="mid"
-          value={mid}
-          onChange={(e) => setMid(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="regno">주민등록번호</label>
-        <input
-          type="text"
-          id="regno"
-          value={regno}
-          onChange={(e) => setRegno(e.target.value)}
-        />
-      </div> */}
+      
       <div>
         <label htmlFor="email">이메일</label>
         <input

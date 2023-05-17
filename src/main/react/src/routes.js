@@ -24,6 +24,7 @@ import BoardReadPage from './pages/BoardReadPage';
 import MyPage from './pages/MyPage';
 import QnaReadPage from './pages/QnaReadPage';
 import IdPwPage from './pages/IdPwPage';
+import PasswordResetModal from './pages/FindPwPage';
 
 
 // ----------------------------------------------------------------------
@@ -67,6 +68,11 @@ export default function Router() {
     {
       path: '/IdPw',
       element: <IdPwPage />,
+    },
+    {
+      path: '/IdPw2',
+      element: <PasswordResetModal />
+
     },
     {
       path: '/Coardpage',
