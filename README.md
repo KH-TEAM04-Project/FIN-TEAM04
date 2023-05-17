@@ -92,7 +92,13 @@ WHERE sequence_owner = 'TEAM4'
      drop table reply;
      drop table qna;
      drop table members;
-  2. 
+     drop table CONFIRMATION_TOKEN;
+     drop table TOKEN;
+  2. 시퀀스 삭제
+     drop sequence BOARD_SEQ;
+     drop sequence member_seq;
+     drop sequence qna_seq;
+
 #### 2023. 05. 02 전달사항 및 필요사항
 1. 프로젝트 개요 정리해서 멘토님한테 전달
 2. 질문사항 모아서 멘토님한테 물어보기

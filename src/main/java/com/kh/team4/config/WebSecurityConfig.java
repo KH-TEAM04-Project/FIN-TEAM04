@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/sLogin").permitAll()
-                .antMatchers("/re").permitAll()
+                .antMatchers("/re", "/CoardPage", "EoardPage","/BoardReadPage/**", "/EditPage/**").permitAll()
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
 
