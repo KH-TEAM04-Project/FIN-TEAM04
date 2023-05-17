@@ -53,12 +53,13 @@ spring:
 
   mail:
     host: smtp.naver.com
-    port: 465
-    username: lee970808@naver.com
-    password: lee990606
+    port: 995
+    username: tjrwns4824@naver.com
+    password: 1392514aA!
     properties:
       mail.smtp.auth: true
       mail.smtp.ssl.enable: true
+
 
   # mybatis 연동 설정
   mybatis:
