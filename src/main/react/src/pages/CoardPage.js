@@ -8,10 +8,23 @@ AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
-import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import CollectionsIcon from '@mui/icons-material/Collections';
 import axios from "axios";
 // ----------------------------------------------------------------------
-
+const style13 = {
+  position: 'absolute' ,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+   pt: 10,
+   px: 10,
+   pb: 15
+};
  
 
 
@@ -47,10 +60,15 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function CoardPage1() {
 
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem('accessToken');
+  const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+  
   const [data, setData] = useState({
     title: "",
     RegDate: "",
-    writer:  "",
+    writer:  sub,
     hits :Number,
     content: ""
   });
@@ -90,14 +108,17 @@ export default function CoardPage1() {
 // 여기까지 axios
 
  
-  const navigate = useNavigate();
+  
 
   const handleClick = () => {
     navigate('/EoardPage', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
+   const [open1, setOpen1] = React.useState(false);
 
-
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
 
   const handleClose = () => {
     setOpen(false);
@@ -122,13 +143,28 @@ export default function CoardPage1() {
   };
 
 
-
+       const handleOpen1 = () => {
+             setOpen1(true);
+             };
  
        const handleOpen = () => {
-        
-        setOpen(true);
-       
-      };
+             setOpen(true);
+             };
+
+
+ const [imageSrc, setImageSrc] = useState('');
+
+ const encodeFileToBase64 = (fileBlob) => {
+     const reader = new FileReader();
+     reader.readAsDataURL(fileBlob);
+     return new Promise((resolve) => {
+       reader.onload = () => {
+         setImageSrc(reader.result);
+         resolve();
+       };
+     });
+   };
+
   return (
     <>
       <Helmet>
@@ -284,12 +320,11 @@ export default function CoardPage1() {
 
           
 
-          <TextField    name="writer" label="작성자" 
-
-          value={data.writer}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
-        
+                   
+<TextField    name="writer" label="작성자"
+          value={sub}
+          InputProps={{  readOnly: true,  }}
+           sx={{ my: { xs: 3, sm: 5, mr: 1 } }}/>
                 
             
            
@@ -302,15 +337,45 @@ export default function CoardPage1() {
          />
 
         
-          
+          <div>
             <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
           <Button variant="contained" component="label">
-            Upload  &nbsp; <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
-            <input hidden accept="image/*" multiple type="file" />
-        
+              Upload File &nbsp;<AddAPhotoIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
+            <input hidden accept="image/*" multiple type="file"
+            onChange={(e) => {encodeFileToBase64(e.target.files[0]); }}
+            />
           </Button>
-          </Stack>
-            
+
+
+            <Button variant="contained"  component="label" onClick={handleOpen1}
+            type="file" >
+            이미지 미리보기 &nbsp; <CollectionsIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}}/></Button>
+                <Modal
+                  open={open1}
+                  onClose={handleClose1}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style13}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                  &nbsp; &nbsp; &nbsp; 미리 보기 에유
+                    </Typography>
+                   <Container
+                   style={{ width: '200%', height: '150px' }}
+                   className="preview"> {imageSrc && <img src={imageSrc} alt="preview-img"
+                   style={{ width: '400px', height: '150%' }}/>}
+                   </Container>
+                  </Box>
+                </Modal>
+                   </Stack>
+          </div>
+
+
+
+
+
+
+
           <div>
           <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
             <Modal

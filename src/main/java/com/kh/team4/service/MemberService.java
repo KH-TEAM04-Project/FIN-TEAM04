@@ -84,9 +84,17 @@ public class MemberService {
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        Long midex1 = reqDto.getMno();
+         // TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
+
+
+        // id를 기준으로 mno 값 가져오기
+
+
+        // 상경 데이터 실험 -- mno 매칭 데이터 필요.
+        Long midex1 = memberRepository.findByMid2(reqDto.getMid());
+        System.out.println("넣은 값 확인 : midex1 = " + midex1 );
         TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication, midex1);
-        //TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
+        System.out.println("Access 토큰값 확인 " + tokenDto.getAccessToken());
 
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()

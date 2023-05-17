@@ -18,22 +18,21 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor    // 생성자 주입
 @CrossOrigin(origins = "http://localhost:3000") //CORS 문제 해결 위함
-@RequestMapping("/")
+@RequestMapping("/") //board로 변경
 
 public class BoardController {
     private final BoardService service;
+/*    @GetMapping("/EoardPage") //list로 변경
+    public ResponseEntity<Page<PageResponseDto>> pageArticle(@RequestParam(name = "page") int page) {
+        return ResponseEntity.ok(service.pageArticle(page));
+    }*/
 
-
-    //게시글 등록
-    @PostMapping("/CoardPage")
-    public ResponseEntity<Long> register(@RequestBody BoardDTO dto) {
-        log.info("컨트롤러 진입");
-        //새로 추가된 엔티티의 번호
-        Long bno = service.register(dto);
-
-        log.info("저장 완료 BNO: " + bno);
-        return ResponseEntity.ok(bno);
+    @PostMapping("/CoardPage") //register로 변경
+    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO request) {
+        log.info("등록 컨트롤러");
+        return ResponseEntity.ok(service.postBoard(request.getTitle(), request.getContent()));
     }
+
     //게시글 목록
     @GetMapping("/EoardPage")
     public List<BoardDTO> boardList() {
@@ -43,33 +42,28 @@ public class BoardController {
 
         return boardDTOList;
     }
-    //게시글 삭제
-    @GetMapping("/boardDelete/{bno}")
-    public String delete(@PathVariable("bno") Long bno) {
-        System.out.println("삭제 컨트롤러");
-        service.delete(bno);
-        System.out.println("서비스에서 delete 함수 호출");
-        return "/delete";
-    }
+
     //게시글 상세조회/수정 불러오기
     @GetMapping({"/BoardReadPage/{bno}", "/EditPage/{bno}"})
-    public ResponseEntity<BoardDTO> read(@PathVariable("bno") Long bno) {
+    public ResponseEntity<BoardDTO> getOneBoard(@PathVariable("bno") Long bno) {
         log.info("상세페이지/수정 컨트롤러");
-        /* 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함*/
-        log.info("bno: " + bno);
+       // 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함
         service.updateHits(bno);
-        BoardDTO boardDTO = service.findById(bno);
-        log.info(boardDTO);
-        return ResponseEntity.ok(boardDTO);
+        return ResponseEntity.ok(service.oneBoard(bno));
     }
-    //게시글 수정 등록
-        @PostMapping("/EditPage/{bno}")
-        public ResponseEntity<Long> update(@RequestBody BoardDTO dto) {
-            log.info("업데이트 컨트롤러 진입");
-            //새로 추가된 엔티티의 번호
-            Long bno = service.modify(dto);
-            log.info("수정 완료 BNO: " + bno);
-            return ResponseEntity.ok(bno);
-        }
 
+    //게시글 수정 등록
+    @PostMapping("/EditPage/{bno}")
+    public ResponseEntity<BoardDTO> update(@RequestBody BoardDTO request) {
+        return ResponseEntity.ok(service.changeBoard(
+                request.getBno(), request.getTitle(), request.getContent()
+                ));
+    }
+
+    //게시글 삭제
+    @DeleteMapping ("/boardDelete/{bno}")
+    public ResponseEntity<String> delete(@PathVariable("bno") Long bno) {
+        service.deleteBoard(bno);
+        return new ResponseEntity<>("회원가입이 완료되었습니다.", HttpStatus.OK);
+    }
 }

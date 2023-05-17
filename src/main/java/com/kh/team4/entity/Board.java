@@ -1,9 +1,6 @@
 package com.kh.team4.entity;
 
-import com.kh.team4.dto.BoardDTO;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 
 @Entity
@@ -11,7 +8,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-@ToString(exclude = "writer") //fetch 방식이 Lazy일 경우 사용
+@ToString(exclude = "member") //fetch 방식이 Lazy일 경우 사용
 //Eager Loading(즉시로딩):특정 엔티티를 조회할 때 연관관계를 가진 모든 엔티티를 같이 로딩 -> 성능 저하
 // LAZY : 지연로딩,즉시로딩과 반대, 필요할 때만 사용, LAZY 사용하면 @ToString(exclude) 무조건 사용
 // @ToString(): 해당 클래스의 모든 멤버 변수를 출력
@@ -48,28 +45,22 @@ public class Board extends Base {
     @JoinColumn(name = "member_mno")
     private Member member;
 
+    @Column
+    private Integer fileAttached; //파일 첨부 여부 (첨부 1, 미첨부 0)
 
-    /* 게시글 수정 */
-    public void updateTitle(String title){
-        this.title = title;
-    }
 
-    public void updateContent(String content){
-        this.content = content;
-    }
-
-    public static Board dtoToEntity(BoardDTO dto) {
-        System.out.println("dtoToEntity 실행");
-        Board board = Board.builder()
-              //  .bno(dto.getBno())
-                .title(dto.getTitle())
-                .content(dto.getContent())
-                .hits(dto.getHits())
-               // .member(dto.getMember().getMname())
-                .build();
-      //  System.out.println("member :" + member);
-        System.out.println("보드 dto -> 엔티티 변환 :" + board);
+    public static Board createBoard(String title, String content, Member member) {
+        Board board = new Board();
+        board.title = title;
+        board.content = content;
+        board.member = member;
+        //board.fileAttached = 0; // 0 = 파일 없음
         return board;
     }
-
+    /* 게시글 수정 */
+    public static Board changeBoard(Board board, String title, String content) {
+        board.title = title;
+        board.content = content;
+        return board;
+    }
 }
