@@ -60,9 +60,9 @@ public class SendEmailService {
         int idx = 0;
         for (int i = 0; i < 10; i++) {
             idx = (int) (charSet.length * Math.random());
-            str += charSet[idx] + "!";
+            str += charSet[idx];
         }
-        return str;
+        return str  + "!";
     }
     // 메일보내기
     public void mailSend(MailDTO mailDTO) {

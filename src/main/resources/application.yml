@@ -50,6 +50,7 @@ spring:
 
 
   # 이메일 인증 이거 내 ㄹㅇ 어디가서 유포 금지.
+
   mail:
     host: smtp.naver.com
     port: 995

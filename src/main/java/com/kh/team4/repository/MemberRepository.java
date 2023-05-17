@@ -12,20 +12,18 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-
-    MemberResDTO findByMidAndPwd(final String mid, final String pwd);
-
     Optional<Member> findByMid(String mid);
+
+    @Query(value = "select mid from members where email = :email and mname = :mname", nativeQuery = true)
+    Optional<Member> findByMidwithemailandmname(@Param("email") String email, @Param("mname") String mname);
+
     Member findByEmail(String email);
 
-/*    @Modifying
-    @Query("UPDATE Member m SET m.pwd = :password WHERE m.email = :email")
-    void updatepwd(@Param("email") String email, @Param("password") String password);*/
+
   
     @Query(value = "SELECT mno from members where mid = :mid", nativeQuery = true)
     Long findByMid2(@Param("mid")String mid);
 
-    boolean existsByEmail(String email); // 중복가입방지
 
     @Modifying // select 문이 아님을 나타낸다
     @Query(value = "UPDATE Member m set (m.password, m.email, m.ph) = (:password, :email, :ph) where m.email = :email", nativeQuery = true)
