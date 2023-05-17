@@ -117,30 +117,40 @@ export default function Page404() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+  // reply 객체 확인 및 초기화
+    const reply = {
+        rno: null,
+        content: '',
+        qnaQno: qno
+    };
+
     const userReply = {
-      title: reply.title,
-      RegDate: reply.RegDate,
-      writer: reply.writer,
-      content: reply.content
+      rno: reply.rno,
+      content: reply.content,
+      qnaQno: reply.qnaQno
     };
     axios
       .post(`/QnaReadPage/${qno}`, userReply)
       .then((response) => {
         console.log(response.status, response.replys);
-        // 새로운 댓글을 추가하는 함수 호출
-        addReply(response.replys);
+        addReply(response.replys.map(reply => ({
+          rno: reply.rno || '', // 'rno'가 존재하지 않을 경우 빈 문자열로 설정
+          content: reply.content,
+          qnaQno: reply.qnaQno || '' // 'qnaQno'가 존재하지 않을 경우 빈 문자열로 설정
+        })));
       })
       .catch((error) => {
         if (error.response) {
-          console.log("이거  댓글 에러인걸?");
+          console.log("댓글 에러 발생");
           console.log(userReply);
         } else if (error.request) {
-          console.log("network error");
+          console.log("네트워크 오류");
         } else {
           console.log(error);
         }
-      });
-  };
+        });
+     };
 
   const addReply = (newReply) => {
     setReplys((prevReplys) => [...prevReplys, newReply]);

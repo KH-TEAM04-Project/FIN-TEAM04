@@ -18,9 +18,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByMid(String mid);
     Member findByEmail(String email);
 
-    @Modifying
+/*    @Modifying
     @Query("UPDATE Member m SET m.pwd = :password WHERE m.email = :email")
-    void updatepwd(@Param("email") String email, @Param("password") String password);
+    void updatepwd(@Param("email") String email, @Param("password") String password);*/
   
     @Query(value = "SELECT mno from members where mid = :mid", nativeQuery = true)
     Long findByMid2(@Param("mid")String mid);

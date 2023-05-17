@@ -63,9 +63,9 @@ public class MemberController {
 
     //Email과 name의 일치여부를 check하는 컨트롤러
     @GetMapping("/check/findPw")
-    public @ResponseBody Map<String, Boolean> pw_find(String userEmail, String userName){
+    public @ResponseBody Map<String, Boolean> pw_find(String email, String mname){
         Map<String,Boolean> json = new HashMap<>();
-        boolean pwFindCheck = memberService.memberEmailCheck(userEmail,userName);
+        boolean pwFindCheck = memberService.memberEmailCheck(email,mname);
 
         System.out.println(pwFindCheck);
         json.put("check", pwFindCheck);
@@ -74,8 +74,12 @@ public class MemberController {
 
     //등록된 이메일로 임시비밀번호를 발송하고 발송된 임시비밀번호로 사용자의 pw를 변경하는 컨트롤러
     @PostMapping("/check/findPw/sendEmail")
-    public @ResponseBody void sendEmail(String userEmail, String userName){
-        MailDTO dto = sendEmailService.createMailAndChangePassword(userEmail, userName);
+    public @ResponseBody void sendEmail(MemberReqDTO requestDto){
+        String email = requestDto.getEmail();
+        String mname = requestDto.getMname();
+        System.out.println(requestDto.getEmail() + requestDto.getPwd());
+        MailDTO dto = sendEmailService.createMailAndChangePassword(email, mname);
+        System.out.println(dto.toString());
         sendEmailService.mailSend(dto);
 
     }
