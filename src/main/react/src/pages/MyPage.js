@@ -24,6 +24,29 @@ function MyPage() {
       // payload에서 MNO 값을 추출하여 상태에 저장
       setMno(decodedToken.mno);
       console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
+
+      // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
+      axios.post('/MyPageCont', { MNO: decodedToken.mno }, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(response => {
+        // 사용자 데이터를 성공적으로 가져온 경우
+        const userData = response.data;
+
+        // 사용자 정보를 상태에 설정
+        setMname(userData.mname);
+        setMid(userData.mid);
+        setRegno(userData.regno);
+        setEmail(userData.email);
+        setPwd(userData.pwd);
+        setDetailAddress(userData.detailaddress);
+        setAddress(userData.address);
+        setPh(userData.ph);
+      })
+      .catch(error => {
+        // API 호출 중 에러 발생한 경우
+        console.error(error);
+      });
     }
   }, [token]);
 
@@ -56,27 +79,6 @@ function MyPage() {
     }
   };
 
-  // 백으로 MNO 값 전송하는 함수
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    if (mno) {
-      axios.post('/MyPageCont', {
-        MNO: mno // 상태에 저장된 mno 값을 서버로 보냄
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(response => {
-        // 사용자 데이터를 성공적으로 가져온 경우
-        console.log(response.data);
-      })
-      .catch(error => {
-        // API 호출 중 에러 발생한 경우
-        console.error(error);
-      });
-    }
-  };
-
   return (
     <div>
       <h1>마이페이지</h1>
@@ -91,7 +93,6 @@ function MyPage() {
 
       <MyPageForm onSave={handleSave} />
 
-      
       {/* 회원 삭제 폼 */}
       <form onSubmit={(e) => {
         e.preventDefault();
@@ -107,10 +108,6 @@ function MyPage() {
         </div>
         <button type="submit">회원 삭제</button>
       </form>
-
-
-      
-      
     </div>
   );
 }

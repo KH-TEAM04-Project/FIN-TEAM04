@@ -19,6 +19,15 @@ public class SendEmailService {
     private JavaMailSender mailSender;
     private static final String FROM_ADDRESS = "본인의 이메일 주소를 입력하세요!";
 
+    private final PasswordEncoder passwordEncoder;
+
+    public SendEmailService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+    public SendEmailService() {
+        // 기본 생성자 추가
+        this.passwordEncoder = null;
+    }
 
     public MailDTO createMailAndChangePassword(String userEmail, String userName) {
         String str = getTempPassword();
@@ -27,13 +36,11 @@ public class SendEmailService {
         dto.setTitle(userName + "님의 꽁머니 임시비밀번호 안내 이메일 입니다.");
         dto.setMessage("안녕하세요. 꽁머니 임시비밀번호 안내 관련 이메일 입니다." + "[" + userName + "]" + "님의 임시 비밀번호는 "
                 + str + " 입니다.");
-        updatePassword(str, userEmail, passwordEncoder);
+        updatePassword(str, userEmail);
         return dto;
     }
 
-    private final PasswordEncoder passwordEncoder;
-
-    public void updatePassword(String str, String userEmail, PasswordEncoder passwordEncoder) {
+    public void updatePassword(String str, String userEmail) {
         String pw = passwordEncoder.encode(str);  // 비밀번호 암호화
         String memberId = memberRepository.findByEmail(userEmail).getEmail();
         memberRepository.updatepwd(memberId, pw);
@@ -59,8 +66,8 @@ public class SendEmailService {
         message.setTo(mailDTO.getAddress());
         message.setSubject(mailDTO.getTitle());
         message.setText(mailDTO.getMessage());
-        message.setFrom("lee970808@naver.com");
-        message.setReplyTo("lee970808@naver.coom");
+        message.setFrom("tjrwns4824@naver.com");
+        message.setReplyTo("tjrwns4824@naver.com");
         System.out.println("message"+message);
         mailSender.send(message);
     }
