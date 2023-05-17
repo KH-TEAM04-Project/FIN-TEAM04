@@ -3,6 +3,15 @@ server:
 
 # database 연동 설정
 spring:
+
+  redis:
+    pool:
+      min-idle: 0
+      max-idle: 8
+      max-active: 8
+    port: 6379
+    host: 127.0.0.1
+
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@localhost:1521:xe
@@ -36,12 +45,19 @@ spring:
   jwt:
     headers: Authorization
     secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpZzao
-#      access_token-valid-seconds : 3600
-#      refresh-token-valid-seconds : 86400
+  #      access_token-valid-seconds : 3600
+  #      refresh-token-valid-seconds : 86400
 
 
-# 이메일 인증 이거 내 ㄹㅇ 어디가서 유포 금지.
-
+  # 이메일 인증 이거 내 ㄹㅇ 어디가서 유포 금지.
+  mail:
+    host: smtp.naver.com
+    port: 995
+    username: lee970808@naver.com
+    password: lee990606
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
 
 
   # mybatis 연동 설정
