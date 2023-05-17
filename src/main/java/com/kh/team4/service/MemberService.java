@@ -88,9 +88,7 @@ public class MemberService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
          // TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
 
-
         // id를 기준으로 mno 값 가져오기
-
 
         // 상경 데이터 실험 -- mno 매칭 데이터 필요.
         Long midex1 = memberRepository.findByMid2(reqDto.getMid());
@@ -182,6 +180,15 @@ public class MemberService {
         return "로그아웃 완료";
     }
 
+
+    public String findID2(String email, String mname) {
+        System.out.println("아이디 찾기 진행중");
+        Optional<Member> findID2 = memberRepository.findByMidwithemailandmname(email, mname);
+        MemberResDTO aaa1 = MemberResDTO.of2(findID2);
+        String bbb2 = aaa1.getMid();
+        System.out.println("찾아낸 아이디 값은 :" + bbb2);
+        return  bbb2;
+    }
 
 }
 
