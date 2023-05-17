@@ -4,6 +4,7 @@ import com.kh.team4.entity.Base;
 import com.kh.team4.entity.Board;
 import com.kh.team4.entity.Member;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,7 +29,11 @@ public class BoardDTO {
     private String modDate;
     private boolean isWritten; //작성여부
 
-
+    //멀티파트파일 인터페이스 : 파일 담아 컨트롤러로 넘겨주는 역할
+    private MultipartFile boardFile; //save.html -> Controller 파일 담는 용도
+    private String originalFileName; //원본 파일 이름
+    private String storedFileName; //서버 저장용 파일 이름
+    private int fileAttached; //파일 첨부 여부(첨부 1, 미첨부 0)
 
     public static BoardDTO entityToDTO(Board board) {
             BoardDTO boardDTO = BoardDTO.builder()

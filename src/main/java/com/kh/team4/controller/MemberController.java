@@ -1,20 +1,16 @@
 package com.kh.team4.controller;
 
-import com.kh.team4.dto.ChangePasswordRequestDto;
-import com.kh.team4.dto.MemberReqDTO;
-import com.kh.team4.dto.MemberResDTO;
-import com.kh.team4.dto.TokenDTO;
+import com.kh.team4.dto.*;
 import com.kh.team4.service.MemberService;
-import com.kh.team4.service.RegisterMail;
+import com.kh.team4.service.SendEmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @CrossOrigin(origins = "localhost:3000")
@@ -25,6 +21,8 @@ import javax.validation.Valid;
 public class MemberController {
     private final MemberService memberService;
     private final JavaMailSender javaMailSender;
+
+    private final SendEmailService sendEmailService;
 
 
     //회원가입 기능 구현
@@ -61,25 +59,25 @@ public class MemberController {
         return ResponseEntity.ok(memberService.login(requestDto));
     }
 
-  /*  @Value("${spring.mail.username}")
-    private String from;
+    //Email과 name의 일치여부를 check하는 컨트롤러
+    @GetMapping("/check/findPw")
+    public @ResponseBody Map<String, Boolean> pw_find(String userEmail, String userName){
+        Map<String,Boolean> json = new HashMap<>();
+        boolean pwFindCheck = memberService.memberEmailCheck(userEmail,userName);
 
-    @PostMapping("/password")
-    public ResponseEntity<MemberResDTO> setMemberPassword(@RequestBody ChangePasswordRequestDto request) {
-        return ResponseEntity.ok(memberService.changeMemberPassword(request.getEmail(), request.getExPassword(), request.getNewPassword()));
+        System.out.println(pwFindCheck);
+        json.put("check", pwFindCheck);
+        return json;
     }
 
-    @Autowired
-    RegisterMail registerMail;
+    //등록된 이메일로 임시비밀번호를 발송하고 발송된 임시비밀번호로 사용자의 pw를 변경하는 컨트롤러
+    @PostMapping("/check/findPw/sendEmail")
+    public @ResponseBody void sendEmail(String userEmail, String userName){
+        MailDTO dto = sendEmailService.createMailAndChangePassword(userEmail, userName);
+        sendEmailService.mailSend(dto);
 
-    //127.0.0.1:8080/ROOT/api/mail/confirm.json?email
-    @PostMapping(value = "/email")
-    public String mailConfirm(@RequestParam(name = "email") String email, String mname) throws Exception{
-        String code = registerMail.sendSimpleMessage(email);
-        System.out.println("사용자에게 발송한 인증코드 ==> " + code);
+    }
 
-        return code;
-    }*/
 
 }
 
