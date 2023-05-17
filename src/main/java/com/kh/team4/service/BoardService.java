@@ -3,7 +3,7 @@ package com.kh.team4.service;
 import com.kh.team4.dto.BoardDTO;
 
 import com.kh.team4.entity.*;
-import com.kh.team4.jwt.SecurityUtil;
+import com.kh.team4.config.SecurityUtil;
 import com.kh.team4.repository.BoardRepository;
 import com.kh.team4.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 @Service
@@ -35,15 +36,15 @@ public class BoardService {
         Board board = repository.findById(bno).orElseThrow(() -> new RuntimeException("글이 없습니다."));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // SecurityUtil에서 SecurityContext에 유저정보가 저장
-        if (authentication == null || authentication.getPrincipal() == "anonymousUser") {
+    /*    if (authentication == null || authentication.getPrincipal() == "anonymousUser") {
             // 인증정보가 없을 경우, 익명유저 값 적용
             return BoardDTO.of(board, false);
             //Board 객체와 false 합쳐서 BoardDTO생성
-        } else { //인증정보가 존재할 경우, 인증정보에 있는 id를 추출해 내어 member객체를 찾아내고, Board의 Member객체와 일치 여부 boolean 값을 얻어옴
+        } else {*/ //인증정보가 존재할 경우, 인증정보에 있는 id를 추출해 내어 member객체를 찾아내고, Board의 Member객체와 일치 여부 boolean 값을 얻어옴
             Member member = memberRepository.findById(Long.parseLong(authentication.getName())).orElseThrow();
             boolean result = board.getMember().equals(member);
             return BoardDTO.of(board, result);
-        }
+
     }
     /*public Page<PageResponseDto> pageArticle(int pageNum) {
        return articleRepository.searchAll(PageRequest.of(pageNum - 1, 20));
@@ -66,18 +67,29 @@ public class BoardService {
     }
 
     /* 게시글 등록 */
+/*    @Transactional
+    public Long postBoard(BoardDTO dto) {
+        log.info("postBoard서비스");
+     *//*   Long mno2 = 1L;
+        Member member = new Member(mno2);*//*
+        Member member = isMemberCurrent();
+        log.info("member : " + member);
+
+        //Board board = Board.createBoard(title, content, member);
+        Board board = dtoToEntity(dto, member);
+        log.info("board : " + board);
+        repository.save(board);
+        return board.getBno();
+        //인증정보에서 Member의 id를 추출해, Member 객체를 생성해내어, Repository를 거쳐 DB로
+    }*/
+
     @Transactional
     public BoardDTO postBoard(String title, String content) {
-        log.info("postBoard서비스");
-        Long mno2 = 123L;
-        Member mem2 = new Member(mno2);
-
+  /*      Long mno2 = 1L;
+        Member member = new Member(mno2);*/
         Member member = isMemberCurrent();
-        log.info("member : " + mem2);
         Board board = Board.createBoard(title, content, member);
-        log.info("board : " + board);
         return BoardDTO.of(repository.save(board), true);
-        //인증정보에서 Member의 id를 추출해, Member 객체를 생성해내어, Repository를 거쳐 DB로
     }
 
     /* 게시글 수정 */
@@ -96,8 +108,11 @@ public class BoardService {
 
     /* 토큰 확인 메서드 : 수정과 삭제에 사용 */
     public Member isMemberCurrent() {
-        return memberRepository.findById(SecurityUtil.getCurrentMemberId())
+        log.info("isMemberCurrent 진입");
+        Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId()) // mno
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
+        log.info("member: " + member);
+        return member;
         //로그인 확인 후 인증정보에서 Member의 id를 추출해, Member객체를 생성
     }
 

@@ -61,8 +61,8 @@ public class BoardDTO {
                 .writerID(board.getMember().getMid())
                 .title(board.getTitle())
                 .content(board.getContent())
-                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                .modDate(board.getModDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .hits(board.getHits())
+              //  .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .isWritten(bool)
                 .build();
     }

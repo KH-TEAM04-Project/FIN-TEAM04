@@ -27,9 +27,18 @@ public class BoardController {
         return ResponseEntity.ok(service.pageArticle(page));
     }*/
 
-    @PostMapping("/CoardPage") //register로 변경
-    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO request) {
+/*    @PostMapping("/CoardPage") //register로 변경
+    public ResponseEntity<Long> createArticle(@RequestBody BoardDTO dto) {
         log.info("등록 컨트롤러");
+        log.info("writer :" + dto.getWriterID());
+        Long bno = service.postBoard(dto);
+        log.info("BNO: " + bno);
+        return ResponseEntity.ok(bno);
+
+    }*/
+
+    @PostMapping("/CoardPage")
+    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO request) {
         return ResponseEntity.ok(service.postBoard(request.getTitle(), request.getContent()));
     }
 
