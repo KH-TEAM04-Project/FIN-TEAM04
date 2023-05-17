@@ -1,5 +1,6 @@
 package com.kh.team4.service;
 
+import com.kh.team4.config.RedisUtil;
 import com.kh.team4.config.SecurityUtil;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
@@ -25,6 +26,7 @@ import java.util.Optional;
 public class MemberService {
     //final 붙여야지 생성자 만들어줌
     private final MemberRepository memberRepository;
+    private final RedisUtil redisUtil;
     private final PasswordEncoder passwordEncoder;
 
     // 회원가입 기능 구현
@@ -101,7 +103,7 @@ public class MemberService {
                 .key(authentication.getName())
                 .value(tokenDto.getRefreshToken())
                 .build();
-        System.out.println("힘들어 뒤질각" + refreshToken);
+        System.out.println("refreshtoken 생성중" + refreshToken);
         refreshTokenRepository.save(refreshToken);
 
         // 5. 토큰 발급
@@ -169,7 +171,16 @@ public class MemberService {
     }
 
 
+    public String logout(String accessToken, Member users) {
 
+        // refreshToken 테이블의 refreshToken 삭제
+        refreshTokenRepository.deleteRefreshTokenByKey(users.getEmail());
+
+        // 레디스에 accessToken 사용못하도록 등록
+        redisUtil.setBlackList(accessToken, "accessToken", 5);
+
+        return "로그아웃 완료";
+    }
 
 
 }

@@ -38,6 +38,10 @@ dependencies {
     implementation 'junit:junit:4.13.1'
     implementation 'junit:junit:4.13.1'
 
+    // redis 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
     runtimeOnly 'com.h2database:h2'
