@@ -136,7 +136,7 @@ posts.sort(compareFunction);
               </TableCell>
               <TableCell align="right">{data.content}</TableCell>
               <TableCell align="right">{data.regDate}</TableCell>
-              <TableCell align="right">조회수</TableCell>
+              <TableCell align="right">{data.hits}</TableCell>
               <TableCell align="right">{data.writer}</TableCell>
               <TableCell align="right">
 
