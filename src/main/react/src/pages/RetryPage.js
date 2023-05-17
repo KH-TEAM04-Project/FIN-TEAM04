@@ -207,16 +207,17 @@ return (
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-            -
-          </TableCell>
-          <TableCell align="right">{data.qno}</TableCell>
-          <TableCell align="right">
-            <Link to={`/QnaReadPage/${data.qno}`}>{data.title}</Link>
-          </TableCell>
-          <TableCell align="right">{data.content}</TableCell>
-          <TableCell align="right">{data.regDate}</TableCell>
-          <TableCell align="right">조회수</TableCell>
-          <TableCell align="right">{data.writer}</TableCell>
+              -
+              </TableCell>
+              <TableCell align="right">{data.qno}</TableCell>
+              <TableCell align="right">
+                <Link to={`/QnaReadPage/${data.qno}`}>{data.title}</Link>
+              </TableCell>
+              <TableCell align="right">{data.content}</TableCell>
+              <TableCell align="right">{data.regDate}</TableCell>
+              <TableCell align="right">{data.hits}</TableCell>
+              <TableCell align="right">{data.writer}</TableCell>
+
               <TableCell align="right">
 
                    <Link to={`/QEditPage/${data.qno}`}>
