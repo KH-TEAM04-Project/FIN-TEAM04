@@ -8,9 +8,24 @@ AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
-import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import CollectionsIcon from '@mui/icons-material/Collections';
 import axios from "axios";
 // ----------------------------------------------------------------------
+const style13 = {
+  position: 'absolute' ,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+   pt: 10,
+   px: 10,
+   pb: 15
+};
+
 
 const StyledContent2 = styled('div')(({ theme }) => ({
   maxWidth: 1000,
@@ -92,13 +107,22 @@ export default function DoardPage() {
     };
 
     const [open, setOpen] = useState(false);
+    const [open1, setOpen1] = React.useState(false);
 
     const handleOpen = () => {
       setOpen(true);
     };
 
+   const handleOpen1 = () => {
+         setOpen1(true);
+         };
+
     const handleClose = () => {
       setOpen(false);
+    };
+
+     const handleClose1 = () => {
+          setOpen1(false);
     };
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -122,6 +146,18 @@ export default function DoardPage() {
   
 
   
+
+ const [imageSrc, setImageSrc] = useState('');
+ const encodeFileToBase64 = (fileBlob) => {
+     const reader = new FileReader();
+     reader.readAsDataURL(fileBlob);
+     return new Promise((resolve) => {
+       reader.onload = () => {
+         setImageSrc(reader.result);
+         resolve();
+       };
+     });
+   };
 
   return (
     <>
@@ -282,14 +318,38 @@ export default function DoardPage() {
           onChange={handleChange}
           defaultValue=" 글 작성"
          />
-       
-         <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
-      <Button variant="contained" component="label">
-        Upload  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
-        <input hidden accept="image/*" multiple type="file" />
-        
-      </Button>
-      </Stack>
+<div>
+            <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
+          <Button variant="contained" component="label">
+              Upload File &nbsp;<AddAPhotoIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
+            <input hidden accept="image/*" multiple type="file"
+            onChange={(e) => {encodeFileToBase64(e.target.files[0]); }}
+            />
+          </Button>
+
+
+            <Button variant="contained"  component="label" onClick={handleOpen1}
+            type="file" >
+            이미지 미리보기 &nbsp; <CollectionsIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}}/></Button>
+                <Modal
+                  open={open1}
+                  onClose={handleClose1}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style13}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                  &nbsp; &nbsp; &nbsp; 미리 보기 에유
+                    </Typography>
+                   <Container
+                   style={{ width: '200%', height: '150px' }}
+                   className="preview"> {imageSrc && <img src={imageSrc} alt="preview-img"
+                   style={{ width: '400px', height: '150%' }}/>}
+                   </Container>
+                  </Box>
+                </Modal>
+                   </Stack>
+          </div>
          
       <div>
       <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>

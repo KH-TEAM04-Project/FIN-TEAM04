@@ -69,8 +69,11 @@ public class BoardService {
     @Transactional
     public BoardDTO postBoard(String title, String content) {
         log.info("postBoard서비스");
+        Long mno2 = 123L;
+        Member mem2 = new Member(mno2);
+
         Member member = isMemberCurrent();
-        log.info("member : " + member);
+        log.info("member : " + mem2);
         Board board = Board.createBoard(title, content, member);
         log.info("board : " + board);
         return BoardDTO.of(repository.save(board), true);

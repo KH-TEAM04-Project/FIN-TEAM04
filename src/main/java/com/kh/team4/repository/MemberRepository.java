@@ -2,7 +2,6 @@ package com.kh.team4.repository;
 
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.entity.Member;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +16,14 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     MemberResDTO findByMidAndPwd(final String mid, final String pwd);
 
     Optional<Member> findByMid(String mid);
+    Member findByEmail(String email);
+
+    @Modifying
+    @Query("UPDATE Member m SET m.pwd = :password WHERE m.email = :email")
+    void updatepwd(@Param("email") String email, @Param("password") String password);
+  
+    @Query(value = "SELECT mno from members where mid = :mid", nativeQuery = true)
+    Long findByMid2(@Param("mid")String mid);
 
     boolean existsByEmail(String email); // 중복가입방지
 
