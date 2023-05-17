@@ -1,22 +1,15 @@
 package com.kh.team4.service;
 
 import com.kh.team4.config.SecurityUtil;
-import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TokenDTO;
-import com.kh.team4.entity.Board;
-import com.kh.team4.entity.ConfirmationToken;
 import com.kh.team4.entity.Member;
 import com.kh.team4.entity.RefreshToken;
 import com.kh.team4.jwt.TokenProvider;
 import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -152,6 +145,19 @@ public class MemberService {
         }
         member.setPwd(passwordEncoder.encode((newPassword)));
         return MemberResDTO.of(memberRepository.save(member));
+    }
+
+    public boolean memberEmailCheck(String userEmail, String userName) {
+
+        Member member = memberRepository.findByEmail(userEmail);
+        if(member!=null && member.getMname().equals(userName)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        // Email을 통해 해당 email로 가입된 정보가 있는지 확인하고,
+        // 가입된 정보가 있다면 입력받은 name과 등록된 name이 일치한지 여부를 리턴하는 메소드
     }
 
 
