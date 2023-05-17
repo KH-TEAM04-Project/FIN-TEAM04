@@ -157,10 +157,10 @@ public class MemberService {
         return MemberResDTO.of(memberRepository.save(member));
     }
 
-    public boolean memberEmailCheck(String userEmail, String userName) {
+    public boolean memberEmailCheck(String email, String mname) {
 
-        Member member = memberRepository.findByEmail(userEmail);
-        if(member!=null && member.getMname().equals(userName)) {
+        Member member = memberRepository.findByEmail(email);
+        if(member!=null && member.getMname().equals(mname)) {
             return true;
         }
         else {
