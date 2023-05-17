@@ -11,7 +11,7 @@ function MyPage() {
   const [detailaddress, setDetailAddress] = useState(""); // 상세주소 상태
   const [address, setAddress] = useState(""); // 주소 상태
   const [ph, setPh] = useState(""); // 휴대폰번호 상태
-  const [sub, setSub] = useState(""); // 토큰에서 추출한 sub 값 상태
+  const [mno, setMno] = useState(""); // 토큰에서 추출한 sub 값 상태
 
   // 로컬 스토리지에서 토큰 값을 가져옴
   const token = localStorage.getItem('accessToken');
@@ -22,8 +22,8 @@ function MyPage() {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
       // payload에서 MNO 값을 추출하여 상태에 저장
-      setSub(decodedToken.sub);
-      console.log(decodedToken.sub); // 추출한 sub 값 콘솔에 출력
+      setMno(decodedToken.mno);
+      console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
     }
   }, [token]);
 
@@ -60,9 +60,9 @@ function MyPage() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (sub) {
+    if (mno) {
       axios.post('/MyPageCont', {
-        MNO: sub // 상태에 저장된 sub 값을 서버로 보냄
+        MNO: mno // 상태에 저장된 mno 값을 서버로 보냄
       }, {
         headers: { Authorization: `Bearer ${token}` }
       })
