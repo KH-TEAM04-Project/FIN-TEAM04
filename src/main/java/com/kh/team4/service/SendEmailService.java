@@ -1,6 +1,7 @@
 package com.kh.team4.service;
 
 import com.kh.team4.dto.MailDTO;
+import com.kh.team4.entity.Member;
 import com.kh.team4.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,23 +21,31 @@ public class SendEmailService {
     private static final String FROM_ADDRESS = "본인의 이메일 주소를 입력하세요!";
 
 
-    public MailDTO createMailAndChangePassword(String userEmail, String userName) {
+    public MailDTO createMailAndChangePassword(String email, String mname) {
         String str = getTempPassword();
         MailDTO dto = new MailDTO();
-        dto.setAddress(userEmail);
-        dto.setTitle(userName + "님의 꽁머니 임시비밀번호 안내 이메일 입니다.");
-        dto.setMessage("안녕하세요. 꽁머니 임시비밀번호 안내 관련 이메일 입니다." + "[" + userName + "]" + "님의 임시 비밀번호는 "
+        dto.setAddress(email);
+        dto.setTitle(mname + "님의 꽁머니 임시비밀번호 안내 이메일 입니다.");
+        dto.setMessage("안녕하세요. 꽁머니 임시비밀번호 안내 관련 이메일 입니다." + "[" + mname + "]" + "님의 임시 비밀번호는 "
                 + str + " 입니다.");
-        updatePassword(str, userEmail, passwordEncoder);
+        updatePassword(str, email, passwordEncoder);
         return dto;
     }
 
     private final PasswordEncoder passwordEncoder;
 
-    public void updatePassword(String str, String userEmail, PasswordEncoder passwordEncoder) {
+  /*  public void updatePassword(String str, String email, PasswordEncoder passwordEncoder) {
         String pw = passwordEncoder.encode(str);  // 비밀번호 암호화
-        String memberId = memberRepository.findByEmail(userEmail).getEmail();
+        String memberId = memberRepository.findByEmail(email).getEmail();
         memberRepository.updatepwd(memberId, pw);
+    }*/
+
+    public void updatePassword(String str, String email, PasswordEncoder passwordEncoder) {
+        String pw = passwordEncoder.encode(str);  // 비밀번호 암호화
+        Member user = memberRepository.findByEmail(email);
+        user.setPwd(pw);
+        System.out.println("User: " + user.getPwd() + "원래 비번" + pw);
+        memberRepository.save(user);
     }
 
     public String getTempPassword() {
@@ -48,7 +57,7 @@ public class SendEmailService {
         int idx = 0;
         for (int i = 0; i < 10; i++) {
             idx = (int) (charSet.length * Math.random());
-            str += charSet[idx];
+            str += charSet[idx] + "!";
         }
         return str;
     }

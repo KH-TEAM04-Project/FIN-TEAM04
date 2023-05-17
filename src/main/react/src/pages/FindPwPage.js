@@ -42,7 +42,7 @@ const PasswordResetModal = () => {
           swal('발송 완료!', '입력하신 이메일로 임시비밀번호가 발송되었습니다.', 'success').then((OK) => {
             if (OK) {
               axios
-                .post('/check/findPw/sendEmail', requestData)
+                .post('/check/findPw/sendEmail', null, { params: requestData })
                 .then(() => {
                   window.location = '/login';
                 })
