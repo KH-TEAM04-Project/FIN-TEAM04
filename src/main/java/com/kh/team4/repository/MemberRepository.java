@@ -24,6 +24,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query(value = "SELECT mno from members where mid = :mid", nativeQuery = true)
     Long findByMid2(@Param("mid")String mid);
 
+    @Modifying
+    @Query("UPDATE Member m SET m.pwd = :password WHERE m.email = :email")
+    void updatepwd(@Param("email") String email, @Param("password") String password);
 
     @Modifying // select 문이 아님을 나타낸다
     @Query(value = "UPDATE Member m set (m.password, m.email, m.ph) = (:password, :email, :ph) where m.email = :email", nativeQuery = true)

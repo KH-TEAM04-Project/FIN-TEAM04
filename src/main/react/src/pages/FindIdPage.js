@@ -38,7 +38,7 @@ const UsernameRecoveryModal = () => {
     };
 
     axios
-      .post('/check/findUsername', requestData)
+      .post('/check/findID', null, {params: requestData})
       .then((response) => {
         const res = response.data;
         if (res.success) {
