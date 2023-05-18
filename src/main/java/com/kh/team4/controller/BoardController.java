@@ -36,11 +36,12 @@ public class BoardController {
         return ResponseEntity.ok(bno);
 
     }*/
-//
-//    @PostMapping("/board/regist") //mno값을 빼서 변수에 넣어
-//    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO boardDTO) {
-//        return ResponseEntity.ok(service.postBoard(boardDTO));
-//    }
+
+
+    @PostMapping("/board/regist") 
+    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO request) {
+        return ResponseEntity.ok(service.postBoard(request.getTitle(), request.getContent()));
+    }
 
     //게시글 목록
     @GetMapping("/board/list")
