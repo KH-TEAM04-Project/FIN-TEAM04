@@ -37,6 +37,12 @@ public class MemberService {
         String aaa = "success";
         return aaa;
     }
+    public MemberResDTO detail(Long mno) {
+        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
+        System.out.println("마이페이지로 보낼 값 (3가지만 선정) : " + member.toString());
+        return member;
+    }
+
 
     public void delete(Long mno) {
         System.out.println("받은 값 : " + mno);

@@ -4,6 +4,7 @@ import com.kh.team4.entity.Member;
 import lombok.*;
 
 import javax.persistence.Id;
+import java.util.Optional;
 
 @ToString
 @Getter
@@ -48,6 +49,18 @@ public class MemberResDTO {
                 .regno(member.getRegno())
                 .email(member.getEmail())
                 .ph(member.getPh())
+
+                .build();
+    }
+
+    public static MemberResDTO of2(Optional<Member> member) {
+        return MemberResDTO.builder()
+                .mid(member.get().getMid())
+                .mno(member.get().getMno())
+                .mname(member.get().getMname())
+                .regno(member.get().getRegno())
+                .email(member.get().getEmail())
+                .ph(member.get().getPh())
 
                 .build();
     }
