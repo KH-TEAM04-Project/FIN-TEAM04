@@ -25,10 +25,11 @@ function MyPage() {
       setMno(decodedToken.mno);
       console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
 
+      const mno = decodedToken.mno;
       // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
-      axios.post('/MyPageCont', { MNO: decodedToken.mno }, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      axios.post("/MyPageCont", {mno} )
+
+
       .then(response => {
         // 사용자 데이터를 성공적으로 가져온 경우
         const userData = response.data;

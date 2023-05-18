@@ -43,6 +43,12 @@ public class MemberController {
         memberService.delete(mno);
     }
 
+    @PostMapping("/MyPageCont")
+    public ResponseEntity<MemberResDTO> memberDetail(@RequestBody MemberReqDTO memreqDTO) {
+        Long mno = memreqDTO.getMno();
+        System.out.println("회원정보 페이지 진입 및 받은 값 : " + mno);
+        return ResponseEntity.ok(memberService.detail(mno));
+    }
     @PostMapping("/memberUpdate")
     public ResponseEntity<MemberResDTO> memberUpdate(@RequestBody MemberReqDTO memberReqDTO) throws Exception {
         System.out.println("받은 값 : " + memberReqDTO.toString());
