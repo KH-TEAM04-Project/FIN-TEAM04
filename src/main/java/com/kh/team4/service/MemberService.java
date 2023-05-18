@@ -196,5 +196,19 @@ public class MemberService {
         return  bbb2;
     }
 
+    public boolean confirmpwd(Long mno, String pwd) {
+       Optional<Member> searchmember = memberRepository.findById(mno);
+       String confirmedPwd = searchmember.get().getPwd();
+            System.out.println("서치한 패스워드 확인 : " + confirmedPwd);
+            System.out.println("가져온 패스워드 확인 : " + pwd);
+       String getPwd = passwordEncoder.encode(pwd);
+            System.out.println("가져온 패스워드 인코딩 값 확인 : " + getPwd);
+
+       if (confirmedPwd.equals(getPwd)){
+           return true;
+       } else {
+           return false;
+       }
+    }
 }
 

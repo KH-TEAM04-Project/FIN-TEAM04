@@ -20,7 +20,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findByEmail(String email);
 
 
-  
     @Query(value = "SELECT mno from members where mid = :mid", nativeQuery = true)
     Long findByMid2(@Param("mid")String mid);
 
