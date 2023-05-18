@@ -1,9 +1,12 @@
 package com.kh.team4.service;
 
+import com.kh.team4.config.SecurityUtil;
 import com.kh.team4.dto.BoardDTO;
 
+import com.kh.team4.dto.TokenDTO;
 import com.kh.team4.entity.*;
-import com.kh.team4.jwt.SecurityUtil;
+
+import com.kh.team4.config.SecurityUtil;
 import com.kh.team4.repository.BoardRepository;
 import com.kh.team4.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +16,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.kh.team4.entity.Board.dtoToEntity;
 
 
 @Service
@@ -43,6 +47,7 @@ public class BoardService {
             Member member = memberRepository.findById(Long.parseLong(authentication.getName())).orElseThrow();
             boolean result = board.getMember().equals(member);
             return BoardDTO.of(board, result);
+
         }
     }
     /*public Page<PageResponseDto> pageArticle(int pageNum) {
@@ -66,18 +71,33 @@ public class BoardService {
     }
 
     /* 게시글 등록 */
-    @Transactional
-    public BoardDTO postBoard(String title, String content) {
+/*    @Transactional
+    public Long postBoard(BoardDTO dto) {
         log.info("postBoard서비스");
-        Long mno2 = 123L;
-        Member mem2 = new Member(mno2);
-
+     *//*   Long mno2 = 1L;
+        Member member = new Member(mno2);*//*
         Member member = isMemberCurrent();
-        log.info("member : " + mem2);
-        Board board = Board.createBoard(title, content, member);
+        log.info("member : " + member);
+
+        //Board board = Board.createBoard(title, content, member);
+        Board board = dtoToEntity(dto, member);
         log.info("board : " + board);
-        return BoardDTO.of(repository.save(board), true);
+        repository.save(board);
+        return board.getBno();
         //인증정보에서 Member의 id를 추출해, Member 객체를 생성해내어, Repository를 거쳐 DB로
+    }*/
+
+    @Transactional
+    public BoardDTO postBoard(BoardDTO boardDTO) {
+  /*      Long mno2 = 1L;
+        Member member = new Member(mno2);*/
+        Member member = isMemberCurrent();
+       // Board board = Board.createBoard(bno, title, content, member);
+        System.out.println(boardDTO);
+        System.out.println(member);
+        Board board = dtoToEntity(boardDTO, member);
+        System.out.println("board : " + board);
+        return BoardDTO.of(repository.save(board), true);
     }
 
     /* 게시글 수정 */
@@ -96,10 +116,19 @@ public class BoardService {
 
     /* 토큰 확인 메서드 : 수정과 삭제에 사용 */
     public Member isMemberCurrent() {
-        return memberRepository.findById(SecurityUtil.getCurrentMemberId())
+        Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId()) //getCurrentMemberId
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
-        //로그인 확인 후 인증정보에서 Member의 id를 추출해, Member객체를 생성
+        System.out.println("member" + member);
+        return member;
     }
+/*    public Member isMemberCurrent() {
+        Long mno = findByMid2() //mid로 mno를 찾아서
+        Member member = memberRepository.findById(mno) //mno에 해당하는 member 객체 넣음
+                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
+        System.out.println("member" + member);
+        return member;
+    }*/
+
 
     /* 토큰 Member객체와 일치하는지 확인 */
     public Board authorizationArticleWriter(Long bno) {

@@ -12,16 +12,18 @@ const navConfig = [
     path: '/Main',
     icon: icon('ic_analytics'),
   },
-  {
-    title: '공지사항',
-    path: '/board',
-    icon: icon('notice'),
+ {
+    title: '게 시 판',
+    path: '/board/list',
+    icon: icon('ic_cart'),
+
   },
-  {
-    title: 'QNA',
-    path: '/QnA',
-    icon: icon('qna'),
-  },
+    {
+      title: 'Q & A',
+      path: '/qna/list',
+      icon: icon('ic_cart'),
+
+    },
   {
     title: 'product',
     path: '/products',
@@ -37,23 +39,9 @@ const navConfig = [
     path: '/login',
     icon: icon('ic_lock'),
   },
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: icon('ic_disabled'),
-  },
-  {
-    title: 'EoardPage',
-    path: '/EoardPage',
-    icon: icon('ic_cart'),
 
-  },
-  {
-    title: 'retryPage',
-    path: '/re',
-    icon: icon('ic_cart'),
 
-  },
+
 ];
 
 export default navConfig;

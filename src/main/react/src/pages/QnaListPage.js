@@ -85,7 +85,7 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
   },
 }));
 
-export default function QnaPage() {
+export default function Yaya() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -110,7 +110,7 @@ export default function QnaPage() {
     const [posts, setPosts] = useState([]);
 
     const getPosts = () => {
-        axios.get('/re').then((response) => {
+        axios.get('/qna/list').then((response) => {
             setPosts(response.data);
             console.log(response.data);
         })
@@ -181,7 +181,7 @@ return (
       }
     />
 
-    <Button  href="http://localhost:3000/DoardPage" variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}
+    <Button  href="http://localhost:3000/qna/regist" variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}
    >
       QnA 작성하기
     </Button>
@@ -207,20 +207,22 @@ return (
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
+
               -
               </TableCell>
               <TableCell align="right">{data.qno}</TableCell>
               <TableCell align="right">
-                <Link to={`/QnaReadPage/${data.qno}`}>{data.title}</Link>
+                <Link to={`/qna/list/${data.qno}`}>{data.title}</Link>
               </TableCell>
               <TableCell align="right">{data.content}</TableCell>
               <TableCell align="right">{data.regDate}</TableCell>
               <TableCell align="right">{data.hits}</TableCell>
               <TableCell align="right">{data.writer}</TableCell>
 
+
               <TableCell align="right">
 
-                   <Link to={`/QEditPage/${data.qno}`}>
+                   <Link to={`/qna/Update/${data.qno}`}>
                    <Button>
                           <Iconify  icon={'eva:edit-fill'} sx={{ mr: 2 }} />
                          글 수 정
@@ -241,7 +243,7 @@ return (
                           <p id="parent-modal-description">
                             진짜 글삭제 되는데요?
                           </p>
-                          <Button href="http://localhost:3000/re" onClick={() => handleDelete(data.qno)}>진짜 삭제</Button>
+                          <Button href="http://localhost:3000/qna/list" onClick={() => handleDelete(data.qno)}>진짜 삭제</Button>
                         </Box>
                       </Modal>
               </TableCell>

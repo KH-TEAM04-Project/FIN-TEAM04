@@ -1,5 +1,7 @@
 package com.kh.team4.entity;
 
+import com.kh.team4.dto.BoardDTO;
+import com.kh.team4.dto.QnaDTO;
 import lombok.*;
 import javax.persistence.*;
 
@@ -41,22 +43,35 @@ public class Board extends Base {
     @Column(columnDefinition = "integer default 0", nullable = false)
     private Integer hits;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "member_mno")
     private Member member;
 
     @Column
     private Integer fileAttached; //파일 첨부 여부 (첨부 1, 미첨부 0)
 
-
-    public static Board createBoard(String title, String content, Member member) {
+    public static Board dtoToEntity(BoardDTO dto, Member member) {
+        //Member member = Member.builder().mid(dto.getWriterID()).build();
+        Board board = Board.builder()
+//                .bno(dto.getBno())
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .hits(dto.getHits())
+                .member(member)
+                .build();
+        return board;
+    }
+/*    public static Board createBoard(Long bno, String title, String content, Member member) {
         Board board = new Board();
+        board.bno = bno;
         board.title = title;
         board.content = content;
         board.member = member;
+        board.hits = 0;
+
         //board.fileAttached = 0; // 0 = 파일 없음
         return board;
-    }
+    }*/
     /* 게시글 수정 */
     public static Board changeBoard(Board board, String title, String content) {
         board.title = title;

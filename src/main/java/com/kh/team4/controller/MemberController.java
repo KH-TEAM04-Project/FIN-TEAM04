@@ -43,10 +43,16 @@ public class MemberController {
         memberService.delete(mno);
     }
 
+    @PostMapping("/MyPageCont")
+    public ResponseEntity<MemberResDTO> memberDetail(@RequestBody MemberReqDTO memreqDTO) {
+        Long mno = memreqDTO.getMno();
+        System.out.println("회원정보 페이지 진입 및 받은 값 : " + mno);
+        return ResponseEntity.ok(memberService.detail(mno));
+    }
     @PostMapping("/memberUpdate")
     public ResponseEntity<MemberResDTO> memberUpdate(@RequestBody MemberReqDTO memberReqDTO) throws Exception {
         System.out.println("받은 값 : " + memberReqDTO.toString());
-         return ResponseEntity.ok(memberService.Update(memberReqDTO));
+        return ResponseEntity.ok(memberService.Update(memberReqDTO));
     }
 
 
@@ -62,10 +68,21 @@ public class MemberController {
     }
 
     //Email과 name의 일치여부를 check하는 컨트롤러
+    @PostMapping("/check/findID")
+    public String ID_find(MemberReqDTO memreq) {
+        String userEmail = memreq.getEmail();
+        String userName = memreq.getMname();
+        System.out.println(userName + userEmail);
+
+        return memberService.findID2(userEmail, userName);
+
+    }
+
+
     @GetMapping("/check/findPw")
-    public @ResponseBody Map<String, Boolean> pw_find(String userEmail, String userName){
-        Map<String,Boolean> json = new HashMap<>();
-        boolean pwFindCheck = memberService.memberEmailCheck(userEmail,userName);
+    public @ResponseBody Map<String, Boolean> pw_find(String email, String mname) {
+        Map<String, Boolean> json = new HashMap<>();
+        boolean pwFindCheck = memberService.memberEmailCheck(email, mname);
 
         System.out.println(pwFindCheck);
         json.put("check", pwFindCheck);
@@ -74,10 +91,13 @@ public class MemberController {
 
     //등록된 이메일로 임시비밀번호를 발송하고 발송된 임시비밀번호로 사용자의 pw를 변경하는 컨트롤러
     @PostMapping("/check/findPw/sendEmail")
-    public @ResponseBody void sendEmail(String userEmail, String userName){
-        MailDTO dto = sendEmailService.createMailAndChangePassword(userEmail, userName);
+    public @ResponseBody void sendEmail(MemberReqDTO requestDto) {
+        String email = requestDto.getEmail();
+        String mname = requestDto.getMname();
+        System.out.println(requestDto.getEmail() + requestDto.getPwd());
+        MailDTO dto = sendEmailService.createMailAndChangePassword(email, mname);
+        System.out.println(dto.toString());
         sendEmailService.mailSend(dto);
-
     }
 
   /*  @DeleteMapping("/logout")

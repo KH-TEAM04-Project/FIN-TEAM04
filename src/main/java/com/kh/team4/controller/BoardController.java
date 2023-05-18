@@ -27,14 +27,24 @@ public class BoardController {
         return ResponseEntity.ok(service.pageArticle(page));
     }*/
 
-    @PostMapping("/CoardPage") //register로 변경
-    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO request) {
+/*    @PostMapping("/CoardPage") //register로 변경
+    public ResponseEntity<Long> createArticle(@RequestBody BoardDTO dto) {
         log.info("등록 컨트롤러");
+        log.info("writer :" + dto.getWriterID());
+        Long bno = service.postBoard(dto);
+        log.info("BNO: " + bno);
+        return ResponseEntity.ok(bno);
+
+    }*/
+
+
+    @PostMapping("/board/regist") 
+    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO request) {
         return ResponseEntity.ok(service.postBoard(request.getTitle(), request.getContent()));
     }
 
     //게시글 목록
-    @GetMapping("/EoardPage")
+    @GetMapping("/board/list")
     public List<BoardDTO> boardList() {
         System.out.println("컨트롤러 진입");
         List<BoardDTO> boardDTOList = service.findAll();
@@ -44,20 +54,20 @@ public class BoardController {
     }
 
     //게시글 상세조회/수정 불러오기
-    @GetMapping({"/BoardReadPage/{bno}", "/EditPage/{bno}"})
+    @GetMapping({"/board/detail/{bno}", "/board/update/{bno}"})
     public ResponseEntity<BoardDTO> getOneBoard(@PathVariable("bno") Long bno) {
         log.info("상세페이지/수정 컨트롤러");
-       // 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함
+        // 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함
         service.updateHits(bno);
         return ResponseEntity.ok(service.oneBoard(bno));
     }
 
     //게시글 수정 등록
-    @PostMapping("/EditPage/{bno}")
+    @PostMapping("/board/update/{bno}")
     public ResponseEntity<BoardDTO> update(@RequestBody BoardDTO request) {
         return ResponseEntity.ok(service.changeBoard(
                 request.getBno(), request.getTitle(), request.getContent()
-                ));
+        ));
     }
 
     //게시글 삭제

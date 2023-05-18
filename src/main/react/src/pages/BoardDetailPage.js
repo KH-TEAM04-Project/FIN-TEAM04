@@ -1,31 +1,20 @@
 import { Helmet } from 'react-helmet-async';
-import  React, {useState} from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams ,useNavigate} from 'react-router-dom';
+import axios from 'axios';
+import TableCell from '@mui/material/TableCell';
 // @mui
 import { styled } from '@mui/material/styles';
-import { TextField, Typography, Container,Stack,Button,Box,Modal,
+import { TextField,Typography, Container,Stack,Button,Box,Modal,
 AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem} from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import CollectionsIcon from '@mui/icons-material/Collections';
-import axios from "axios";
-// ----------------------------------------------------------------------
-const style13 = {
-  position: 'absolute' ,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-   pt: 10,
-   px: 10,
-   pb: 15
-};
 
+import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
+// import { number } from 'prop-types';
+// import Clock from 'react-live-clock'
+// ----------------------------------------------------------------------
 
 const StyledContent2 = styled('div')(({ theme }) => ({
   maxWidth: 1000,
@@ -53,76 +42,47 @@ const style = {
 // ----------------------------------------------------------------------
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-export default function DoardPage() {
 
-  const token = localStorage.getItem('accessToken');
-  const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
 
-  const [data, setData] = useState({
-    title: "",
-    RegDate: "",
-    writer: sub,
-    content: ""
-  });
 
-  const handleChange = ({ target }) => {
-    const { value, name } = target;
-    setData((prevData) => ({
-        ...prevData,
-        [name]: value
-    }));
-  };
+export default function BoardDetail() {
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const userData = {
-      title: data.title,
-      RegDate: data.RegDate,
-      writer: data.writer,
-      content: data.content
-    };
-    axios
-      .post("/DoardPage", userData)
-      .then((response) => {
-        console.log(response.status, response.data);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log("이거 에러인걸?");
-          console.log(userData);
-        } else if (error.request) {
-          console.log("network error");
-        } else {
-          console.log(error);
-        }
-      });
-  };
 
-  // const [value, setValue] = React.useState<number ||  null>(2);
+   const { bno } = useParams();
+   const [posts, setPosts] = useState([]);
+
+   const getPosts = () => {
+     axios.get(`/board/detail/${bno}`).then((response) => {
+       setPosts([response.data]); // 배열 형태로 설정
+       console.log(response.data);
+       console.log("yaya");
+     })
+     .catch((error) => {
+       if (error.response) {
+         console.log("이거 에러인걸?");
+       } else if (error.request) {
+         console.log("network error");
+       } else {
+         console.log(error);
+       }
+     });
+   };
+
+   useEffect(() => {
+     getPosts();
+   }, []);
   const navigate = useNavigate();
 
-    const handleClick = () => {
-      navigate('/re', { replace: true });
-    };
-
-    const [open, setOpen] = useState(false);
-    const [open1, setOpen1] = React.useState(false);
-
-    const handleOpen = () => {
-      setOpen(true);
-    };
-
-   const handleOpen1 = () => {
-         setOpen1(true);
-         };
-
-    const handleClose = () => {
-      setOpen(false);
-    };
-
-     const handleClose1 = () => {
-          setOpen1(false);
-    };
+  const handleClick = () => {
+    navigate('/board/list', { replace: true });
+  };
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -142,24 +102,12 @@ export default function DoardPage() {
     setAnchorElUser(null);
   };
 
- const [imageSrc, setImageSrc] = useState('');
- const encodeFileToBase64 = (fileBlob) => {
-     const reader = new FileReader();
-     reader.readAsDataURL(fileBlob);
-     return new Promise((resolve) => {
-       reader.onload = () => {
-         setImageSrc(reader.result);
-         resolve();
-       };
-     });
-   };
-
   return (
     <>
       <Helmet>
-        <title> QnA 작성| 꽁머니 </title>
+        <title> 게시글보기| 꽁머니 </title>
       </Helmet>
-
+   
       <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -281,72 +229,54 @@ export default function DoardPage() {
         </Toolbar>
       </Container>
     </AppBar>
-    <form onSubmit={handleSubmit}>
-      <Container width="10000">
+     {posts.map((data) => (
+      <Container key={data.bno} width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            QnA 작성하세유
+            게시글 보세유
           </Typography>
-
+      
           <Typography sx={{ color: 'text.secondary' }}>
-        무엇이든 물어보세유
+        무엇이든 보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-         {/* 여기서 부터 내용 */}
 
+          <TextField defaultValue={data.title} name="text" label="제목" readOnly disabled
+           sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
 
-         <TextField    name="title" label="제목"
-          value={data.title}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>
+          <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자" disabled
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1
+          } }}> {data.writer} </TextField>
 
-          <TextField    name="writer" label="작성자"
-          value={sub}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>
+          <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일" disabled
+                    sx={{my: {  xs: 3, sm: 5 ,mr: 1
+                    } }}> {data.regDate} </TextField>
+        
 
-        <TextField    name="content" label="내용"
-          value={data.content}
+           
+        
+          <TextField
+          id="outlined-multiline-static"
+          disabled
           multiline
           rows={10}
-          onChange={handleChange}
-          defaultValue=" 글 작성"
-         />
-<div>
-            <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
-          <Button variant="contained" component="label">
-              Upload File &nbsp;<AddAPhotoIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
-            <input hidden accept="image/*" multiple type="file"
-            onChange={(e) => {encodeFileToBase64(e.target.files[0]); }}
-            />
-          </Button>
+          defaultValue={data.content}
+
+        ><TableCell >{data.content}</TableCell>}</TextField>
+
+         <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
+      <Button variant="contained" component="label">
+        재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
+        <input hidden accept="image/*" multiple type="file" />
+        
+      </Button>
+      </Stack>
 
 
-            <Button variant="contained"  component="label" onClick={handleOpen1}
-            type="file" >
-            이미지 미리보기 &nbsp; <CollectionsIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}}/></Button>
-                <Modal
-                  open={open1}
-                  onClose={handleClose1}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style13}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                  &nbsp; &nbsp; &nbsp; 미리 보기 에유
-                    </Typography>
-                   <Container
-                   style={{ width: '200%', height: '150px' }}
-                   className="preview"> {imageSrc && <img src={imageSrc} alt="preview-img"
-                   style={{ width: '400px', height: '150%' }}/>}
-                   </Container>
-                  </Box>
-                </Modal>
-                   </Stack>
-          </div>
 
-      <div>
-      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
+
+      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}
+      onClick={handleClick}>목록으로 돌아가기</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -356,17 +286,16 @@ export default function DoardPage() {
         <Box sx={{ ...style, width: 500 }}>
           <h2 id="parent-modal-title">꽁 머 니</h2>
           <p id="parent-modal-description">
-           QnA이 작성됐습니다람쥐.
+            목록가즈아ㅏㅏㅏ
           </p>
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
-       등록
-      </LoadingButton>
+
         </Box>
       </Modal>
-    </div>
+
+
       </StyledContent2>
       </Container>
-      </form>
+ ))}
     </>
   );
 }

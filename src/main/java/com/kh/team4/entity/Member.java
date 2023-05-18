@@ -99,7 +99,12 @@ public class Member {
                 .build();
         return member;
     }
-
+public  static Member findMid(MemberResDTO memberResDTO){
+        Member member = Member.builder()
+                .mid(memberResDTO.getMid())
+                .build();
+        return member;
+}
 
     public static Member dtoToEntity2(MemberReqDTO memberReqDTO, PasswordEncoder passwordEncoder) {
 

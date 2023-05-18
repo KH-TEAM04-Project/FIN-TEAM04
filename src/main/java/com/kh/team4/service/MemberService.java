@@ -37,6 +37,12 @@ public class MemberService {
         String aaa = "success";
         return aaa;
     }
+    public MemberResDTO detail(Long mno) {
+        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
+        System.out.println("마이페이지로 보낼 값 (3가지만 선정) : " + member.toString());
+        return member;
+    }
+
 
     public void delete(Long mno) {
         System.out.println("받은 값 : " + mno);
@@ -88,9 +94,7 @@ public class MemberService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
          // TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
 
-
         // id를 기준으로 mno 값 가져오기
-
 
         // 상경 데이터 실험 -- mno 매칭 데이터 필요.
         Long midex1 = memberRepository.findByMid2(reqDto.getMid());
@@ -157,10 +161,10 @@ public class MemberService {
         return MemberResDTO.of(memberRepository.save(member));
     }
 
-    public boolean memberEmailCheck(String userEmail, String userName) {
+    public boolean memberEmailCheck(String email, String mname) {
 
-        Member member = memberRepository.findByEmail(userEmail);
-        if(member!=null && member.getMname().equals(userName)) {
+        Member member = memberRepository.findByEmail(email);
+        if(member!=null && member.getMname().equals(mname)) {
             return true;
         }
         else {
@@ -182,6 +186,15 @@ public class MemberService {
         return "로그아웃 완료";
     }
 
+
+    public String findID2(String email, String mname) {
+        System.out.println("아이디 찾기 진행중");
+        Optional<Member> findID2 = memberRepository.findByMidwithemailandmname(email, mname);
+        MemberResDTO aaa1 = MemberResDTO.of2(findID2);
+        String bbb2 = aaa1.getMid();
+        System.out.println("찾아낸 아이디 값은 :" + bbb2);
+        return  bbb2;
+    }
 
 }
 
