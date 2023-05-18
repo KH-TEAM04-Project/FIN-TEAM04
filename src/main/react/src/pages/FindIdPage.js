@@ -4,8 +4,8 @@ import axios from 'axios';
 
 const UsernameRecoveryModal = () => {
   const [showModal, setShowModal] = useState(false);
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
+  const [mname, setUserName] = useState('');
+  const [email, setUserEmail] = useState('');
   const [retrievedUsername, setRetrievedUsername] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -33,8 +33,8 @@ const UsernameRecoveryModal = () => {
     e.preventDefault();
 
     const requestData = {
-      userName,
-      userEmail,
+      mname,
+      email,
     };
 
     axios
@@ -42,7 +42,7 @@ const UsernameRecoveryModal = () => {
       .then((response) => {
         const res = response.data;
         if (res.success) {
-          setRetrievedUsername(res.username);
+          setRetrievedUsername(res.mname);
           setErrorMsg('');
         } else {
           setRetrievedUsername('');
@@ -70,7 +70,7 @@ const UsernameRecoveryModal = () => {
               <Form.Control
                 type="text"
                 placeholder="가입 시 등록한 이름을 입력하세요."
-                value={userName}
+                value={mname}
                 onChange={handleUserNameChange}
               />
             </Form.Group>
@@ -79,7 +79,7 @@ const UsernameRecoveryModal = () => {
               <Form.Control
                 type="email"
                 placeholder="가입 시 등록한 이메일을 입력하세요."
-                value={userEmail}
+                value={email}
                 onChange={handleUserEmailChange}
               />
             </Form.Group>
