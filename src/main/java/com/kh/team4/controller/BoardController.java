@@ -39,8 +39,8 @@ public class BoardController {
 
 
     @PostMapping("/board/regist") 
-    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO request) {
-        return ResponseEntity.ok(service.postBoard(request.getTitle(), request.getContent()));
+    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO boardDTO) {
+        return ResponseEntity.ok(service.postBoard(boardDTO));
     }
 
     //게시글 목록

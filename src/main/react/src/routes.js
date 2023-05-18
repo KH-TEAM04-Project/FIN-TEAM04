@@ -11,7 +11,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import SignUpPage from './pages/SignUpPage';
 import MyPage from './pages/MyPage';
 
-import IdPwPage from './pages/IdPwPage';
+
 import PasswordResetModal from './pages/FindPwPage';
 import UsernameRecoveryModal from './pages/FindIdPage';
 
