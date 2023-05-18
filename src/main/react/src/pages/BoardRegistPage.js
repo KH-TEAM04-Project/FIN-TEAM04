@@ -64,13 +64,16 @@ export default function BoardRegist() {
 
   const token = localStorage.getItem('accessToken');
   const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+  const mno = token ? JSON.parse(atob(token.split('.')[1])).mno : '';
+    console.log(mno);
   
   const [data, setData] = useState({
     title: "",
     RegDate: "",
-    writerID:  "",
+    writerID:  sub,
     hits :Number,
-    content: ""
+    content: "",
+    mno : mno
   });
 
   const handleChange = (e) => { const value = e.target.value;
