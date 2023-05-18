@@ -50,8 +50,14 @@ spring:
 
 
   # 이메일 인증 이거 내 ㄹㅇ 어디가서 유포 금지.
-
   mail:
+    host: smtp.google.com
+    port: 995
+    username: qnacontroller@gmail.com
+    password: qwe789!@
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
 
 
 
