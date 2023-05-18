@@ -5,8 +5,8 @@ import swal from 'sweetalert';
 
 const PasswordResetModal = () => {
   const [showModal, setShowModal] = useState(false);
-  const [mname, setMname] = useState('');
-  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
   const openModal = () => {
@@ -17,20 +17,20 @@ const PasswordResetModal = () => {
     setShowModal(false);
   };
 
-  const handleMnameChange = (e) => {
-    setMname(e.target.value);
+  const handleUserNameChange = (e) => {
+    setUserName(e.target.value);
   };
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+  const handleUserEmailChange = (e) => {
+    setUserEmail(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const requestData = {
-      mname,
-      email,
+      userName,
+      userEmail,
     };
 
     console.log(requestData);
@@ -87,8 +87,8 @@ const PasswordResetModal = () => {
                     <Form.Control
                       type="text"
                       placeholder="가입 시 등록한 이메일을 입력하세요."
-                      value={email}
-                      onChange={handleEmailChange}
+                      value={userEmail}
+                      onChange={handleUserEmailChange}
                     />
                   </Form.Group>
                   <Form.Group>
@@ -96,8 +96,8 @@ const PasswordResetModal = () => {
                     <Form.Control
                       type="text"
                       placeholder="가입 시 등록한 이름을 입력하세요."
-                      value={mname}
-                      onChange={handleMnameChange}
+                      value={userName}
+                      onChange={handleUserNameChange}
                     />
                   </Form.Group>
                   <Button type="submit" variant="success" block>

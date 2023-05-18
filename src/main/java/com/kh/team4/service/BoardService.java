@@ -1,9 +1,9 @@
 package com.kh.team4.service;
 
+import com.kh.team4.config.SecurityUtil;
 import com.kh.team4.dto.BoardDTO;
 
 import com.kh.team4.entity.*;
-import com.kh.team4.jwt.SecurityUtil;
 import com.kh.team4.repository.BoardRepository;
 import com.kh.team4.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
