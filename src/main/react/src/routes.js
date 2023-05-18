@@ -106,6 +106,10 @@ export default function Router() {
       element: <QnaDetailPage />,
       path: '/qna/detail',
     },
+        {
+          element: <QnaDetailPage />,
+          path: '/qna/detail/:qno',
+        },
     {
       element: <BoardDetailPage />,
       path: '/board/detail/:bno',

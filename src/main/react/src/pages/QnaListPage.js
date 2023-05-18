@@ -212,7 +212,7 @@ return (
               </TableCell>
               <TableCell align="right">{data.qno}</TableCell>
               <TableCell align="right">
-                <Link to={`/qna/list/${data.qno}`}>{data.title}</Link>
+                <Link to={`/qna/detail/${data.qno}`}>{data.title}</Link>
               </TableCell>
               <TableCell align="right">{data.content}</TableCell>
               <TableCell align="right">{data.regDate}</TableCell>
