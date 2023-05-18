@@ -60,10 +60,16 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function BoardRegist() {
 
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem('accessToken');
+  const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+  
   const [data, setData] = useState({
     title: "",
     RegDate: "",
     writerID:  "",
+    hits :Number,
     content: ""
   });
 
@@ -102,7 +108,7 @@ export default function BoardRegist() {
 // 여기까지 axios
 
  
-  const navigate = useNavigate();
+  
 
   const handleClick = () => {
     navigate('/board/list', { replace: true });
@@ -319,7 +325,7 @@ export default function BoardRegist() {
           value={data.writerID}
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
-        
+
                 
             
            

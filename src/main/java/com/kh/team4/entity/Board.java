@@ -1,9 +1,6 @@
 package com.kh.team4.entity;
 
-import com.kh.team4.dto.BoardDTO;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 
 @Entity
@@ -11,7 +8,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-@ToString(exclude = "writer") //fetch 방식이 Lazy일 경우 사용
+@ToString(exclude = "member") //fetch 방식이 Lazy일 경우 사용
 //Eager Loading(즉시로딩):특정 엔티티를 조회할 때 연관관계를 가진 모든 엔티티를 같이 로딩 -> 성능 저하
 // LAZY : 지연로딩,즉시로딩과 반대, 필요할 때만 사용, LAZY 사용하면 @ToString(exclude) 무조건 사용
 // @ToString(): 해당 클래스의 모든 멤버 변수를 출력
@@ -41,63 +38,29 @@ public class Board extends Base {
     private String content;
 
 
-    @Column
-    @ColumnDefault("0")
-    protected Integer hits;
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private Integer hits;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_mno")
-    private Member writer;
+    private Member member;
 
-/*    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "writer", referencedColumnName = "mid")
-    private Member writer;*/
+    @Column
+    private Integer fileAttached; //파일 첨부 여부 (첨부 1, 미첨부 0)
 
+
+    public static Board createBoard(String title, String content, Member member) {
+        Board board = new Board();
+        board.title = title;
+        board.content = content;
+        board.member = member;
+        //board.fileAttached = 0; // 0 = 파일 없음
+        return board;
+    }
     /* 게시글 수정 */
-    public void changeTitle(String title){
-        this.title = title;
-    }
-
-    public void changeContent(String content){
-        this.content = content;
-    }
-
-    /*   댓글 리스트 : 최상위 객체인 게시글이 삭제되면 그 게시글의 댓글 모두 삭제
-      여기서 중요한건 mappedBy = "post"를 하지 않으면, 연관관계의 주인이 설정되지 않아 게시글을 삭제할경우 참조키 제약조건 위반으로 예외가 생김*/
-/*
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<board> comment;
-*/
-
-    public static Board dtoToEntity(BoardDTO dto) {
-        System.out.println("dtoToEntity 실행");
-
-        //작성자
-        //Member member = Member.builder().mname(dto.getWriterName()).build();
-
-        Board board = Board.builder()
-                //.bno(dto.getBno())
-                .title(dto.getTitle())
-                .content(dto.getContent())
-               // .writer(member)
-                .build();
-      //  System.out.println("member :" + member);
-        System.out.println("보드 dto -> 엔티티 변환 :" + board);
-        return board;
-
-    }
-
-    public static Board toUpdateEntity(BoardDTO boardDTO ) {
-        Board board = Board.builder()
-                .bno(boardDTO.getBno())
-                .title(boardDTO.getTitle())
-                .content(boardDTO.getContent())
-                .hits(boardDTO.getHits())
-                .build();
-        //  System.out.println("member :" + member);
-        System.out.println("보드 dto -> 엔티티 변환 :" + board);
+    public static Board changeBoard(Board board, String title, String content) {
+        board.title = title;
+        board.content = content;
         return board;
     }
-
-
 }

@@ -219,9 +219,8 @@ const isNotFound = !filteredUsers.length && !!filterName;
                       key={data.bno}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                    <TableCell component="th" scope="row">
-                     ""
-                    </TableCell>
+                    <TableCell component="th" scope="row">&nbsp;</TableCell>
+       
                     <TableCell align="right">{data.bno}</TableCell>
                     <TableCell align="right">
                       <Link to={`/board/detail/${data.bno}`}>{data.title}</Link>

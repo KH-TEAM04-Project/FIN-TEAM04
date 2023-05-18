@@ -1,8 +1,6 @@
 package com.kh.team4;
 
 import com.kh.team4.dto.BoardDTO;
-import com.kh.team4.dto.PageRequestDTO;
-import com.kh.team4.dto.PageResultDTO;
 import com.kh.team4.entity.Board;
 import com.kh.team4.entity.Member;
 import com.kh.team4.repository.BoardRepository;

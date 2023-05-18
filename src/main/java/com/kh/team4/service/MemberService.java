@@ -1,5 +1,6 @@
 package com.kh.team4.service;
 
+import com.kh.team4.config.RedisUtil;
 import com.kh.team4.config.SecurityUtil;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
@@ -17,12 +18,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional()
 public class MemberService {
     //final 붙여야지 생성자 만들어줌
     private final MemberRepository memberRepository;
+    private final RedisUtil redisUtil;
     private final PasswordEncoder passwordEncoder;
 
     // 회원가입 기능 구현
@@ -30,9 +34,48 @@ public class MemberService {
         System.out.println(memberDTO.toString());
         Member entMember = Member.dtoToEntity2(memberDTO, passwordEncoder);
         memberRepository.save(entMember);
-        String aaa = "회원가입 성공";
+        String aaa = "success";
         return aaa;
     }
+    public MemberResDTO detail(Long mno) {
+        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
+        System.out.println("마이페이지로 보낼 값 (3가지만 선정) : " + member.toString());
+        return member;
+    }
+
+
+    public void delete(Long mno) {
+        System.out.println("받은 값 : " + mno);
+        memberRepository.deleteById(mno);
+    }
+
+    public MemberResDTO Update(MemberReqDTO memberDTO) throws Exception {
+        // 05.12 시점에 수정할만한 컬럼 목록 3가지만 설정
+        String password = memberDTO.getPwd();
+        String email = memberDTO.getEmail();
+        String ph = memberDTO.getPh();
+        // 찾는 용도의 Mno를 써야하는군..
+        Long mno = memberDTO.getMno();
+
+        Member entMember = Member.dtoToEntity2(memberDTO, passwordEncoder);
+
+        memberRepository.updateMember(password, email, ph);
+
+        Optional<Member> updatingMember = memberRepository.findById(mno); // 업데이트 된 값을 서치해서 다시 가져와서  ResDTO 에 넣고 리턴.
+        System.out.println("수정된 값 확인 : " + updatingMember.get().confirm());
+
+        if (updatingMember.isPresent()) {
+            System.out.println("존재 확인 작업");
+            Member member = updatingMember.get();
+            MemberResDTO memberResDTO = MemberResDTO.of(member);
+            return memberResDTO;
+        } else {
+            System.out.println("return null");
+            return null;
+        }
+
+    }
+
 
     private final AuthenticationManagerBuilder managerBuilder;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -49,14 +92,22 @@ public class MemberService {
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
+         // TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
+
+        // id를 기준으로 mno 값 가져오기
+
+        // 상경 데이터 실험 -- mno 매칭 데이터 필요.
+        Long midex1 = memberRepository.findByMid2(reqDto.getMid());
+        System.out.println("넣은 값 확인 : midex1 = " + midex1 );
+        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication, midex1);
+        System.out.println("Access 토큰값 확인 " + tokenDto.getAccessToken());
 
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
                 .key(authentication.getName())
                 .value(tokenDto.getRefreshToken())
                 .build();
-        System.out.println("힘들어 뒤질각" + refreshToken);
+        System.out.println("refreshtoken 생성중" + refreshToken);
         refreshTokenRepository.save(refreshToken);
 
         // 5. 토큰 발급
@@ -109,5 +160,41 @@ public class MemberService {
         member.setPwd(passwordEncoder.encode((newPassword)));
         return MemberResDTO.of(memberRepository.save(member));
     }
+
+    public boolean memberEmailCheck(String email, String mname) {
+
+        Member member = memberRepository.findByEmail(email);
+        if(member!=null && member.getMname().equals(mname)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        // Email을 통해 해당 email로 가입된 정보가 있는지 확인하고,
+        // 가입된 정보가 있다면 입력받은 name과 등록된 name이 일치한지 여부를 리턴하는 메소드
+    }
+
+
+    public String logout(String accessToken, Member users) {
+
+        // refreshToken 테이블의 refreshToken 삭제
+        refreshTokenRepository.deleteRefreshTokenByKey(users.getEmail());
+
+        // 레디스에 accessToken 사용못하도록 등록
+        redisUtil.setBlackList(accessToken, "accessToken", 5);
+
+        return "로그아웃 완료";
+    }
+
+
+    public String findID2(String email, String mname) {
+        System.out.println("아이디 찾기 진행중");
+        Optional<Member> findID2 = memberRepository.findByMidwithemailandmname(email, mname);
+        MemberResDTO aaa1 = MemberResDTO.of2(findID2);
+        String bbb2 = aaa1.getMid();
+        System.out.println("찾아낸 아이디 값은 :" + bbb2);
+        return  bbb2;
+    }
+
 }
 

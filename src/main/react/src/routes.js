@@ -10,8 +10,10 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import SignUpPage from './pages/SignUpPage';
 import MyPage from './pages/MyPage';
-import IdPwPage from './pages/IdPwPage';
 
+import IdPwPage from './pages/IdPwPage';
+import PasswordResetModal from './pages/FindPwPage';
+import UsernameRecoveryModal from './pages/FindIdPage';
 
 import BoardListPage from './pages/BoardListPage'
 import BoardRegistPage from './pages/BoardRegistPage';
@@ -62,7 +64,12 @@ export default function Router() {
     },
     {
       path: '/IdPw',
-      element: <IdPwPage />,
+      element: <UsernameRecoveryModal />,
+    },
+    {
+      path: '/IdPw2',
+      element: <PasswordResetModal />
+
     },
 
     {

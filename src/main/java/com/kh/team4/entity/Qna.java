@@ -46,8 +46,7 @@ public class Qna extends Base {
     @ColumnDefault("0")
     private Integer secret;
 
-    @Column
-    @ColumnDefault("0")
+    @Column(columnDefinition = "integer default 0", nullable = false)
     private Integer hits;
 
 //    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -59,8 +58,6 @@ public class Qna extends Base {
     private List<Reply> replyList = new ArrayList<>();
 
     public static Qna dtoToEntity(QnaDTO qnaDTO) {
-
-//        Member member = Member.builder().mno(writer.getMno()).build();
         Qna qna = Qna.builder()
             .qno(qnaDTO.getQno())
             .title(qnaDTO.getTitle())
@@ -72,13 +69,11 @@ public class Qna extends Base {
         return qna;
     }
 
-    public static Qna toUpdateEntity(QnaDTO qnaDTO) {
-        Qna qna = Qna.builder()
-                .qno(qnaDTO.getQno())
-                .title(qnaDTO.getTitle())
-                .content(qnaDTO.getContent())
-                .build();
-        System.out.println("보드 dto -> 엔티티 변환 :" + qna);
-        return qna;
+    public void updateTitle(String title){
+        this.title = title;
+    }
+
+    public void updateContent(String content){
+        this.content = content;
     }
 }
