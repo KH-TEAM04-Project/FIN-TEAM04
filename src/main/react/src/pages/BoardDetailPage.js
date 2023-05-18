@@ -1,14 +1,16 @@
 import { Helmet } from 'react-helmet-async';
-import React, {useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams ,useNavigate} from 'react-router-dom';
 import axios from 'axios';
+import TableCell from '@mui/material/TableCell';
 // @mui
 import { styled } from '@mui/material/styles';
-import { TextField, Typography, Container,Stack,Button,Box,Modal,
+import { TextField,Typography, Container,Stack,Button,Box,Modal,
 AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem} from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
+
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
 // import { number } from 'prop-types';
 // import Clock from 'react-live-clock'
@@ -43,89 +45,36 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 
-export default function Page404() {
-   const { qno } = useParams();
+export default function BoardDetail() {
 
-   const [data, setData] = useState({
-     qno : "",
-     title: "",
-     regDate: "",
-     writer: "",
-     content: "",
-   });
 
+   const { bno } = useParams();
    const [posts, setPosts] = useState([]);
 
-   const getPosts = useCallback(() => {
-     axios
-       .get(`/QEditPage/${qno}`)
-       .then((response) => {
-         setPosts([response.data]);
-         console.log(response.data);
-         console.log("yaya");
-       })
-       .catch((error) => {
-         if (error.response) {
-           console.log("이거 에러인걸?");
-         } else if (error.request) {
-           console.log("network error");
-         } else {
-           console.log(error);
-         }
-       });
-   }, [qno]);
-
-   const handleChange = useCallback((e) => {
-     const value = e.target.value;
-     setData((Data) => ({
-       ...Data,
-       [e.target.name]: value,
-     }));
-   }, []);
-
-   const handleSubmit = useCallback(
-     (e) => {
-       e.preventDefault();
-       const userData = {
-         qno: data.qno,
-         title: data.title,
-         regDate: data.regDate,
-         writer: data.writer,
-         content: data.content,
-       };
-       axios
-         .post(`/QEditPage/${qno}`, userData)
-         .then((response) => {
-           console.log(response.status, response.data);
-           console.log(response.data);
-         })
-         .catch((error) => {
-           if (error.response) {
-             console.log("이거 포스트 에러인걸?");
-             console.log(userData);
-             console.log(error.response.data);
-           } else if (error.request) {
-             console.log("network error");
-           } else {
-             console.log(error);
-           }
-         });
-     },
-     [data, qno]
-   );
+   const getPosts = () => {
+     axios.get(`/board/detail/${bno}`).then((response) => {
+       setPosts([response.data]); // 배열 형태로 설정
+       console.log(response.data);
+       console.log("yaya");
+     })
+     .catch((error) => {
+       if (error.response) {
+         console.log("이거 에러인걸?");
+       } else if (error.request) {
+         console.log("network error");
+       } else {
+         console.log(error);
+       }
+     });
+   };
 
    useEffect(() => {
-     if (qno) {
-       getPosts();
-     }
-   }, [qno, getPosts]);
-
-
-
+     getPosts();
+   }, []);
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/re', { replace: true });
+    navigate('/board/list', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -158,7 +107,7 @@ export default function Page404() {
       <Helmet>
         <title> 게시글보기| 꽁머니 </title>
       </Helmet>
-
+   
       <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -280,59 +229,54 @@ export default function Page404() {
         </Toolbar>
       </Container>
     </AppBar>
-
-
      {posts.map((data) => (
-<form onSubmit={handleSubmit} key={data.writer}>
-      <Container  width="10000">
+      <Container key={data.bno} width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            게시글 수정 해보세유
+            게시글 보세유
           </Typography>
-
+      
           <Typography sx={{ color: 'text.secondary' }}>
         무엇이든 보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-           <TextField name="qno" label="게시글 번호"
-                      value={data.qno}
-                      sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
-          <TextField name="title" label="제목"
-            defaultValue={data.title} onChange={handleChange}
-            sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
+          <TextField defaultValue={data.title} name="text" label="제목" readOnly disabled
+           sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
 
-          <TextField name="regDate" label="작성일"
-            defaultValue={data.regDate} onChange={handleChange}
-            sx={{my: {  xs: 3, sm: 5 ,mr: 1 } }}>
-            {data.regDate}
-          </TextField>
+          <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자" disabled
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1
+          } }}> {data.writer} </TextField>
 
-          <TextField name="writer" label="작성자"
-            defaultValue={data.writer} onChange={handleChange}
-            sx={{my: {  xs: 3, sm: 5 ,mr: 1 } }}>
-            {data.writer}
-          </TextField>
+          <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일" disabled
+                    sx={{my: {  xs: 3, sm: 5 ,mr: 1
+                    } }}> {data.regDate} </TextField>
+        
 
+           
+        
           <TextField
-            id="outlined-multiline-static"
-            name="content"
-            defaultValue={data.content} onChange={handleChange}
-            multiline
-            rows={10}
-            >{data.content}
-          </TextField>
+          id="outlined-multiline-static"
+          disabled
+          multiline
+          rows={10}
+          defaultValue={data.content}
+
+        ><TableCell >{data.content}</TableCell>}</TextField>
 
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
       <Button variant="contained" component="label">
         재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
         <input hidden accept="image/*" multiple type="file" />
-
+        
       </Button>
       </Stack>
 
 
-      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
+
+
+      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}
+      onClick={handleClick}>목록으로 돌아가기</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -342,19 +286,16 @@ export default function Page404() {
         <Box sx={{ ...style, width: 500 }}>
           <h2 id="parent-modal-title">꽁 머 니</h2>
           <p id="parent-modal-description">
-            수정이 완료됐습니다람쥐.
+            목록가즈아ㅏㅏㅏ
           </p>
-          <LoadingButton fullWidth size="large"  variant="contained" onClick={handleClick}>
-       등록
-      </LoadingButton>
+
         </Box>
       </Modal>
 
+
       </StyledContent2>
       </Container>
-</form>
  ))}
-
     </>
   );
 }

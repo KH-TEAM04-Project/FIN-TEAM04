@@ -94,7 +94,7 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
   },
 }));
 
-export default function EoardPage() {
+export default function BoardList() {
 
 
   const [page, setPage] = React.useState(0);
@@ -120,7 +120,7 @@ const [open1, setOpen1] = React.useState(false);
   const [posts, setPosts] = useState([]);
 
   const getPosts = () => {
-    axios.get('/EoardPage').then((response) => {
+    axios.get('/board/list').then((response) => {
       setPosts(response.data);
 
       console.log(response.data.length);
@@ -193,7 +193,7 @@ const isNotFound = !filteredUsers.length && !!filterName;
 
 
 
-         <Button  href='http://localhost:3000/CoardPage' variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+         <Button  href='http://localhost:3000/board/regist' variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
                     게시글 작성하기
                   </Button>
 
@@ -224,7 +224,7 @@ const isNotFound = !filteredUsers.length && !!filterName;
                     </TableCell>
                     <TableCell align="right">{data.bno}</TableCell>
                     <TableCell align="right">
-                      <Link to={`/BoardReadPage/${data.bno}`}>{data.title}</Link>
+                      <Link to={`/board/detail/${data.bno}`}>{data.title}</Link>
                     </TableCell>
                     <TableCell align="right">{data.content}</TableCell>
                     <TableCell align="right">{data.regDate}</TableCell>
@@ -232,7 +232,7 @@ const isNotFound = !filteredUsers.length && !!filterName;
                     <TableCell align="right">{data.hits}</TableCell>
                     <TableCell align="right">
 
-               <Button component={Link} to={`/EditPage/${data.bno}`}>
+               <Button component={Link} to={`/board/update/${data.bno}`}>
                <Iconify  icon={'eva:edit-fill'} sx={{ mr: 2 }} />
               글 수 정</Button>
 
@@ -253,7 +253,7 @@ const isNotFound = !filteredUsers.length && !!filterName;
                       </p>
 
 
-                      <Button href="http://localhost:3000/EoardPage" onClick={() => handleDelete(data.bno)}>진짜 삭제</Button>
+                      <Button href="http://localhost:3000/board/list" onClick={() => handleDelete(data.bno)}>진짜 삭제</Button>
 
 
                     </Box>

@@ -23,7 +23,7 @@ public class QnAController {
     private final QnaService qnaService;
 
     // 게시글 작성(CREATE)
-    @PostMapping("/DoardPage")
+    @PostMapping("/qna/regist")
     public ResponseEntity<String> register(@RequestBody QnaDTO qnaDTO) {
         System.out.println("게시글 작성 컨트롤러 진입");
         // "/dashboard/write" 주소로 POST 요청이 들어오면 QnaDTO를 받아서 QnaService의 register() 메서드를 호출
@@ -35,7 +35,7 @@ public class QnAController {
     }
 
     // 게시글 리스트 불러오기
-    @GetMapping("/re")
+    @GetMapping("/qna/list")
     @ResponseBody
     public List<QnaDTO> qnaList() {
         System.out.println("리스트 불러오는 컨트롤러 진입");
@@ -47,7 +47,7 @@ public class QnAController {
     }
 
     // 상세보기 페이지
-    @GetMapping({"/QnaReadPage/{qno}", "/QEditPage/{qno}"})    // id 값을 받아온다.
+    @GetMapping({"/qna/detail/{qno}", "/qna/update/{qno}"})    // id 값을 받아온다.
     public ResponseEntity<QnaDTO> findById(@PathVariable Long qno) {
         log.info("상세보기/수정 컨트롤러 진입");
         // 만약에 페이지 요청이 없는 경우도 있을 수 있으니 @PageableDefault 사용
@@ -75,7 +75,7 @@ public class QnAController {
     }
 
     //재연 추가 수정
-    @PostMapping("/QEditPage/{bno}")
+    @PostMapping("/qna/update/{bno}")
     public ResponseEntity<Long> update(@RequestBody QnaDTO qnaDTO) {
         log.info("업데이트 컨트롤러 진입");
         //새로 추가된 엔티티의 번호

@@ -1,32 +1,19 @@
 import { Helmet } from 'react-helmet-async';
-import  React, {useState} from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link,useParams ,useNavigate} from 'react-router-dom';
+import axios from 'axios';
+import TableCell from '@mui/material/TableCell';
 // @mui
 import { styled } from '@mui/material/styles';
 import { TextField, Typography, Container,Stack,Button,Box,Modal,
-AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem} from '@mui/material';
+AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem,Table,TableHead,TableBody,TableRow} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import CollectionsIcon from '@mui/icons-material/Collections';
-import axios from "axios";
+import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
+// import { number } from 'prop-types';
+// import Clock from 'react-live-clock'
 // ----------------------------------------------------------------------
-const style13 = {
-  position: 'absolute' ,
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-   pt: 10,
-   px: 10,
-   pb: 15
-};
- 
-
 
 const StyledContent2 = styled('div')(({ theme }) => ({
   maxWidth: 1000,
@@ -57,63 +44,39 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 
+export default function Yaya() {
+   const { qno } = useParams();
+   const [posts, setPosts] = useState([]);
 
-export default function CoardPage1() {
+   const getPosts = () => {
+     axios.get(`/qna/detail/${qno}`).then((response) => {
+       setPosts([response.data]); // 배열 형태로 설정
+       console.log(response.data);
+       console.log("yaya");
+     })
+     .catch((error) => {
+       if (error.response) {
+         console.log("이거 에러인걸?");
+       } else if (error.request) {
+         console.log("network error");
+       } else {
+         console.log(error);
+       }
+     });
+   };
 
-  const [data, setData] = useState({
-    title: "",
-    RegDate: "",
-    writer:  "",
-    content: ""
-  });
-
-  const handleChange = (e) => { const value = e.target.value;
-    setData({
-      ...data,
-      [e.target.name]: value
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const userData = {
-      title: data.title,
-      RegDate: data.RegDate,
-      writer: data.writer,
-      content: data.content
-    };
-    axios
-      .post("/CoardPage", userData)
-      .then((response) => {
-        console.log(response.status, response.data);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log("이거 에러인걸?");
-          console.log(userData);
-        } else if (error.request) {
-          console.log("network error");
-        } else {
-          console.log(error);
-        }
-      });
-  };
-  
-// 여기까지 axios
-
- 
+   useEffect(() => {
+     getPosts();
+   }, []);
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/EoardPage', { replace: true });
+    navigate('/qna/list', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
-   const [open1, setOpen1] = React.useState(false);
-
-  const handleClose1 = () => {
-    setOpen1(false);
+  const handleOpen = () => {
+    setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -136,35 +99,59 @@ export default function CoardPage1() {
     setAnchorElUser(null);
   };
 
+  const [replys, setReplys] = useState([]);
+  const [reply, setReply] = useState({
+    title: "",
+    RegDate: "",
+    writer: "",
+    content: ""
+  });
 
-       const handleOpen1 = () => {
-             setOpen1(true);
-             };
- 
-       const handleOpen = () => {
-             setOpen(true);
-             };
+  const handleChange = ({ target }) => {
+    const { value, name } = target;
+    setReply((prevReply) => ({
+      ...prevReply,
+      [name]: value
+    }));
+  };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const userReply = {
+      title: reply.title,
+      RegDate: reply.RegDate,
+      writer: reply.writer,
+      content: reply.content
+    };
+    axios
+      .post(`/qna/detail/${qno}`, userReply)
+      .then((response) => {
+        console.log(response.status, response.replys);
+        // 새로운 댓글을 추가하는 함수 호출
+        addReply(response.replys);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log("이거  댓글 에러인걸?");
+          console.log(userReply);
+        } else if (error.request) {
+          console.log("network error");
+        } else {
+          console.log(error);
+        }
+      });
+  };
 
- const [imageSrc, setImageSrc] = useState('');
-
- const encodeFileToBase64 = (fileBlob) => {
-     const reader = new FileReader();
-     reader.readAsDataURL(fileBlob);
-     return new Promise((resolve) => {
-       reader.onload = () => {
-         setImageSrc(reader.result);
-         resolve();
-       };
-     });
-   };
+  const addReply = (newReply) => {
+    setReplys((prevReplys) => [...prevReplys, newReply]);
+  };
 
   return (
     <>
       <Helmet>
-        <title> 게시글 작성| 꽁머니 </title>
+        <title> Q&A | 꽁머니 </title>
       </Helmet>
-   
+
       <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -286,115 +273,111 @@ export default function CoardPage1() {
         </Toolbar>
       </Container>
     </AppBar>
-       <form onSubmit={handleSubmit}>       
-      <Container width="10000" >
+     {posts.map((data) => (
+      <Container key={data.qno} Width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            게시글 작성하세유
+            QNA 보세유
           </Typography>
-                
+
           <Typography sx={{ color: 'text.secondary' }}>
-        무엇이든 물어보세유 
+        무엇이든 보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-            
-       
 
-          {/* 여기서 부터 내용 */}
-                
-             
-          <TextField    name="title" label="제목" 
-          value={data.title}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
-                  
-          
+          <TextField defaultValue={data.title} name="text" label="제목" readOnly disabled
+           sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
 
+          <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자" disabled
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1
+          } }}> {data.writer} </TextField>
+
+          <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일" disabled
+                    sx={{my: {  xs: 3, sm: 5 ,mr: 1
+                    } }}> {data.regDate} </TextField>
 
 
-          
 
-          <TextField    name="writer" label="작성자" 
 
-          value={data.writer}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
-        
-                
-            
-           
-        <TextField    name="content" label="내용" 
-          value={data.content}
+          <TextField
+          id="outlined-multiline-static"
+            disabled
           multiline
           rows={10}
-          onChange={handleChange}
-          defaultValue=" 글 작성"
-         />
+          value={data.content}
 
-        
-          <div>
-            <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
-          <Button variant="contained" component="label">
-              Upload File &nbsp;<AddAPhotoIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
-            <input hidden accept="image/*" multiple type="file"
-            onChange={(e) => {encodeFileToBase64(e.target.files[0]); }}
-            />
-          </Button>
+        ><TableCell >{data.content}</TableCell>}</TextField>
 
+         <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
+      <Button variant="contained" component="label">
+        재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
+        <input hidden accept="image/*" multiple type="file" />
 
-            <Button variant="contained"  component="label" onClick={handleOpen1}
-            type="file" >
-            이미지 미리보기 &nbsp; <CollectionsIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}}/></Button>
-                <Modal
-                  open={open1}
-                  onClose={handleClose1}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style13}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                  &nbsp; &nbsp; &nbsp; 미리 보기 에유
-                    </Typography>
-                   <Container
-                   style={{ width: '200%', height: '150px' }}
-                   className="preview"> {imageSrc && <img src={imageSrc} alt="preview-img"
-                   style={{ width: '400px', height: '150%' }}/>}
-                   </Container>
-                  </Box>
-                </Modal>
-                   </Stack>
-          </div>
+      </Button>
+      </Stack>
 
+        <form onSubmit={handleSubmit}>
+              <li className='comment-from'>
+                <span className='ps_box'>
+                  <TextField
+                    fullWidth
+                    type='text'
+                    name='content'
+                    className='int'
+                    value={replys.content}
+                    onChange={handleChange}
+                    placeholder='댓글을 입력해주세요~'
+                  />
+                </span>
+                <Stack direction='row-reverse' sx={{ my: { xs: 1, mr: 12 } }}>
+                  <Button variant='contained' type='submit' className='btn'>
+                    등록
+                  </Button>
+                </Stack>
+              </li>
+            </form>
 
+         <Table sx={{ maxWidth: 2000, overflow: 'hidden' }} aria-label='simple table'>
+              <TableHead>
+                <TableCell>번호</TableCell>
+                <TableCell>내용</TableCell>
+                <TableCell>작성자</TableCell>
+                <TableCell>수정/삭제</TableCell>
+              </TableHead>
 
+              <TableBody>
+                {replys.map((reply, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{reply.rno}</TableCell>
+                    <TableCell>{reply.content}</TableCell>
+                    <TableCell>작성자</TableCell>
+                    <TableCell>수정/삭제</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
 
+      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>목록으로 돌아가기</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 1500 }}>
+          <h2 id="parent-modal-title">꽁 머 니</h2>
+          <p id="parent-modal-description">
+            목록가즈아ㅏㅏㅏ
+          </p>
+          <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
+       등록
+      </LoadingButton>
+        </Box>
+      </Modal>
 
-
-
-          <div>
-          <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-          aria-labelledby="parent-modal-title"
-              aria-describedby="parent-modal-description"
-            >
-              <Box sx={{ ...style, width: 500 }}>
-                <h2 id="parent-modal-title">꽁 머 니</h2>
-                <p id="parent-modal-description">
-                  게시글이 작성됐습니다람쥐.
-                </p>
-                      <LoadingButton fullWidth size="large"  variant="contained" onClick={handleClick}>
-                  등록
-            </LoadingButton>
-              </Box>
-            </Modal>
-          </div>
-  
-            </StyledContent2>
-            </Container>
-            </form>      
+      </StyledContent2>
+      </Container>
+ ))}
     </>
-  ) ;
+  );
 }
-

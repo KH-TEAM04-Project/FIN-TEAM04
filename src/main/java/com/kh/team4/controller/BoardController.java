@@ -24,7 +24,7 @@ public class BoardController {
 
 
     //게시글 등록
-    @PostMapping("/CoardPage")
+    @PostMapping("/board/regist")
     public ResponseEntity<Long> register(@RequestBody BoardDTO dto) {
         log.info("컨트롤러 진입");
         //새로 추가된 엔티티의 번호
@@ -34,7 +34,7 @@ public class BoardController {
         return ResponseEntity.ok(bno);
     }
 
-    @GetMapping("/EoardPage")
+    @GetMapping("/board/list")
     public List<BoardDTO> boardList() {
         System.out.println("컨트롤러 진입");
         List<BoardDTO> boardDTOList = service.findAll();
@@ -51,7 +51,7 @@ public class BoardController {
         return "/delete";
     }
 
-    @GetMapping({"/BoardReadPage/{bno}", "/EditPage/{bno}"})
+    @GetMapping({"/board/detail/{bno}", "/board/update/{bno}"})
     public ResponseEntity<BoardDTO> read(@PathVariable("bno") Long bno) {
         log.info("상세페이지/수정 컨트롤러");
         /* 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함*/
@@ -64,7 +64,7 @@ public class BoardController {
 
     }
 
-    @PostMapping("/EditPage/{bno}")
+    @PostMapping("/board/update/{bno}")
     public ResponseEntity<Long> update(@RequestBody BoardDTO dto) {
         log.info("업데이트 컨트롤러 진입");
         //새로 추가된 엔티티의 번호

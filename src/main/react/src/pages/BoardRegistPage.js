@@ -25,6 +25,7 @@ const style13 = {
    px: 10,
    pb: 15
 };
+ 
 
 
 const StyledContent2 = styled('div')(({ theme }) => ({
@@ -53,20 +54,24 @@ const style = {
 // ----------------------------------------------------------------------
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-export default function DoardPage() {
+
+
+
+
+export default function BoardRegist() {
+
   const [data, setData] = useState({
     title: "",
     RegDate: "",
-    writer: "",
+    writerID:  "",
     content: ""
   });
 
-  const handleChange = ({ target }) => {
-    const { value, name } = target;
-    setData((prevData) => ({
-        ...prevData,
-        [name]: value
-    }));
+  const handleChange = (e) => { const value = e.target.value;
+    setData({
+      ...data,
+      [e.target.name]: value
+    });
   };
 
   const handleSubmit = (e) => {
@@ -74,11 +79,11 @@ export default function DoardPage() {
     const userData = {
       title: data.title,
       RegDate: data.RegDate,
-      writer: data.writer,
+      writerID: data.writerID,
       content: data.content
     };
     axios
-      .post("/DoardPage", userData)
+      .post("/board/regist", userData)
       .then((response) => {
         console.log(response.status, response.data);
       })
@@ -93,32 +98,25 @@ export default function DoardPage() {
         }
       });
   };
+  
+// 여기까지 axios
 
-  // const [value, setValue] = React.useState<number ||  null>(2);
+ 
   const navigate = useNavigate();
 
-    const handleClick = () => {
-      navigate('/re', { replace: true });
-    };
+  const handleClick = () => {
+    navigate('/board/list', { replace: true });
+  };
+  const [open, setOpen] = React.useState(false);
+   const [open1, setOpen1] = React.useState(false);
 
-    const [open, setOpen] = useState(false);
-    const [open1, setOpen1] = React.useState(false);
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
 
-    const handleOpen = () => {
-      setOpen(true);
-    };
-
-   const handleOpen1 = () => {
-         setOpen1(true);
-         };
-
-    const handleClose = () => {
-      setOpen(false);
-    };
-
-     const handleClose1 = () => {
-          setOpen1(false);
-    };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -138,7 +136,18 @@ export default function DoardPage() {
     setAnchorElUser(null);
   };
 
+
+       const handleOpen1 = () => {
+             setOpen1(true);
+             };
+ 
+       const handleOpen = () => {
+             setOpen(true);
+             };
+
+
  const [imageSrc, setImageSrc] = useState('');
+
  const encodeFileToBase64 = (fileBlob) => {
      const reader = new FileReader();
      reader.readAsDataURL(fileBlob);
@@ -153,7 +162,7 @@ export default function DoardPage() {
   return (
     <>
       <Helmet>
-        <title> QnA 작성| 꽁머니 </title>
+        <title> 게시글 작성| 꽁머니 </title>
       </Helmet>
    
       <AppBar position="static">
@@ -277,30 +286,43 @@ export default function DoardPage() {
         </Toolbar>
       </Container>
     </AppBar>
-    <form onSubmit={handleSubmit}>
-      <Container width="10000">
+       <form onSubmit={handleSubmit}>       
+      <Container width="10000" >
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            QnA 작성하세유
+            게시글 작성하세유
           </Typography>
-      
+                
           <Typography sx={{ color: 'text.secondary' }}>
         무엇이든 물어보세유 
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-         {/* 여기서 부터 내용 */}
+            
+       
 
-
-         <TextField    name="title" label="제목" 
+          {/* 여기서 부터 내용 */}
+                
+             
+          <TextField    name="title" label="제목" 
           value={data.title}
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
+                  
+          
 
-          <TextField    name="writer" label="작성자" 
-          value={data.writer}
+
+
+          
+
+          <TextField    name="writerID" label="작성자"
+
+          value={data.writerID}
           onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
-
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
+        
+                
+            
+           
         <TextField    name="content" label="내용" 
           value={data.content}
           multiline
@@ -308,7 +330,9 @@ export default function DoardPage() {
           onChange={handleChange}
           defaultValue=" 글 작성"
          />
-<div>
+
+        
+          <div>
             <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
           <Button variant="contained" component="label">
               Upload File &nbsp;<AddAPhotoIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
@@ -340,29 +364,37 @@ export default function DoardPage() {
                 </Modal>
                    </Stack>
           </div>
-         
-      <div>
-      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-      >
-        <Box sx={{ ...style, width: 500 }}>
-          <h2 id="parent-modal-title">꽁 머 니</h2>
-          <p id="parent-modal-description">
-           QnA이 작성됐습니다람쥐.
-          </p>
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
-       등록
-      </LoadingButton>
-        </Box>
-      </Modal>
-    </div>
-      </StyledContent2>
-      </Container>
-      </form>      
+
+
+
+
+
+
+
+          <div>
+          <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
+            <Modal
+              open={open}
+              onClose={handleClose}
+          aria-labelledby="parent-modal-title"
+              aria-describedby="parent-modal-description"
+            >
+              <Box sx={{ ...style, width: 500 }}>
+                <h2 id="parent-modal-title">꽁 머 니</h2>
+                <p id="parent-modal-description">
+                  게시글이 작성됐습니다람쥐.
+                </p>
+                      <LoadingButton fullWidth size="large"  variant="contained" onClick={handleClick}>
+                  등록
+            </LoadingButton>
+              </Box>
+            </Modal>
+          </div>
+  
+            </StyledContent2>
+            </Container>
+            </form>      
     </>
-  );
+  ) ;
 }
+
