@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const UsernameRecoveryModal = () => {
   const [showModal, setShowModal] = useState(false);
-  const [mname, setUserName] = useState('');
-  const [email, setUserEmail] = useState('');
+  const [mname, setMname] = useState(''); // Changed userName to mname
+  const [email, setEmail] = useState(''); // Changed userEmail to email
   const [retrievedUsername, setRetrievedUsername] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -15,44 +16,62 @@ const UsernameRecoveryModal = () => {
 
   const closeModal = () => {
     setShowModal(false);
-    setUserName('');
-    setUserEmail('');
+    setMname('');
+    setEmail('');
     setRetrievedUsername('');
     setErrorMsg('');
   };
 
-  const handleUserNameChange = (e) => {
-    setUserName(e.target.value);
+  const handleMnameChange = (e) => { // Changed handleUserNameChange to handleMnameChange
+    setMname(e.target.value);
   };
 
-  const handleUserEmailChange = (e) => {
-    setUserEmail(e.target.value);
+  const handleEmailChange = (e) => { // Changed handleUserEmailChange to handleEmailChange
+    setEmail(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const requestData = {
-      mname,
-      email,
+      email, // Changed userEmail to email
+      mname, // Changed userName to mname
     };
 
+    console.log('Request Data:', requestData);
+
     axios
-      .post('/check/findID', null, {params: requestData})
+      .post('/check/findID', requestData)
       .then((response) => {
         const res = response.data;
-        if (res.success) {
-          setRetrievedUsername(res.mname);
+        if (res) {
+          Swal.fire({
+            icon: 'success',
+            title: '아이디 찾기 성공',
+
+            text: `아이디: ${res}`,
+          });
+          setRetrievedUsername(res);
           setErrorMsg('');
         } else {
+          Swal.fire({
+            icon: 'error',
+            title: '아이디 찾기 실패',
+            text: '아이디를 찾을 수 없습니다.',
+          });
           setRetrievedUsername('');
-          setErrorMsg(res.message);
+          setErrorMsg('아이디를 찾을 수 없습니다.');
         }
       })
       .catch((error) => {
         console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: '아이디 찾기 실패',
+          text: '아이디를 검색하는 중에 오류가 발생했습니다. 나중에 다시 시도해주세요.',
+        });
         setRetrievedUsername('');
-        setErrorMsg('Failed to retrieve username. Please try again later.');
+        setErrorMsg('아이디를 검색하는 중에 오류가 발생했습니다.');
       });
   };
 
@@ -70,8 +89,8 @@ const UsernameRecoveryModal = () => {
               <Form.Control
                 type="text"
                 placeholder="가입 시 등록한 이름을 입력하세요."
-                value={mname}
-                onChange={handleUserNameChange}
+                value={mname} // Changed userName to mname
+                onChange={handleMnameChange} // Changed handleUserNameChange to handleMnameChange
               />
             </Form.Group>
             <Form.Group>
@@ -79,8 +98,8 @@ const UsernameRecoveryModal = () => {
               <Form.Control
                 type="email"
                 placeholder="가입 시 등록한 이메일을 입력하세요."
-                value={email}
-                onChange={handleUserEmailChange}
+                value={email} // Changed userEmail to email
+                onChange={handleEmailChange} // Changed handleUserEmailChange to handleEmailChange
               />
             </Form.Group>
             <Button type="submit" variant="success" block>
