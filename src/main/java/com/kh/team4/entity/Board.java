@@ -50,19 +50,20 @@ public class Board extends Base {
     @Column
     private Integer fileAttached; //파일 첨부 여부 (첨부 1, 미첨부 0)
 
-/*    public static Board dtoToEntity(BoardDTO dto, Member member) {
+    public static Board dtoToEntity(BoardDTO dto, Member member) {
         //Member member = Member.builder().mid(dto.getWriterID()).build();
         Board board = Board.builder()
 //                .bno(dto.getBno())
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                .hits(0)
+                .hits(dto.getHits())
                 .member(member)
                 .build();
         return board;
-    }*/
-    public static Board createBoard(String title, String content, Member member) {
+    }
+/*    public static Board createBoard(Long bno, String title, String content, Member member) {
         Board board = new Board();
+        board.bno = bno;
         board.title = title;
         board.content = content;
         board.member = member;
@@ -70,7 +71,7 @@ public class Board extends Base {
 
         //board.fileAttached = 0; // 0 = 파일 없음
         return board;
-    }
+    }*/
     /* 게시글 수정 */
     public static Board changeBoard(Board board, String title, String content) {
         board.title = title;
