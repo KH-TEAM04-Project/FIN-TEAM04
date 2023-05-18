@@ -26,7 +26,6 @@ public class MemberController {
     private final JavaMailSender javaMailSender;
     private final SendEmailService sendEmailService;
 
-
     //회원가입 기능 구현
     @PostMapping("/SignUp2")
     public String memberregist(@RequestBody MemberReqDTO memberDTO) {
@@ -34,22 +33,31 @@ public class MemberController {
         return memberService.regist(memberDTO);
     }
 
-    // 회원 탈퇴 기능 구현
-    @PostMapping("/memberDelete")
-    public void memberDelete(@RequestBody MemberReqDTO memberDTO) {
-        // mid 가 아닌 mno를 기준으로 삼은 것은 delete메서드가 ID를 기본 골자로 삼고 있기 때문이다.
+    @PostMapping("/intoMyPage") // 마이페이지 진입 전 확인
+    public boolean intoCheck(@RequestBody MemberReqDTO memberDTO) {
+        System.out.println("마이페이지 진입 시 패스워드 확인");
         Long mno = memberDTO.getMno();
-        System.out.println(mno);
-        memberService.delete(mno);
+        String  pwd = memberDTO.getPwd();
+        System.out.println("받은 값 확인 : Mno - " + mno + ", Pwd - " + pwd);
+        return memberService.confirmpwd(mno, pwd);
     }
 
-    @PostMapping("/MyPageCont")
+    @PostMapping("/MyPageCont") // 마이페이지
     public ResponseEntity<MemberResDTO> memberDetail(@RequestBody MemberReqDTO memreqDTO) {
         Long mno = memreqDTO.getMno();
         System.out.println("회원정보 페이지 진입 및 받은 값 : " + mno);
         return ResponseEntity.ok(memberService.detail(mno));
     }
-    @PostMapping("/memberUpdate")
+
+    @PostMapping("/memberDelete")   // 회원 삭제
+    public void memberDelete(@RequestBody MemberReqDTO memberDTO) {
+        // mid 가 아닌 mno를 기준으로 삼은 것은 delete메서드가 ID를 기본 골자로 삼고 있기 때문이다.
+        Long mno = memberDTO.getMno();
+        System.out.println("삭제할 회원의 No. : " + mno);
+        memberService.delete(mno);
+    }
+
+    @PostMapping("/memberUpdate")   // 회원 정보 갱신
     public ResponseEntity<MemberResDTO> memberUpdate(@RequestBody MemberReqDTO memberReqDTO) throws Exception {
         System.out.println("받은 값 : " + memberReqDTO.toString());
         return ResponseEntity.ok(memberService.Update(memberReqDTO));

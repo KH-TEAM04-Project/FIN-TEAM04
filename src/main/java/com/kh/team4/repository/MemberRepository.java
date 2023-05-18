@@ -14,13 +14,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByMid(String mid);
 
-    @Query(value = "select mid from members where email = :email and mname = :mname", nativeQuery = true)
+    @Query(value = "select * from members where email = :email and mname = :mname", nativeQuery = true)
     Optional<Member> findByMidwithemailandmname(@Param("email") String email, @Param("mname") String mname);
 
     Member findByEmail(String email);
 
 
-  
     @Query(value = "SELECT mno from members where mid = :mid", nativeQuery = true)
     Long findByMid2(@Param("mid")String mid);
 

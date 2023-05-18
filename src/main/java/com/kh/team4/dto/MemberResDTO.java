@@ -53,7 +53,7 @@ public class MemberResDTO {
                 .build();
     }
 
-    public static MemberResDTO of2(Optional<Member> member) {
+    public static MemberResDTO of2(Optional<Member> member) {   // Optional 사용 위한 메서드
         return MemberResDTO.builder()
                 .mid(member.get().getMid())
                 .mno(member.get().getMno())
@@ -64,4 +64,5 @@ public class MemberResDTO {
 
                 .build();
     }
+
 }
