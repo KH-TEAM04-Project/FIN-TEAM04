@@ -77,12 +77,12 @@ export default function Router() {
       element: <QnaRegistPage />,
     },
     {
-      path: '/boardUpdate',
+      path: '/board/update',
       element: <BoardUpdatePage />,
     },
      {
       element: <BoardUpdatePage />,
-      path: '/boardUpdate/:bno',
+      path: '/board/update/:bno',
     },
       {
           path: '/qna/update',
@@ -95,7 +95,7 @@ export default function Router() {
     {
 
       element: <BoardDetailPage />,
-      path: '/boardDetail',
+      path: '/board/detail',
     },
         {
 
@@ -104,7 +104,7 @@ export default function Router() {
         },
     {
       element: <QnaDetailPage />,
-      path: '/qna/detail/:qno',
+      path: '/qna/detail',
     },
     {
       element: <BoardDetailPage />,

@@ -59,6 +59,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 export default function BoardRegist() {
+
 const token = localStorage.getItem('accessToken');
 const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
 const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
