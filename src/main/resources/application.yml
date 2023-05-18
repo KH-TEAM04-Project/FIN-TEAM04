@@ -52,13 +52,7 @@ spring:
   # 이메일 인증 이거 내 ㄹㅇ 어디가서 유포 금지.
 
   mail:
-    host: smtp.naver.com
-    port: 465
-    username: lee970808@naver.com
-    password: lee990606
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.ssl.enable: true
+
 
 
   # mybatis 연동 설정
