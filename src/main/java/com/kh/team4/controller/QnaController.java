@@ -26,7 +26,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000")
 @Log4j2
 
-public class QnAController {
+public class QnaController {
     private final QnaService qnaService;
 
     private final ReplyService replyService;
