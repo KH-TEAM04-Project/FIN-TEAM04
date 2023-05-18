@@ -57,12 +57,11 @@ export default function DoardPage() {
 
   const token = localStorage.getItem('accessToken');
   const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
-  
-  
+
   const [data, setData] = useState({
     title: "",
     RegDate: "",
-    writer: sub, // writer 필드의 기본값을 sub로 설정
+    writer: sub,
     content: ""
   });
 
@@ -142,10 +141,6 @@ export default function DoardPage() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  
-  
-
-  
 
  const [imageSrc, setImageSrc] = useState('');
  const encodeFileToBase64 = (fileBlob) => {
@@ -161,11 +156,10 @@ export default function DoardPage() {
 
   return (
     <>
-    
       <Helmet>
         <title> QnA 작성| 꽁머니 </title>
       </Helmet>
-   
+
       <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -293,9 +287,9 @@ export default function DoardPage() {
           <Typography variant="h5" paragraph  defaultValue="Normal">
             QnA 작성하세유
           </Typography>
-      
+
           <Typography sx={{ color: 'text.secondary' }}>
-        무엇이든 물어보세유 
+        무엇이든 물어보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
          {/* 여기서 부터 내용 */}
@@ -304,14 +298,14 @@ export default function DoardPage() {
          <TextField    name="title" label="제목"
           value={data.title}
           onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>
 
-         <TextField    name="writer" label="작성자"
+          <TextField    name="writer" label="작성자"
           value={sub}
-          InputProps={{  readOnly: true,  }}
-           sx={{ my: { xs: 3, sm: 5, mr: 1 } }}/>
+          onChange={handleChange}
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>
 
-        <TextField    name="content" label="내용" 
+        <TextField    name="content" label="내용"
           value={data.content}
           multiline
           rows={10}
@@ -350,7 +344,7 @@ export default function DoardPage() {
                 </Modal>
                    </Stack>
           </div>
-         
+
       <div>
       <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
       <Modal
@@ -372,7 +366,7 @@ export default function DoardPage() {
     </div>
       </StyledContent2>
       </Container>
-      </form>      
+      </form>
     </>
   );
 }

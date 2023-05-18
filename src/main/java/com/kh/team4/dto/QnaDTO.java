@@ -1,11 +1,8 @@
 package com.kh.team4.dto;
 
-import com.kh.team4.entity.Member;
 import com.kh.team4.entity.Qna;
 import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
@@ -23,6 +20,8 @@ public class QnaDTO {
     private Integer hits;
     private String regDate;
     private String modDate;
+    private String memberId; // memberId 필드 추가
+
 
     public static QnaDTO toQnaDTO(Qna qna) {
         QnaDTO qnaDTO = new QnaDTO();
@@ -33,8 +32,13 @@ public class QnaDTO {
         qnaDTO.setSecret(qna.getSecret());
         qnaDTO.setHits(qna.getHits());
         qnaDTO.setRegDate(qna.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        qnaDTO.setMemberId(qnaDTO.getMemberId());
 
         return qnaDTO;
+    }
+
+    public String getWriter() {
+        return writer; // 회원 객체를 반환하도록 수정
     }
 
 
