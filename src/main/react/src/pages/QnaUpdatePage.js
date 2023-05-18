@@ -44,45 +44,70 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 export default function Ya() {
+    const token = localStorage.getItem('accessToken');
+    const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+    const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
 
-   const { qno } = useParams();
+    console.log(mno);
+    useEffect(() => {
+      if (token) {
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        setMno(decodedToken.mno);
+        console.log(decodedToken.mno);
 
-   const [data, setData] = useState({
-     qno : "",
-     title: "",
-     regDate: "",
-     writer: "",
-     content: "",
-   });
+        const fetchData = async () => {
+          try {
+            const response = await axios.post("/board/update", { mno: decodedToken.mno });
+            const userData = response.data;
+            // 사용자 데이터 처리
+          } catch (error) {
+            console.error(error);
+          }
+        };
 
-   const [posts, setPosts] = useState([]);
+        fetchData();
+      }
+    }, []);
 
-   const getPosts = useCallback(() => {
-     axios
-       .get(`/qna/update/${qno}`)
-       .then((response) => {
-         setPosts([response.data]);
-         console.log(response.data);
-         console.log("yaya");
-       })
-       .catch((error) => {
-         if (error.response) {
-           console.log("이거 에러인걸?");
-         } else if (error.request) {
-           console.log("network error");
-         } else {
-           console.log(error);
-         }
-       });
-   }, [qno]);
+    const { qno } = useParams();
 
-   const handleChange = useCallback((e) => {
-     const value = e.target.value;
-     setData((Data) => ({
-       ...Data,
-       [e.target.name]: value,
-     }));
-   }, []);
+    const [data, setData] = useState({
+      qno: "",
+      title: "",
+      regDate: "",
+      writerID: sub,
+      content: "",
+      mno
+    });
+
+    const [posts, setPosts] = useState([]);
+
+    const getPosts = () => {
+      axios
+        .get(`/qna/update/${qno}`)
+        .then((response) => {
+          setPosts([response.data]);
+          console.log(response.data);
+          console.log("yaya");
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log("이거 에러인걸?");
+          } else if (error.request) {
+            console.log("network error");
+          } else {
+            console.log(error);
+          }
+        });
+    };
+
+    const handleChange = (e) => {
+      const value = e.target.value;
+      setData((prevData) => ({
+        ...prevData,
+        [e.target.name]: value,
+      }));
+    };
 
    const handleSubmit = useCallback(
      (e) => {
@@ -91,8 +116,9 @@ export default function Ya() {
          qno: data.qno,
          title: data.title,
          regDate: data.regDate,
-         writer: data.writer,
+         writerID: data.writerID,
          content: data.content,
+         mno
        };
        axios
          .post(`/qna/update/${qno}`, userData)

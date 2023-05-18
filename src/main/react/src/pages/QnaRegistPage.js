@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import  React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -55,53 +55,74 @@ const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 export default function Yaya() {
 
+const token = localStorage.getItem('accessToken');
+const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
+const navigate = useNavigate();
+console.log(mno);
+useEffect(() => {
+  if (token) {
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    setMno(decodedToken.mno);
+    console.log(decodedToken.mno);
 
-  const token = localStorage.getItem('accessToken');
-  const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
-  
-
-  const [data, setData] = useState({
-    title: "",
-    RegDate: "",
-    writer: sub, // writer 필드의 기본값을 sub로 설정
-    content: ""
-  });
-
-  const handleChange = ({ target }) => {
-    const { value, name } = target;
-    setData((prevData) => ({
-        ...prevData,
-        [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const userData = {
-      title: data.title,
-      RegDate: data.RegDate,
-      writer: data.writer,
-      content: data.content
+    const fetchData = async () => {
+      try {
+        const response = await axios.post("/board/regist", { mno: decodedToken.mno });
+        const userData = response.data;
+        // 사용자 데이터 처리
+      } catch (error) {
+        console.error(error);
+      }
     };
-    axios
-      .post("/qna/regist", userData)
-      .then((response) => {
-        console.log(response.status, response.data);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log("이거 에러인걸?");
-          console.log(userData);
-        } else if (error.request) {
-          console.log("network error");
-        } else {
-          console.log(error);
-        }
-      });
+
+    fetchData();
+  }
+}, [token]);
+
+const [data, setData] = useState({
+  title: "",
+  RegDate: "",
+  writerID: sub,
+  hits: 0,
+  content: "",
+  mno // 축약 구문으로 변경
+});
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setData((prevData) => ({
+    ...prevData,
+    [name]: value
+  }));
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const userData = {
+    title: data.title,
+    RegDate: data.RegDate,
+    writerID: data.writerID,
+    hits: data.hits,
+    content: data.content,
+    mno // 축약 구문으로 변경
   };
-
-
-  const navigate = useNavigate();
+  axios
+    .post("/board/regist", userData)
+    .then((response) => {
+      console.log(response.status, response.data);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log("이거 에러인걸?");
+        console.log(userData);
+      } else if (error.request) {
+        console.log("network error");
+      } else {
+        console.log(error);
+      }
+    });
+};
 
     const handleClick = () => {
       navigate('/qna/list', { replace: true });

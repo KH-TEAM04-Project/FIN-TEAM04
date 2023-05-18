@@ -44,14 +44,42 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 export default function BoardUpdate() {
+    const token = localStorage.getItem('accessToken');
+    const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+    const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
+    const navigate = useNavigate();
+    console.log(mno);
+    useEffect(() => {
+      if (token) {
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        setMno(decodedToken.mno);
+        console.log(decodedToken.mno);
+
+        const fetchData = async () => {
+          try {
+            const response = await axios.post("/board/update", { mno: decodedToken.mno });
+            const userData = response.data;
+            // 사용자 데이터 처리
+          } catch (error) {
+            console.error(error);
+          }
+        };
+
+        fetchData();
+      }
+    }, [token]);
+
+
+
    const { bno } = useParams();
 
    const [data, setData] = useState({
    bno : "",
      title: "",
      regDate: "",
-     writer: "",
+   writerID: sub,
      content: "",
+     mno
    });
 
    const [posts, setPosts] = useState([]);
@@ -90,8 +118,9 @@ export default function BoardUpdate() {
          bno: data.bno,
          title: data.title,
          regDate: data.regDate,
-         writer: data.writer,
+         writerID: data.writerID,
          content: data.content,
+         mno
        };
        axios
          .post(`/board/update/${bno}`, userData)
@@ -122,7 +151,7 @@ export default function BoardUpdate() {
 
 
 
-  const navigate = useNavigate();
+
 
   const handleClick = () => {
     navigate('/board/list', { replace: true });

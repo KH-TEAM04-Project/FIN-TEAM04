@@ -45,6 +45,35 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 export default function Yaya() {
+    const token = localStorage.getItem('accessToken');
+    const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+    const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
+
+    useEffect(() => {
+      if (token) {
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        setMno(decodedToken.mno);
+        console.log(decodedToken.mno);
+
+        const fetchData = async () => {
+          try {
+            const response = await axios.post("/qna/detail", { mno: decodedToken.mno });
+            const userData = response.data;
+            // 사용자 데이터 처리
+          } catch (error) {
+            console.error(error);
+          }
+        };
+
+        fetchData();
+      }
+    }, [token]);
+    const [data, setData] = useState({mno // 축약 구문으로 변경
+    });
+
+
+
+
    const { qno } = useParams();
    const [posts, setPosts] = useState([]);
 
