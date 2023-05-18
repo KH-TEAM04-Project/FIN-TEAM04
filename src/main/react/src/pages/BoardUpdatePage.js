@@ -43,11 +43,11 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 
-export default function Page404() {
-   const { qno } = useParams();
+export default function BoardUpdate() {
+   const { bno } = useParams();
 
    const [data, setData] = useState({
-     qno : "",
+   bno : "",
      title: "",
      regDate: "",
      writer: "",
@@ -58,7 +58,7 @@ export default function Page404() {
 
    const getPosts = useCallback(() => {
      axios
-       .get(`/QEditPage/${qno}`)
+       .get(`/board/update/${bno}`)
        .then((response) => {
          setPosts([response.data]);
          console.log(response.data);
@@ -73,12 +73,12 @@ export default function Page404() {
            console.log(error);
          }
        });
-   }, [qno]);
+   }, [bno]);
 
    const handleChange = useCallback((e) => {
      const value = e.target.value;
-     setData((Data) => ({
-       ...Data,
+     setData((prevData) => ({
+       ...prevData,
        [e.target.name]: value,
      }));
    }, []);
@@ -87,14 +87,14 @@ export default function Page404() {
      (e) => {
        e.preventDefault();
        const userData = {
-         qno: data.qno,
+         bno: data.bno,
          title: data.title,
          regDate: data.regDate,
          writer: data.writer,
          content: data.content,
        };
        axios
-         .post(`/QEditPage/${qno}`, userData)
+         .post(`/board/update/${bno}`, userData)
          .then((response) => {
            console.log(response.status, response.data);
            console.log(response.data);
@@ -111,21 +111,21 @@ export default function Page404() {
            }
          });
      },
-     [data, qno]
+     [data, bno]
    );
 
    useEffect(() => {
-     if (qno) {
+     if (bno) {
        getPosts();
      }
-   }, [qno, getPosts]);
+   }, [bno, getPosts]);
 
 
 
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/re', { replace: true });
+    navigate('/board/list', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
@@ -283,7 +283,7 @@ export default function Page404() {
 
 
      {posts.map((data) => (
-<form onSubmit={handleSubmit} key={data.writer}>
+<form onSubmit={handleSubmit} key={data.bno}>
       <Container  width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
@@ -294,8 +294,8 @@ export default function Page404() {
         무엇이든 보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-           <TextField name="qno" label="게시글 번호"
-                      value={data.qno}
+           <TextField name="bno" label="게시글 번호"
+                      defaultValue={data.bno}
                       sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
           <TextField name="title" label="제목"

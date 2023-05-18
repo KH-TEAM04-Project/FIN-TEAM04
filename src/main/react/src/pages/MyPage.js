@@ -11,7 +11,7 @@ function MyPage() {
   const [detailaddress, setDetailAddress] = useState(""); // 상세주소 상태
   const [address, setAddress] = useState(""); // 주소 상태
   const [ph, setPh] = useState(""); // 휴대폰번호 상태
-  const [sub, setSub] = useState(""); // 토큰에서 추출한 sub 값 상태
+  const [mno, setMno] = useState(""); // 토큰에서 추출한 sub 값 상태
 
   // 로컬 스토리지에서 토큰 값을 가져옴
   const token = localStorage.getItem('accessToken');
@@ -22,8 +22,32 @@ function MyPage() {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
       // payload에서 MNO 값을 추출하여 상태에 저장
-      setSub(decodedToken.sub);
-      console.log(decodedToken.sub); // 추출한 sub 값 콘솔에 출력
+      setMno(decodedToken.mno);
+      console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
+
+      const mno = decodedToken.mno;
+      // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
+      axios.post("/MyPageCont", {mno} )
+
+
+      .then(response => {
+        // 사용자 데이터를 성공적으로 가져온 경우
+        const userData = response.data;
+
+        // 사용자 정보를 상태에 설정
+        setMname(userData.mname);
+        setMid(userData.mid);
+        setRegno(userData.regno);
+        setEmail(userData.email);
+        setPwd(userData.pwd);
+        setDetailAddress(userData.detailaddress);
+        setAddress(userData.address);
+        setPh(userData.ph);
+      })
+      .catch(error => {
+        // API 호출 중 에러 발생한 경우
+        console.error(error);
+      });
     }
   }, [token]);
 
@@ -56,27 +80,6 @@ function MyPage() {
     }
   };
 
-  // 백으로 MNO 값 전송하는 함수
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    if (sub) {
-      axios.post('/MyPageCont', {
-        MNO: sub // 상태에 저장된 sub 값을 서버로 보냄
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(response => {
-        // 사용자 데이터를 성공적으로 가져온 경우
-        console.log(response.data);
-      })
-      .catch(error => {
-        // API 호출 중 에러 발생한 경우
-        console.error(error);
-      });
-    }
-  };
-
   return (
     <div>
       <h1>마이페이지</h1>
@@ -91,7 +94,6 @@ function MyPage() {
 
       <MyPageForm onSave={handleSave} />
 
-      
       {/* 회원 삭제 폼 */}
       <form onSubmit={(e) => {
         e.preventDefault();
@@ -107,10 +109,6 @@ function MyPage() {
         </div>
         <button type="submit">회원 삭제</button>
       </form>
-
-
-      
-      
     </div>
   );
 }

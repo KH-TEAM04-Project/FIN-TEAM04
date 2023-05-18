@@ -58,7 +58,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 
-export default function CoardPage1() {
+export default function BoardRegist() {
 
   const navigate = useNavigate();
 
@@ -68,7 +68,7 @@ export default function CoardPage1() {
   const [data, setData] = useState({
     title: "",
     RegDate: "",
-    writer:  sub,
+    writerID:  "",
     hits :Number,
     content: ""
   });
@@ -85,11 +85,11 @@ export default function CoardPage1() {
     const userData = {
       title: data.title,
       RegDate: data.RegDate,
-      writer: data.writer,
+      writerID: data.writerID,
       content: data.content
     };
     axios
-      .post("/CoardPage", userData)
+      .post("/board/regist", userData)
       .then((response) => {
         console.log(response.status, response.data);
       })
@@ -111,7 +111,7 @@ export default function CoardPage1() {
   
 
   const handleClick = () => {
-    navigate('/EoardPage', { replace: true });
+    navigate('/board/list', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
    const [open1, setOpen1] = React.useState(false);
@@ -320,11 +320,12 @@ export default function CoardPage1() {
 
           
 
-                   
-<TextField    name="writer" label="작성자"
-          value={sub}
-          InputProps={{  readOnly: true,  }}
-           sx={{ my: { xs: 3, sm: 5, mr: 1 } }}/>
+          <TextField    name="writerID" label="작성자"
+
+          value={data.writerID}
+          onChange={handleChange}
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
+
                 
             
            

@@ -45,14 +45,14 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 
-export default function Page404() {
+export default function BoardDetail() {
 
 
    const { bno } = useParams();
    const [posts, setPosts] = useState([]);
 
    const getPosts = () => {
-     axios.get(`/BoardReadPage/${bno}`).then((response) => {
+     axios.get(`/board/detail/${bno}`).then((response) => {
        setPosts([response.data]); // 배열 형태로 설정
        console.log(response.data);
        console.log("yaya");
@@ -74,7 +74,7 @@ export default function Page404() {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/EoardPage', { replace: true });
+    navigate('/board/list', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {

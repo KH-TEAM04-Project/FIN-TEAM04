@@ -1,10 +1,8 @@
 package com.kh.team4.jwt;
 
 
-import com.kh.team4.dto.MemberReqDTO;
-import com.kh.team4.dto.MemberResDTO;
+import com.kh.team4.config.RedisUtil;
 import com.kh.team4.dto.TokenDTO;
-import com.kh.team4.entity.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -23,7 +21,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-
 @Component
 @Slf4j
 public class TokenProvider {
@@ -36,15 +33,14 @@ public class TokenProvider {
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
     private final Key key;
-
-
-
+    private final RedisUtil redisUtil;
 
 
     // @value 어노테이션으로 yml에 있는 secretKey가져온다음 디코딩 해서 의존성 주입된 키 값으로 설정
-    public TokenProvider(@Value("${spring.jwt.secret}") String secretKey) {
+    public TokenProvider(@Value("${spring.jwt.secret}") String secretKey, RedisUtil redisUtil) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.redisUtil = redisUtil;
     }
 
 
@@ -56,6 +52,7 @@ public class TokenProvider {
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
+
 
 
         Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 만료시간 설정
@@ -71,7 +68,6 @@ public class TokenProvider {
                 .setExpiration(tokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
-
 
 
         // Refresh Token 생성
@@ -129,6 +125,7 @@ public class TokenProvider {
                 .refreshToken(refreshToken)
                 .build();
     }
+
     public Authentication getAuthentication(String accessToken) { // 토큰의 인증을 꺼내는 메소드
         // 토큰 복호화
         Claims claims = parseClaims(accessToken); // String형태의 토큰을 claims형태로 생성
@@ -155,7 +152,13 @@ public class TokenProvider {
     public boolean validateToken(String token) { //validateToken 토큰 검증하기 위한 메소드
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            // 추가된 부분
+            if (redisUtil.hasKeyBlackList(token)) {
+                // TODO 에러 발생시키는 부분 수정
+                throw new RuntimeException("로그아웃 ing~~");
+            }
             return true;
+
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {

@@ -4,26 +4,26 @@ import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 //
 import BlogPage from './pages/BlogPage';
-import QnaPage from './pages/QnaPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
-
-import BoardPage from './pages/BoardPage';
-import CoardPage from './pages/CoardPage';
-import DoardPage from './pages/DoardPage';
-import EoardPage from './pages/EoardPage';
 import SignUpPage from './pages/SignUpPage';
-import EditPage from './pages/EditPage';
-import QEditPage from './pages/QEditPage';
-import RetryPage from './pages/RetryPage';
-// import FetchPage from './pages/FetchPage';
-import BoardReadPage from './pages/BoardReadPage';
-
 import MyPage from './pages/MyPage';
-import QnaReadPage from './pages/QnaReadPage';
+
 import IdPwPage from './pages/IdPwPage';
+import PasswordResetModal from './pages/FindPwPage';
+import UsernameRecoveryModal from './pages/FindIdPage';
+
+import BoardListPage from './pages/BoardListPage'
+import BoardRegistPage from './pages/BoardRegistPage';
+import BoardUpdatePage from './pages/BoardUpdatePage';
+import BoardDetailPage from './pages/BoardDetailPage';
+
+import QnaListPage from './pages/QnaListPage';
+import QnaRegistPage from './pages/QnaRegistPage';
+import QnaDetailPage from './pages/QnaDetailPage';
+import QnaUpdatePage from './pages/QnaUpdatePage';
 
 
 // ----------------------------------------------------------------------
@@ -36,12 +36,10 @@ export default function Router() {
 
         { element: <Navigate to="/Main" />, index: true },
         { path: '/Main', element: <DashboardAppPage /> },
-        { path: '/QnA', element: <QnaPage /> },
         { path: '/products', element: <ProductsPage /> },
         { path: '/blog', element: <BlogPage /> },
-        { path: '/board', element: <BoardPage /> },
-        { path: '/re', element: <RetryPage /> },
-        { path: 'EoardPage', element: <EoardPage/> }
+        { path: '/qna/list', element: <QnaListPage /> },
+        { path: '/board/list', element: <BoardListPage/> }
 
       ],
     },
@@ -66,68 +64,75 @@ export default function Router() {
     },
     {
       path: '/IdPw',
-      element: <IdPwPage />,
+      element: <UsernameRecoveryModal />,
     },
     {
-      path: '/Coardpage',
-      element: <CoardPage />,
+      path: '/IdPw2',
+      element: <PasswordResetModal />
+
+    },
+
+    {
+      path: '/qna/regist',
+      element: <QnaRegistPage />,
     },
     {
-      path: '/Doardpage',
-      element: <DoardPage />,
-    },
-    {
-      path: '/EditPage',
-      element: <EditPage />,
+      path: '/boardUpdate',
+      element: <BoardUpdatePage />,
     },
      {
-      element: <EditPage />,
-      path: '/EditPage/:bno',
+      element: <BoardUpdatePage />,
+      path: '/boardUpdate/:bno',
     },
       {
-          path: '/QEditPage',
-          element: <QEditPage />,
+          path: '/qna/update',
+          element: <QnaUpdatePage />,
         },
          {
-          element: <QEditPage />,
-          path: '/QEditPage/:qno',
+          element: <QnaUpdatePage />,
+          path: '/qna/update/:qno',
         },
     {
 
-      element: <BoardReadPage />,
-      path: '/BoardReadPage',
+      element: <BoardDetailPage />,
+      path: '/boardDetail',
+    },
+        {
+
+          element: <BoardRegistPage />,
+          path: '/board/regist',
+        },
+    {
+      element: <QnaDetailPage />,
+      path: '/qna/detail/:qno',
     },
     {
-      element: <QnaReadPage />,
-      path: '/QnaReadPage/:qno',
-    },
-    {
-      element: <BoardReadPage />,
-      path: '/BoardReadPage/:bno',
+      element: <BoardDetailPage />,
+      path: '/board/detail/:bno',
     },
 
     {
 
-      element: <BoardReadPage />,
-      path: '/BoardReadPage',
+      element: <BoardDetailPage />,
+      path: '/boardDetail',
 
     },
     {
-      element: <QnaReadPage />,
-      path: '/QnaReadPage:qno',
+      element: <QnaDetailPage />,
+      path: '/qna/detail:qno',
     },
     {
-      element: <BoardReadPage />,
-      path: '/BoardReadPage:bno',
+      element: <BoardDetailPage />,
+      path: '/board/detail:bno',
     }
     ,
     {
-      path: '/re',
-      element: <RetryPage />
+      path: '/board/list',
+      element: <QnaListPage />
     },
     {
-      path: '/BoardReadPage',
-      element: <BoardReadPage />
+      path: '/board/detail',
+      element: <BoardDetailPage />
 
     },
     {
