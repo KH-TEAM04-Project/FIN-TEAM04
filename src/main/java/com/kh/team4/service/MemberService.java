@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -197,18 +198,21 @@ public class MemberService {
     }
 
     public boolean confirmpwd(Long mno, String pwd) {
-       Optional<Member> searchmember = memberRepository.findById(mno);
-       String confirmedPwd = searchmember.get().getPwd();
-            System.out.println("서치한 패스워드 확인 : " + confirmedPwd);
-            System.out.println("가져온 패스워드 확인 : " + pwd);
-       String getPwd = passwordEncoder.encode(pwd);
-            System.out.println("가져온 패스워드 인코딩 값 확인 : " + getPwd);
+        Optional<Member> searchmember = memberRepository.findById(mno);
+        String confirmedPwd = searchmember.get().getPwd();
+        System.out.println("서치한 패스워드 확인: " + confirmedPwd);
+        System.out.println("가져온 패스워드 확인: " + pwd);
 
-       if (confirmedPwd.equals(getPwd)){
-           return true;
-       } else {
-           return false;
-       }
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boolean passwordMatches = passwordEncoder.matches(pwd, confirmedPwd);
+
+        if (passwordMatches) {
+            System.out.println("비밀번호가 일치합니다.");
+            return true;
+        } else {
+            System.out.println("비밀번호가 일치하지 않습니다.");
+            return false;
+        }
     }
 }
 
