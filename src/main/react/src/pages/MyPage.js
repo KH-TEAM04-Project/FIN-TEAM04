@@ -3,14 +3,16 @@ import axios from 'axios';
 import MyPageForm from "../sections/auth/MyPage/MyPageForm";
 
 function MyPage() {
-  const [mname, setMname] = useState(""); // 이름 상태
-  const [mid, setMid] = useState(""); // 아이디 상태
-  const [regno, setRegno] = useState(""); // 주민등록번호 상태
-  const [email, setEmail] = useState(""); // 이메일 상태
-  const [pwd, setPwd] = useState(""); // 패스워드 상태
-  const [detailaddress, setDetailAddress] = useState(""); // 상세주소 상태
-  const [address, setAddress] = useState(""); // 주소 상태
-  const [ph, setPh] = useState(""); // 휴대폰번호 상태
+  const [userData, setUserData] = useState({
+    mname: "",
+    mid: "",
+    regno: "", // Resident Registration Number
+    email: "",
+    address: "",
+    detailAddress: "",
+    ph: ""
+  });
+
   const [mno, setMno] = useState(""); // 토큰에서 추출한 sub 값 상태
 
   // 로컬 스토리지에서 토큰 값을 가져옴
@@ -27,88 +29,85 @@ function MyPage() {
 
       const mno = decodedToken.mno;
       // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
-      axios.post("/MyPageCont", {mno} )
+      axios.post("/MyPageCont", { mno })
+        .then(response => {
+          // 사용자 데이터를 성공적으로 가져온 경우
+          const userData = response.data;
 
-
-      .then(response => {
-        // 사용자 데이터를 성공적으로 가져온 경우
-        const userData = response.data;
-
-        // 사용자 정보를 상태에 설정
-        setMname(userData.mname);
-        setMid(userData.mid);
-        setRegno(userData.regno);
-        setEmail(userData.email);
-        setPwd(userData.pwd);
-        setDetailAddress(userData.detailaddress);
-        setAddress(userData.address);
-        setPh(userData.ph);
-      })
-      .catch(error => {
-        // API 호출 중 에러 발생한 경우
-        console.error(error);
-      });
+          // 사용자 정보를 상태에 설정
+          setUserData(userData);
+        })
+        .catch(error => {
+          // API 호출 중 에러 발생한 경우
+          console.error(error);
+        });
     }
   }, [token]);
 
-  // 입력된 정보를 저장하는 함수
-  const handleSave = (mname, mid, regno, email, pwd, detailaddress, address, ph) => {
-    setMname(mname);
-    setMid(mid);
-    setRegno(regno);
-    setEmail(email);
-    setPwd(pwd);
-    setDetailAddress(detailaddress);
-    setAddress(address);
-    setPh(ph);
+  // Function to display only the first six digits of the Resident Registration Number
+  const getMaskedRegNo = () => {
+    const { regno } = userData;
+    if (regno.length >= 6) {
+      return regno.slice(0, 6);
+    }
+    return regno;
+  };
+
+  // Function to handle saving the updated user information and changing the password
+  const handleSaveAndChangePassword = () => {
+    // Implement the logic to handle saving user information and changing the password
+    console.log("Save and Change Password logic goes here");
   };
 
   // 회원 삭제 함수
-  const handleDelete = (password) => {
-    if (password === pwd) {
-      setMname("");
-      setMid("");
-      setRegno("");
-      setEmail("");
-      setPwd("");
-      setDetailAddress("");
-      setAddress("");
-      setPh("");
-      alert("회원 정보가 삭제되었습니다.");
-    } else {
-      alert("비밀번호가 일치하지 않습니다.");
-    }
+  const handleDelete = () => {
+    // Send the mno value to the backend
+    axios.post("/memberDelete", { mno })
+      .then(response => {
+        // Successful deletion
+        setUserData({
+          mname: "",
+          mid: "",
+          regno: "",
+          email: "",
+          address: "",
+          detailAddress: "",
+          ph: ""
+        });
+        alert("회원 정보가 삭제되었습니다.");
+      })
+      .catch(error => {
+        // Error occurred while deleting
+        console.error(error);
+      });
+  };
+
+  // Function to handle changes in the input fields
+  const handleChange = (field, value) => {
+    setUserData(prevState => ({
+      ...prevState,
+      [field]: value
+    }));
   };
 
   return (
     <div>
       <h1>마이페이지</h1>
-      <p>이름: {mname}</p>
-      <p>아이디: {mid}</p>
-      <p>주민등록번호: {regno}</p>
-      <p>이메일: {email}</p>
-      <p>패스워드: {pwd}</p>
-      <p>주소: {address}</p>
-      <p>상세주소: {detailaddress}</p>
-      <p>휴대폰번호: {ph}</p>
+      <p>이름: {userData.mname}</p>
+      <p>아이디: {userData.mid}</p>
+      <p>생년월일: {getMaskedRegNo()}</p>
+      <p>이메일: {userData.email}</p>
+      <p>주소: {userData.address}</p>
+      <p>상세주소: {userData.detailAddress}</p>
+      <p>휴대폰번호: {userData.ph}</p>
 
-      <MyPageForm onSave={handleSave} />
+      <MyPageForm onSave={handleChange} />
 
-      {/* 회원 삭제 폼 */}
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        handleDelete(e.target.password.value);
-      }}>
-        <div>
-          <label htmlFor="password">비밀번호입력</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-          />
-        </div>
-        <button type="submit">회원 삭제</button>
-      </form>
+      {/* 수정 및 비밀번호 변경 버튼 */}
+      <button onClick={handleSaveAndChangePassword}>회원 정보 수정</button>
+
+      {/* 회원 삭제 버튼 */}
+      <button onClick={handleDelete}>회원 삭제</button>
     </div>
   );
 }
