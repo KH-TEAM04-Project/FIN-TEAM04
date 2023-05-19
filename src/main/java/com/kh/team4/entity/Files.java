@@ -30,13 +30,12 @@ public class Files {
     @JoinColumn(name = "board_bno")
     private Board board;    // 반드시 부모 entity 타입으로 정해줘야됨
 
-    public static Files toFiles(BoardDTO boardDTO) {
-        String originFile = boardDTO.getOriginFile().get(0);
-        String storedFile = boardDTO.getStoredFile().get(0);
+    public static Files toFiles(Board board, String originFile, String storedFile) {
 
         return Files.builder()
                 .originFile(originFile)
                 .storedFile(storedFile)
                 .build();
     }
+
 }

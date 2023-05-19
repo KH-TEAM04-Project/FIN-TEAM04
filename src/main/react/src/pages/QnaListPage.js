@@ -171,10 +171,10 @@ return (
 
 
     <StyledSearch
-    sx={{ mr: 160, ml:1}}
+    sx={{ mr: 80, ml:1}}
       value={filterName}
       onChange={handleFilterByName}
-      placeholder="내용을 검색하세요우"
+      placeholder="내용을 검색하세요"
       startAdornment={
         <InputAdornment position="start">
           <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />

@@ -46,7 +46,7 @@ public class BoardService {
         } else { //인증정보가 존재할 경우, 인증정보에 있는 id를 추출해 내어 member객체를 찾아내고, Board의 Member객체와 일치 여부 boolean 값을 얻어옴
 
             Member member = memberRepository.findById(Long.parseLong(authentication.getName())).orElseThrow();
-         //   Member member = memberRepository.findById(accessToken.get);
+            //   Member member = memberRepository.findById(accessToken.get);
             System.out.println("");
             boolean result = board.getMember().equals(member);
             return BoardDTO.of(board, result);
@@ -102,7 +102,7 @@ public class BoardService {
         System.out.println("변환한 member 객체 : " + member.toString());*/
         Member member = isMemberCurrent();
 
-       // Board board = Board.createBoard(bno, title, content, member);
+        // Board board = Board.createBoard(bno, title, content, member);
         Board board = dtoToEntity(boardDTO, member);
 
         System.out.println("board : " + board);
@@ -138,7 +138,6 @@ public class BoardService {
         System.out.println("member" + member);
         return member;
     }*/
-
 
     /* 토큰 Member객체와 일치하는지 확인 */
     public Board authorizationArticleWriter(Long bno) {
@@ -202,6 +201,44 @@ public class BoardService {
            repository.deleteById(bno);
        }*/
 }
+/*    public void postBoard(BoardDTO boardDTO, Member member) throws IOException {
+        // 파일 첨부 여부에 따라 로직 분리
+        if(boardDTO.getBoardFile().isEmpty()) {
+            // 첨부 파일이 없는 경우
+            // repository 는 기본적으로 entity 클래스만 받아준다.
+            Board board = Board.dtoToEntity(boardDTO, member);
+            // BoardEntity.toSaveEntity(boardDTO); 를 호출한 결과를 entity 객체로 받아올 수 있음
+            repository.save(board);
+            // entity 를 세이브 메서드로 넘겨주게 되면은 인서트 쿼리가 나가게됨.
+        } else {
+            // 첨부 파일이 있는 경우
+            // DTO를 Entity로 변환해서 Board 테이블에 저장을 하고 BoardFile 테이블에 저장을하는 작업이 필요함
+            Board board = Board.toSaveFile(boardDTO);
+            Long saveId = repository.save(board).getBno();
+            // getId()를 쓰는 이유: 부모 자식 관계를 맺어놈, 자식 테이블에서는 부모 게시글에 대한 pk 값(board_id)이 필요하기 때문에
+
+            // 자식 entity 기준으로 entity 타입으로 선언 해놨음 pk 값이 아니라 entity 값을 전달해줘야하는 특징이 있음
+            Board board2 = repository.findById(saveId).get(); // 옵셔널 생략
+            // 부모 entity 자체가 전달이 되어야 하므로 부모 entity 를 db로 부터 가져옴
+            // 파일이 여러개인 상황이라 for 문으로 작성
+            for(MultipartFile boardFile: boardDTO.getBoardFile()) {
+//              1. DTO에 담겨있는 파일을 가져옴
+                String originFile = boardFile.getOriginalFilename();  // 2. 사용자가 올린 파일의 이름
+                String storedFile = System.currentTimeMillis() + "_" + originFile;    // 3.
+                // System.currentTimeMillis() : 1970년 1월 1일 기준으로 현재가 얼만큼 지났느냐의 값이 나옴.
+                String savePath = "C:/springboot_img/" + storedFile;   // 폴더를 만들어 놔야됨.
+                // C:/springboot_img/9564547645765_내사진.jpg
+                boardFile.transferTo(new File(savePath));   // 5. "C:/springboot_img/" 에 파일이 저장됨.
+
+                Files files = Files.toFiles(board, originFile, storedFile);
+                // files 객체로 변환하기 위한 작업
+                filesRepository.save(files);  // DB에 저장
+            }
+
+        }
+
+    }*/
+
 
 
 
