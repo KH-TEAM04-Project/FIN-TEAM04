@@ -86,6 +86,7 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
 }));
 
 export default function Yaya() {
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 

@@ -68,7 +68,7 @@ useEffect(() => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.post("/board/regist", { mno: decodedToken.mno });
+        const response = await axios.post("/qna/regist", { mno: decodedToken.mno });
         const userData = response.data;
         // 사용자 데이터 처리
       } catch (error) {
@@ -108,7 +108,7 @@ const handleSubmit = (e) => {
     mno // 축약 구문으로 변경
   };
   axios
-    .post("/board/regist", userData)
+    .post("/qna/regist", userData)
     .then((response) => {
       console.log(response.status, response.data);
     })

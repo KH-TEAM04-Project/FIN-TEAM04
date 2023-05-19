@@ -80,6 +80,7 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
        setPosts([response.data]); // 배열 형태로 설정
        console.log(response.data);
        console.log("yaya");
+
      })
      .catch((error) => {
        if (error.response) {
@@ -94,7 +95,7 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
 
    useEffect(() => {
      getPosts();
-   }, []);
+   }, [getPosts]);
   const navigate = useNavigate();
 
   const handleClick = () => {
