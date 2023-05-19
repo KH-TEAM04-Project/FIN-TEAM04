@@ -45,30 +45,34 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 export default function BoardUpdate() {
     const token = localStorage.getItem('accessToken');
-    const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
-    const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
-    const navigate = useNavigate();
-    console.log(mno);
-    useEffect(() => {
-      if (token) {
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        setMno(decodedToken.mno);
-        console.log(decodedToken.mno);
+const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
+const navigate = useNavigate();
+console.log(mno);
+ useEffect(() => {
+    if (token) {
+      // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
-        const fetchData = async () => {
-          try {
-            const response = await axios.post("/board/update", { mno: decodedToken.mno });
-            const userData = response.data;
-            // 사용자 데이터 처리
-          } catch (error) {
-            console.error(error);
-          }
-        };
+      // payload에서 MNO 값을 추출하여 상태에 저장
+      setMno(decodedToken.mno);
+      console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
 
-        fetchData();
-      }
-    }, [token]);
+      const mno = decodedToken.mno;
+      // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
+      axios.post("/MyPageCont", {mno} )
 
+
+      .then(response => {
+        // 사용자 데이터를 성공적으로 가져온 경우
+        const userData = response.data;
+ })
+      .catch(error => {
+        // API 호출 중 에러 발생한 경우
+        console.error(error);
+      });
+    }
+  }, [token]);
 
 
    const { bno } = useParams();
