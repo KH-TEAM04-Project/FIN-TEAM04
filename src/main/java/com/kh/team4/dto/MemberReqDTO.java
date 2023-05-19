@@ -21,8 +21,8 @@ public class MemberReqDTO {
     private String regno;
     private String email;
     private String pwd;
-    private String detailaddress;
     private String address;
+    private String detailaddress;
     private String ph;
     private String mtype;
     private Authority authority;
