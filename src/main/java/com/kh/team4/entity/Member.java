@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.QnaDTO;
+import com.kh.team4.embeded.Address;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,16 +23,6 @@ import java.util.Set;
         , initialValue = 1  //시작값
         , allocationSize = 1  //메모리를 통해 할당할 범위 사이즈
 )
-/*@Embeddable
-public class Address {
-    @Column(name = "addr1")
-    private String address1;
-    @Column(name = "addr2")
-    private String address2;
-    @Column(name = "zipcode")
-    private String zipcode;
-}*/
-
 @Builder
 public class Member {
     @Id // pk: 유저넘버
@@ -67,9 +58,11 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    @Embedded
+    private Address address;
+
     public void setPwd(String pwd) { this.pwd = pwd; }
-  /*  @Embedded
-    private Address address;*/
+
 
     public Member(Long mno) {
         this.mno = mno;
@@ -116,6 +109,7 @@ public  static Member findMid(MemberResDTO memberResDTO){
                 .mname(memberReqDTO.getMname())
                 .pwd(passwordEncoder.encode(memberReqDTO.getPwd()))
                 .authority(Authority.ROLE_USER)
+                .address(new Address(memberReqDTO.getAddress(), memberReqDTO.getDetailaddress()))
                 .build();
         return member;
     }
