@@ -1,7 +1,6 @@
 package com.kh.team4.entity;
 
 import com.kh.team4.dto.BoardDTO;
-import com.kh.team4.dto.QnaDTO;
 import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class Board extends Base {
             strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택
             , generator = "BOARD_SEQ_GENERATOR" //식별자 생성기를 설정해놓은  USER_SEQ_GEN으로 설정
     )
-    private long bno;
+    private Long bno;
 
     @Column(length = 50, nullable = false)
     private String title;
@@ -68,6 +67,7 @@ public class Board extends Base {
                 .build();
         return board;
     }
+
 /*    public static Board createBoard(Long bno, String title, String content, Member member) {
         Board board = new Board();
         board.bno = bno;
@@ -83,6 +83,16 @@ public class Board extends Base {
     public static Board changeBoard(Board board, String title, String content) {
         board.title = title;
         board.content = content;
+        return board;
+    }
+
+    public static Board toSaveFile(BoardDTO boardDTO) {
+        Board board = Board.builder()
+                .title(boardDTO.getTitle())
+                .content(boardDTO.getContent())
+                .hits(boardDTO.getHits())
+                .fileAttached(boardDTO.getFileAttached())
+                .build();
         return board;
     }
 }
