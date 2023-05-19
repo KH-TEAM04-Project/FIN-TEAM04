@@ -4,6 +4,8 @@ import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.QnaDTO;
 import lombok.*;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -47,8 +49,14 @@ public class Board extends Base {
     @JoinColumn(name = "member_mno")
     private Member member;
 
+    // 첨부파일 관련
     @Column
     private Integer fileAttached; //파일 첨부 여부 (첨부 1, 미첨부 0)
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Files> FilesList = new ArrayList<>();
+    // 게시글 하나에 보드파일이 여러개가 올 수 있도록 참조 관계 설정
+
 
     public static Board dtoToEntity(BoardDTO dto, Member member) {
         //Member member = Member.builder().mid(dto.getWriterID()).build();
