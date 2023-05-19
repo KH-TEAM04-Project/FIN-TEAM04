@@ -27,38 +27,38 @@ public class QnaController {
     private final ReplyService replyService;
 
     //  게시글 작성(CREATE) JWT 적용전
-//    @PostMapping("/qna/regist")
-//    public ResponseEntity<String> register(@RequestBody QnaDTO qnaDTO) {
-//        System.out.println("게시글 작성 컨트롤러 진입");
-//        // "/dashboard/write" 주소로 POST 요청이 들어오면 QnaDTO를 받아서 QnaService의 register() 메서드를 호출
-//        qnaService.register(qnaDTO);
-//        System.out.println("qnaDTO:" + qnaDTO);
-//        // register() 메서드에서는 QnaDTO를 이용하여 게시글을 작성하고, Qna 객체를 데이터베이스에 저장.
-//        return new ResponseEntity<>("게시글이 작성되었습니다.", HttpStatus.OK);
-//        // 성공적으로 수행되면 "게시글이 작성되었습니다" 메시지와 함께 HttpStatus.OK(200) 상태 코드를 반환.
-    // 게시글 작성(CREATE)
     @PostMapping("/regist")
-    public ResponseEntity<String> register(
-            @RequestBody QnaDTO qnaDTO
-    ) {
-        Long memberId = SecurityUtil.getCurrentMemberId();
-
-        // 회원 ID를 기반으로 게시글 작성 권한을 검사하여 로직을 처리
-        if (isMemberAllowedToWritePost(memberId)) {
-            qnaService.register(qnaDTO);
-            return ResponseEntity.ok("게시글이 작성되었습니다.");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("로그인 후에 게시글을 작성할 수 있습니다.");
-        }
-    }
-
-    private boolean isMemberAllowedToWritePost(Long memberId) {
-        // 여기에 회원의 게시글 작성 권한을 검사하는 로직을 작성합니다.
-        // 예를 들어, 회원의 등급, 권한, 상태 등을 확인하여 게시글 작성 여부를 결정할 수 있습니다.
-        // 필요한 권한 검사 로직을 구현한 후에 true 또는 false를 반환합니다.
-        // 예시로 모든 회원에게 게시글 작성 권한을 부여한다고 가정합니다.
-        return true;
+    public ResponseEntity<String> register(@RequestBody QnaDTO qnaDTO) {
+        System.out.println("게시글 작성 컨트롤러 진입");
+        // "/dashboard/write" 주소로 POST 요청이 들어오면 QnaDTO를 받아서 QnaService의 register() 메서드를 호출
+        qnaService.register(qnaDTO);
+        System.out.println("qnaDTO:" + qnaDTO);
+        // register() 메서드에서는 QnaDTO를 이용하여 게시글을 작성하고, Qna 객체를 데이터베이스에 저장.
+        return new ResponseEntity<>("게시글이 작성되었습니다.", HttpStatus.OK);
+        // 성공적으로 수행되면 "게시글이 작성되었습니다" 메시지와 함께 HttpStatus.OK(200) 상태 코드를 반환.
+    // 게시글 작성(CREATE)
+//    @PostMapping("/DoardPage")
+//    public ResponseEntity<String> register(
+//            @RequestBody QnaDTO qnaDTO
+//    ) {
+//        Long memberId = SecurityUtil.getCurrentMemberId();
+//
+//        // 회원 ID를 기반으로 게시글 작성 권한을 검사하여 로직을 처리
+//        if (isMemberAllowedToWritePost(memberId)) {
+//            qnaService.register(qnaDTO);
+//            return ResponseEntity.ok("게시글이 작성되었습니다.");
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                    .body("로그인 후에 게시글을 작성할 수 있습니다.");
+//        }
+//    }
+//
+//    private boolean isMemberAllowedToWritePost(Long memberId) {
+//        // 여기에 회원의 게시글 작성 권한을 검사하는 로직을 작성합니다.
+//        // 예를 들어, 회원의 등급, 권한, 상태 등을 확인하여 게시글 작성 여부를 결정할 수 있습니다.
+//        // 필요한 권한 검사 로직을 구현한 후에 true 또는 false를 반환합니다.
+//        // 예시로 모든 회원에게 게시글 작성 권한을 부여한다고 가정합니다.
+//        return true;
     }
 
     // 게시글 리스트 불러오기
@@ -102,42 +102,42 @@ public class QnaController {
     }
 
     // 게시글 삭제(DELETE)
-/*    @GetMapping("/delete/{qno}")
+    @GetMapping("/delete/{qno}")
     public String delete(@PathVariable("qno") Long qno) {
         System.out.println("삭제 컨트롤러 진입");
         qnaService.delete(qno);
         System.out.println("서비스에서 delete 함수 호출");
         return "/delete";
-    }*/
-    @PreAuthorize("isAuthenticated() and hasAuthority('ROLE_USER')")
-    @GetMapping("/delete/{qno}")
-    public ResponseEntity<String> delete(@PathVariable("qno") Long qno) {
-        log.info("삭제 컨트롤러 진입");
-        Long memberId = SecurityUtil.getCurrentMemberId();
-        log.info("memberId : " + memberId);
-        if (memberId == null) {
-            return new ResponseEntity<>("로그인 후에 게시글을 삭제할 수 있습니다.", HttpStatus.UNAUTHORIZED);
-        }
-
-        // 회원의 게시글 삭제 권한을 검사하는 로직
-        boolean isAllowedToDelete = isMemberAllowedToDeletePost(memberId, qno);
-        if (!isAllowedToDelete) {
-            return new ResponseEntity<>("해당 게시글을 삭제할 권한이 없습니다.", HttpStatus.FORBIDDEN);
-        }
-
-        qnaService.delete(qno);
-        return new ResponseEntity<>("게시글이 삭제되었습니다.", HttpStatus.OK);
     }
-
-    private boolean isMemberAllowedToDeletePost(Long memberId, Long qno) {
-        //현재 로그인한 회원의 ID와 게시글의 작성자 ID를 비교하여 같을 경우에만 삭제 권한을 부여합니다.
-        QnaDTO qnaDTO = qnaService.findById(qno);
-        if (qnaDTO != null && qnaDTO.getMemberId() != null && qnaDTO.getMemberId().equals(memberId)) {
-            return true;
-        }
-
-        return false;
-    }
+//    @PreAuthorize("isAuthenticated() and hasAuthority('ROLE_USER')")
+//    @GetMapping("/delete/{qno}")
+//    public ResponseEntity<String> delete(@PathVariable("qno") Long qno) {
+//        log.info("삭제 컨트롤러 진입");
+//        Long memberId = SecurityUtil.getCurrentMemberId();
+//        log.info("memberId : " + memberId);
+//        if (memberId == null) {
+//            return new ResponseEntity<>("로그인 후에 게시글을 삭제할 수 있습니다.", HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        // 회원의 게시글 삭제 권한을 검사하는 로직
+//        boolean isAllowedToDelete = isMemberAllowedToDeletePost(memberId, qno);
+//        if (!isAllowedToDelete) {
+//            return new ResponseEntity<>("해당 게시글을 삭제할 권한이 없습니다.", HttpStatus.FORBIDDEN);
+//        }
+//
+//        qnaService.delete(qno);
+//        return new ResponseEntity<>("게시글이 삭제되었습니다.", HttpStatus.OK);
+//    }
+//
+//    private boolean isMemberAllowedToDeletePost(Long memberId, Long qno) {
+//        //현재 로그인한 회원의 ID와 게시글의 작성자 ID를 비교하여 같을 경우에만 삭제 권한을 부여합니다.
+//        QnaDTO qnaDTO = qnaService.findById(qno);
+//        if (qnaDTO != null && qnaDTO.getMemberId() != null && qnaDTO.getMemberId().equals(memberId)) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     @PostMapping("/update/{qno}")
     public ResponseEntity<Long> update(@PathVariable Long qno, @RequestBody QnaDTO qnaDTO) {
@@ -149,5 +149,4 @@ public class QnaController {
         log.info("수정 완료 qno: " + updateQno);
         return ResponseEntity.ok(updateQno);
     }
-
 }
