@@ -1,31 +1,26 @@
 package com.kh.team4.entity;
 
+import com.kh.team4.dto.BoardDTO;
+import com.kh.team4.dto.QnaDTO;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Builder
 @Table(name = "files")
-@SequenceGenerator(
-        name = "FILES_SEQ_GENERATOR"  //시퀀스 제너레이터 이름
-        , sequenceName = "FILES_SEQ"  //시퀀스 이름
-        , initialValue = 1  //시작값
-        , allocationSize = 1  //메모리를 통해 할당할 범위 사이즈
-)
 public class Files {
     @Id
-    @GeneratedValue(  // 기본키를 자동으로 생성해주는 어노테이션
-            strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택
-            , generator = "FILES_SEQ_GENERATOR" //식별자 생성기를 설정해놓은  USER_SEQ_GEN으로 설정
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fno;
 
     @Column
-    private String originfile;
+    private String originFile;
 
     @Column
-    private String storedfile;
+    private String storedFile;
 
     // BoardEntity 와 FileEntity 의 관계
     // 게시글과 파일의 관계는 1:N 의 관계, 보드파일 기준으로는 게시글과의 관계는 N:1
@@ -35,5 +30,13 @@ public class Files {
     @JoinColumn(name = "board_bno")
     private Board board;    // 반드시 부모 entity 타입으로 정해줘야됨
 
+    public static Files toFiles(BoardDTO boardDTO) {
+        String originFile = boardDTO.getOriginFile().get(0);
+        String storedFile = boardDTO.getStoredFile().get(0);
 
+        return Files.builder()
+                .originFile(originFile)
+                .storedFile(storedFile)
+                .build();
+    }
 }
