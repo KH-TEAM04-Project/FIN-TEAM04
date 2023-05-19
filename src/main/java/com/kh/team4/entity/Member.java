@@ -120,6 +120,19 @@ public  static Member findMid(MemberResDTO memberResDTO){
         return member;
     }
 
+    public Member(MemberResDTO memberReqDTO) {
+
+        Member member = Member.builder()
+                .email(memberReqDTO.getEmail())
+                .mid(memberReqDTO.getMid())
+                .ph(memberReqDTO.getPh())
+                .regno(memberReqDTO.getRegno())
+                .mname(memberReqDTO.getMname())
+                .pwd(memberReqDTO.getPwd())
+                .authority(Authority.ROLE_USER)
+                .build();
+    }
+
     public String confirm(){
         return "Mno : " + this.mno + ",  Email : " + this.email + ",  Ph : " + this.ph;
     }

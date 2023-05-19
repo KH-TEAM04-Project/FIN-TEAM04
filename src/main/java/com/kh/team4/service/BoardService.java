@@ -3,10 +3,9 @@ package com.kh.team4.service;
 import com.kh.team4.config.SecurityUtil;
 import com.kh.team4.dto.BoardDTO;
 
-import com.kh.team4.dto.TokenDTO;
+import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.entity.*;
 
-import com.kh.team4.config.SecurityUtil;
 import com.kh.team4.repository.BoardRepository;
 import com.kh.team4.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.kh.team4.entity.Board.dtoToEntity;
 
@@ -44,7 +44,10 @@ public class BoardService {
             return BoardDTO.of(board, false);
             //Board 객체와 false 합쳐서 BoardDTO생성
         } else { //인증정보가 존재할 경우, 인증정보에 있는 id를 추출해 내어 member객체를 찾아내고, Board의 Member객체와 일치 여부 boolean 값을 얻어옴
+
             Member member = memberRepository.findById(Long.parseLong(authentication.getName())).orElseThrow();
+         //   Member member = memberRepository.findById(accessToken.get);
+            System.out.println("");
             boolean result = board.getMember().equals(member);
             return BoardDTO.of(board, result);
 
@@ -89,13 +92,19 @@ public class BoardService {
 
     @Transactional
     public BoardDTO postBoard(BoardDTO boardDTO) {
+        System.out.println(boardDTO);
   /*      Long mno2 = 1L;
         Member member = new Member(mno2);*/
+/*        Long mno = boardDTO.getBno();
+        Optional<Member> member2 = memberRepository.findById(mno);
+        MemberResDTO member3 = MemberResDTO.of2(member2);
+        Member member = Member(member3);
+        System.out.println("변환한 member 객체 : " + member.toString());*/
         Member member = isMemberCurrent();
+
        // Board board = Board.createBoard(bno, title, content, member);
-        System.out.println(boardDTO);
-        System.out.println(member);
         Board board = dtoToEntity(boardDTO, member);
+
         System.out.println("board : " + board);
         return BoardDTO.of(repository.save(board), true);
     }
@@ -116,10 +125,11 @@ public class BoardService {
 
     /* 토큰 확인 메서드 : 수정과 삭제에 사용 */
     public Member isMemberCurrent() {
-        Member member = memberRepository.findById(SecurityUtil.getCurrentMemberId()) //getCurrentMemberId
-                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
-        System.out.println("member" + member);
-        return member;
+        Long mno = memberRepository.findByMid2(SecurityUtil.getCurrentMemberMid());
+        Optional<Member> member = memberRepository.findById(mno); //getCurrentMemberId
+        Member member2 = member.get();
+        System.out.println("현재 로그인한 멤버" + member2);
+        return member2;
     }
 /*    public Member isMemberCurrent() {
         Long mno = findByMid2() //mid로 mno를 찾아서

@@ -53,7 +53,6 @@ public class Board extends Base {
     public static Board dtoToEntity(BoardDTO dto, Member member) {
         //Member member = Member.builder().mid(dto.getWriterID()).build();
         Board board = Board.builder()
-//                .bno(dto.getBno())
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .hits(dto.getHits())

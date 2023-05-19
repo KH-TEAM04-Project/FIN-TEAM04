@@ -27,6 +27,7 @@ public class BoardDTO {
     private Integer hits; //조회수
     private String regDate;//작성일
     private String modDate;
+    private Long mno;
     private boolean isWritten; //작성여부
 
     //멀티파트파일 인터페이스 : 파일 담아 컨트롤러로 넘겨주는 역할
@@ -62,7 +63,7 @@ public class BoardDTO {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .hits(board.getHits())
-              //  .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .isWritten(bool)
                 .build();
     }
