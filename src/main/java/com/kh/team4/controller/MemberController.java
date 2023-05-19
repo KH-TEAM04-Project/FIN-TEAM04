@@ -77,12 +77,12 @@ public class MemberController {
 
     //Email과 name의 일치여부를 check하는 컨트롤러
     @PostMapping("/check/findID")
-    public String ID_find(MemberReqDTO memreq) {
-        String userEmail = memreq.getEmail();
-        String userName = memreq.getMname();
-        System.out.println(userName + userEmail);
+    public String ID_find(@RequestBody MemberReqDTO memreq) {
+        String email = memreq.getEmail();
+        String mname = memreq.getMname();
+        System.out.println(mname + email);
 
-        return memberService.findID2(userEmail, userName);
+        return memberService.findID2(email, mname);
 
     }
 
