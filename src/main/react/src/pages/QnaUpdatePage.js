@@ -44,142 +44,144 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 export default function Ya() {
-    const token = localStorage.getItem('accessToken');
-    const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
-    const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
+const token = localStorage.getItem('accessToken');
+const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+const [mno, setMno] = useState('');
+const navigate = useNavigate();
 
-    console.log(mno);
-    useEffect(() => {
-      if (token) {
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        setMno(decodedToken.mno);
-        console.log(decodedToken.mno);
+console.log(mno);
 
-        const fetchData = async () => {
-          try {
-            const response = await axios.post("/board/update", { mno: decodedToken.mno });
-            const userData = response.data;
-            // 사용자 데이터 처리
-          } catch (error) {
-            console.error(error);
-          }
-        };
+useEffect(() => {
+  if (token) {
+    // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
-        fetchData();
+    // payload에서 MNO 값을 추출하여 상태에 저장
+    const decodedMno = decodedToken.mno;
+    setMno(decodedMno);
+    console.log(decodedMno); // 추출한 mno 값 콘솔에 출력
+
+    // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
+    axios
+      .post("/MyPageCont", { mno: decodedMno })
+      .then(response => {
+        // 사용자 데이터를 성공적으로 가져온 경우
+        const userData = response.data;
+        // 필요한 작업 처리
+      })
+      .catch(error => {
+        // API 호출 중 에러 발생한 경우
+        console.error(error);
+      });
+  }
+}, [token]);
+
+const { qno } = useParams();
+
+const [data, setData] = useState({
+  qno: "",
+  title: "",
+  regDate: "",
+  writerID: sub,
+  content: "",
+});
+
+const [posts, setPosts] = useState([]);
+
+const getPosts = () => {
+  axios
+    .get(`/qna/update/${qno}`)
+    .then((response) => {
+      setPosts([response.data]);
+      console.log(response.data);
+      console.log("yaya");
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log("이거 에러인걸?");
+      } else if (error.request) {
+        console.log("network error");
+      } else {
+        console.log(error);
       }
-    }, []);
-
-    const { qno } = useParams();
-
-    const [data, setData] = useState({
-      qno: "",
-      title: "",
-      regDate: "",
-      writerID: sub,
-      content: "",
-      mno
     });
+};
 
-    const [posts, setPosts] = useState([]);
+const handleChange = (e) => {
+  const value = e.target.value;
+  setData((prevData) => ({
+    ...prevData,
+    [e.target.name]: value,
+  }));
+};
 
-    const getPosts = () => {
-      axios
-        .get(`/qna/update/${qno}`)
-        .then((response) => {
-          setPosts([response.data]);
-          console.log(response.data);
-          console.log("yaya");
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log("이거 에러인걸?");
-          } else if (error.request) {
-            console.log("network error");
-          } else {
-            console.log(error);
-          }
-        });
+const handleSubmit = useCallback(
+  (e) => {
+    e.preventDefault();
+    const userData = {
+      qno: data.qno,
+      title: data.title,
+      regDate: data.regDate,
+      writerID: data.writerID,
+      content: data.content,
+      mno,
     };
+    axios
+      .post(`/qna/update/${qno}`, userData)
+      .then((response) => {
+        console.log(response.status, response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log("이거 포스트 에러인걸?");
+          console.log(userData);
+          console.log(error.response.data);
+        } else if (error.request) {
+          console.log("network error");
+        } else {
+          console.log(error);
+        }
+      });
+  },
+  [data, qno, mno]
+);
 
-    const handleChange = (e) => {
-      const value = e.target.value;
-      setData((prevData) => ({
-        ...prevData,
-        [e.target.name]: value,
-      }));
-    };
+useEffect(() => {
+  if (qno) {
+    getPosts();
+  }
+}, [qno]);
 
-   const handleSubmit = useCallback(
-     (e) => {
-       e.preventDefault();
-       const userData = {
-         qno: data.qno,
-         title: data.title,
-         regDate: data.regDate,
-         writerID: data.writerID,
-         content: data.content,
-         mno
-       };
-       axios
-         .post(`/qna/update/${qno}`, userData)
-         .then((response) => {
-           console.log(response.status, response.data);
-           console.log(response.data);
-         })
-         .catch((error) => {
-           if (error.response) {
-             console.log("이거 포스트 에러인걸?");
-             console.log(userData);
-             console.log(error.response.data);
-           } else if (error.request) {
-             console.log("network error");
-           } else {
-             console.log(error);
-           }
-         });
-     },
-     [data, qno]
-   );
+const handleClick = () => {
+  navigate('/qna/list', { replace: true });
+};
 
-   useEffect(() => {
-     if (qno) {
-       getPosts();
-     }
-   }, [qno, getPosts]);
+const [open, setOpen] = React.useState(false);
+const handleOpen = () => {
+  setOpen(true);
+};
+const handleClose = () => {
+  setOpen(false);
+};
 
+const [anchorElNav, setAnchorElNav] = React.useState(null);
+const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+  setAnchorElNav(event.currentTarget);
+};
+const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+  setAnchorElUser(event.currentTarget);
+};
 
-  const navigate = useNavigate();
+const handleCloseNavMenu = () => {
+  setAnchorElNav(null);
+};
 
-  const handleClick = () => {
-    navigate('/qna/list', { replace: true });
-  };
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
+const handleCloseUserMenu = () => {
+  setAnchorElUser(null);
+};
   return (
     <>
       <Helmet>
