@@ -45,31 +45,32 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 export default function Yaya() {
-    const token = localStorage.getItem('accessToken');
-    const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
-    const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
+const token = localStorage.getItem('accessToken');
+const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
 
-    useEffect(() => {
-      if (token) {
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        setMno(decodedToken.mno);
-        console.log(decodedToken.mno);
+useEffect(() => {
+  if (token) {
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    setMno(decodedToken.mno);
+    console.log(decodedToken.mno);
 
-        const fetchData = async () => {
-          try {
-            const response = await axios.post("/qna/detail", { mno: decodedToken.mno });
-            const userData = response.data;
-            // 사용자 데이터 처리
-          } catch (error) {
-            console.error(error);
-          }
-        };
-
-        fetchData();
+    const fetchData = async () => {
+      try {
+        const mno = decodedToken.mno;
+        const response = await axios.post(`/qna/detail/${qno}`, { mno });
+        const userData = response.data;
+        // 사용자 데이터 처리
+      } catch (error) {
+        console.error(error);
       }
-    }, [token]);
-    const [data, setData] = useState({mno // 축약 구문으로 변경
-    });
+    };
+
+    fetchData();
+  }
+}, [token]);
+
+const [data, setData] = useState({ mno });
 
 
 
@@ -313,7 +314,7 @@ export default function Yaya() {
       </Container>
     </AppBar>
      {posts.map((data) => (
-      <Container key={data.qno} Width="10000">
+      <Container key={data.qno} width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
             QNA 보세유
