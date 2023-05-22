@@ -53,14 +53,9 @@ public class TokenProvider {
 
         long now = (new Date()).getTime();
 
-
-
         Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 만료시간 설정
 
         System.out.println(tokenExpiresIn);
-
-        //payload 부분 설정
-
 
         String accessToken = Jwts.builder() // 토큰dto에 정보 담아
                 .setSubject(authentication.getName())
@@ -151,14 +146,11 @@ public class TokenProvider {
 
     public boolean validateToken(String token) { //validateToken 토큰 검증하기 위한 메소드
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            // 추가된 부분
-            if (redisUtil.hasKeyBlackList(token)) {
-                // TODO 에러 발생시키는 부분 수정
-                throw new RuntimeException("로그아웃 ing~~");
-            }
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
             return true;
-
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
@@ -173,9 +165,22 @@ public class TokenProvider {
 
     private Claims parseClaims(String accessToken) { // parseClaims : 토큰 -> claims형태로 만드는 메소드
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build().parseClaimsJws(accessToken)
+                    .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
     }
+
+    public Long getExpiration(String accessToken) {
+        Date expiration = Jwts.parserBuilder().setSigningKey(key)
+                .build().parseClaimsJws(accessToken).getBody().getExpiration();
+
+        // 현재시간
+        long now = new Date().getTime();
+        return (expiration.getTime() - now);
+    }
+
 }

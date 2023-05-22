@@ -65,8 +65,8 @@ public class MemberController {
 
 
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDTO> reissue(@RequestBody TokenDTO tokenReqDTO) {
-        return ResponseEntity.ok(memberService.reissue(tokenReqDTO));
+    public ResponseEntity<TokenDTO> reissue(@RequestBody TokenDTO reissue) {
+        return ResponseEntity.ok(memberService.reissue(reissue));
     }
 
     @PostMapping("/sLogin")
@@ -108,15 +108,14 @@ public class MemberController {
         sendEmailService.mailSend(dto);
     }
 
-  /*  @DeleteMapping("/logout")
+    @DeleteMapping("/logout")
     public ResponseEntity<String> logout(
             @AuthenticationPrincipal CustomUserDetailsService customDetails,
             @RequestBody TokenDTO tokenDTO
     ) {
 
-        return ResponseEntity.ok(memberService.logout(tokenDTO.getAccessToken(), customDetails));
+        return ResponseEntity.ok(memberService.logout(tokenDTO));
     }
-*/
 
 }
 
