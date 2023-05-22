@@ -50,10 +50,6 @@ public class Member {
     @Column(columnDefinition = "varchar2(20)")
     private String ph;
 
-    @JsonIgnore
-    @Column(name = "activated")
-    public boolean activated; // 활성화 여부
-
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
