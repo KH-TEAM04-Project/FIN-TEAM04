@@ -98,6 +98,7 @@ WHERE sequence_owner = 'TEAM4'
      drop sequence BOARD_SEQ;
      drop sequence member_seq;
      drop sequence qna_seq;
+     drop sequence REPLY_SEQ;
 
 #### 2023. 05. 02 전달사항 및 필요사항
 1. 프로젝트 개요 정리해서 멘토님한테 전달

@@ -3,6 +3,7 @@ package com.kh.team4.controller;
 import com.kh.team4.config.SecurityUtil;
 import com.kh.team4.dto.QnaDTO;
 import com.kh.team4.dto.ReplyDTO;
+import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.service.QnaService;
 import com.kh.team4.service.ReplyService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,9 @@ import java.util.Map;
 public class QnaController {
     private final QnaService qnaService;
     private final ReplyService replyService;
+
+    private final MemberRepository memberRepository;
+
 
     //  게시글 작성(CREATE) JWT 적용전
     @PostMapping("/regist")
@@ -97,7 +101,8 @@ public class QnaController {
             return ResponseEntity.ok(response); // 게시글이 존재하는 경우 200 OK 상태로 게시글 정보를 리턴
         } else {
             System.out.println("게시글이 존재하지 않은 경우");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // 게시글이 존재하지 않는 경우 404 Not Found 상태를 리턴
+            return ResponseEntity.notFound().build();
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // 게시글이 존재하지 않는 경우 404 Not Found 상태를 리턴
         }
     }
 
