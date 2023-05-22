@@ -80,13 +80,14 @@ public class MemberService {
 
     private final AuthenticationManagerBuilder managerBuilder;
     private final TokenProvider tokenProvider;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
 
     @Transactional
     public TokenDTO login(MemberReqDTO reqDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = reqDto.toAuthentication();
+        System.out.println("여기까지 실행됨");
 
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
@@ -96,7 +97,6 @@ public class MemberService {
         // TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // id를 기준으로 mno 값 가져오기
-
         // 상경 데이터 실험 -- mno 매칭 데이터 필요.
         Long midex1 = memberRepository.findByMid2(reqDto.getMid());
         System.out.println("넣은 값 확인 : midex1 = " + midex1);
@@ -131,7 +131,7 @@ public class MemberService {
         /*RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));*/
 
-        String refreshToken = (String) redisTemplate.opsForValue().get("refreshToken" + authentication.getName());
+        String refreshToken = redisTemplate.opsForValue().get("refreshToken" + authentication.getName());
 
         // 4. Refresh Token 일치하는지 검사
         /*if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
