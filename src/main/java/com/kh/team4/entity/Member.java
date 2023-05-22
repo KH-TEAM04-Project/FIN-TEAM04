@@ -1,16 +1,16 @@
 package com.kh.team4.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
-import com.kh.team4.dto.QnaDTO;
 import com.kh.team4.embeded.Address;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -121,6 +121,13 @@ public  static Member findMid(MemberResDTO memberResDTO){
                 .pwd(memberReqDTO.getPwd())
                 .authority(Authority.ROLE_USER)
                 .build();
+    }
+
+    public void toUpdate(String pwd, String email, String ph, String address, String detailAddress) {
+        this.pwd = pwd;
+        this.email = email;
+        this.ph = ph;
+        this.address = new Address(address, detailAddress);
     }
 
     public String confirm(){

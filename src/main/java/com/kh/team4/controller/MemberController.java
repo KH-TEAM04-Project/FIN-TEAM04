@@ -1,7 +1,9 @@
 package com.kh.team4.controller;
 
-import com.kh.team4.dto.*;
-import com.kh.team4.entity.Member;
+import com.kh.team4.dto.MailDTO;
+import com.kh.team4.dto.MemberReqDTO;
+import com.kh.team4.dto.MemberResDTO;
+import com.kh.team4.dto.TokenDTO;
 import com.kh.team4.service.CustomUserDetailsService;
 import com.kh.team4.service.MemberService;
 import com.kh.team4.service.SendEmailService;
@@ -59,7 +61,7 @@ public class MemberController {
 
     @PostMapping("/memberUpdate")   // 회원 정보 갱신
     public ResponseEntity<MemberResDTO> memberUpdate(@RequestBody MemberReqDTO memberReqDTO) throws Exception {
-        System.out.println("받은 값 : " + memberReqDTO.toString());
+        System.out.println("받은 값 확인 : " + memberReqDTO.toString());
         return ResponseEntity.ok(memberService.Update(memberReqDTO));
     }
 

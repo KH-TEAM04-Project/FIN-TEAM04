@@ -50,17 +50,25 @@ public class MemberService {
         memberRepository.deleteById(mno);
     }
 
+
     public MemberResDTO Update(MemberReqDTO memberDTO) throws Exception {
         // 05.12 시점에 수정할만한 컬럼 목록 3가지만 설정
-        String password = memberDTO.getPwd();
         String email = memberDTO.getEmail();
         String ph = memberDTO.getPh();
         // 찾는 용도의 Mno를 써야하는군..
         Long mno = memberDTO.getMno();
+        String address = memberDTO.getAddress();
+        String detailAddress = memberDTO.getDetailaddress();
 
         Member entMember = Member.dtoToEntity2(memberDTO, passwordEncoder);
 
-        memberRepository.updateMember(password, email, ph);
+        String password = entMember.getPwd();
+
+        Member memberorigin = memberRepository.findById(mno).get();
+
+        memberorigin.toUpdate(password, email, ph, address, detailAddress);
+
+        memberRepository.save(memberorigin);
 
         Optional<Member> updatingMember = memberRepository.findById(mno); // 업데이트 된 값을 서치해서 다시 가져와서  ResDTO 에 넣고 리턴.
         System.out.println("수정된 값 확인 : " + updatingMember.get().confirm());
