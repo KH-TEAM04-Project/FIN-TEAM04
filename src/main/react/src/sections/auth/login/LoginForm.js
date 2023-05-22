@@ -6,7 +6,7 @@ import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@m
 import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
 
-// components
+// component
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
@@ -43,7 +43,8 @@ export default function LoginForm() {
     }
   };
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault();
     console.log('click login');
     console.log('ID: ', id);
     console.log('PW: ', pw);
@@ -59,19 +60,20 @@ export default function LoginForm() {
         console.log('res.data.userId: ', response.data);
         localStorage.setItem('accessToken', response.data.accessToken);
         localStorage.setItem('refreshToken', response.data.refreshToken);
-
+  
         console.log('accessToken', response.data.accessToken);
         console.log('refreshToken', response.data.refreshToken);
-
+  
         const decoded1 = jwtDecode(response.data.accessToken);
         const decoded2 = jwtDecode(response.data.refreshToken);
-
+  
         console.log(decoded1);
         console.log(decoded2);
-
+  
         if (response.data.accessToken) {
           alert('환영합니다!');
           navigate('/');
+          console.log('accessToken in localStorage:', localStorage.getItem('accessToken'));
         } else {
           alert('로그인에 실패하였습니다.');
         }
@@ -89,15 +91,22 @@ export default function LoginForm() {
       setNotAllow(true);
     }
   }, [idValid, pwValid]);
+  
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleClick();
+      e.preventDefault(); // 폼 제출 방지
+      
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault(); // 폼 제출 방지
+    handleClick();
+  };
+
   return (
-    <>
+    <form onSubmit={handleSubmit}>
       <Stack spacing={3}>
         <TextField
           name="id"
@@ -156,6 +165,6 @@ export default function LoginForm() {
       >
         로그인
       </LoadingButton>
-    </>
+    </form>
   );
 }
