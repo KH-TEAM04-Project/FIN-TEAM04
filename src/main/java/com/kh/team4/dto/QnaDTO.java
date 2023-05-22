@@ -1,5 +1,6 @@
 package com.kh.team4.dto;
 
+import com.kh.team4.entity.Member;
 import com.kh.team4.entity.Qna;
 import lombok.*;
 
@@ -15,7 +16,7 @@ public class QnaDTO {
     private Long qno;
     private String title;
     private String content;
-    private String writer;
+    private Member writer;
     private Integer secret; // Boolean 타입으로 수정 확인해야됨
     private Integer hits;
     private String regDate;
@@ -37,9 +38,9 @@ public class QnaDTO {
         return qnaDTO;
     }
 
-    public String getWriter() {
-        return writer; // 회원 객체를 반환하도록 수정
-    }
+//    public String getWriter() {
+//        return writer; // 회원 객체를 반환하도록 수정
+//    }
 
 
 }

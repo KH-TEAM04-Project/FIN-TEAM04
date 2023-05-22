@@ -11,9 +11,15 @@ import javax.persistence.*;
 @Getter
 @Builder
 @Table(name = "files")
+@SequenceGenerator(
+        name = "files_seq_generator"  //시퀀스 제너레이터 이름
+        , sequenceName = "files_seq"  //시퀀스 이름
+        , initialValue = 1  //시작값
+        , allocationSize = 1  //메모리를 통해 할당할 범위 사이즈
+)
 public class Files {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "files_seq_generator")
     private Long fno;
 
     @Column
