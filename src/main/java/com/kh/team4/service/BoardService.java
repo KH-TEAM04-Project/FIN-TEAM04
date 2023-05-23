@@ -1,3 +1,4 @@
+
 package com.kh.team4.service;
 
 import com.kh.team4.config.SecurityUtil;
@@ -34,25 +35,24 @@ public class BoardService {
     private final BoardRepository repository; //자동주입 final
     private final MemberRepository memberRepository; //자동주입 final
 
-    /* 상세 보기 */
-    public BoardDTO oneBoard(Long bno) {
-        Board board = repository.findById(bno).orElseThrow(() -> new RuntimeException("글이 없습니다."));
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    /*    *//* 상세 보기 *//*
+    public BoardDTO oneBoard(BoardDTO boardDTO) {
+        Board board = repository.findById(boardDTO.getBno()).orElseThrow(() -> new RuntimeException("글이 없습니다."));
+        log.info("Board: " + board);
+        Member member = isMemberCurrent(boardDTO);
+        System.out.println("member" + member);
         // SecurityUtil에서 SecurityContext에 유저정보가 저장
-        if (authentication == null || authentication.getPrincipal() == "anonymousUser") {
+        if (member == null) {
             // 인증정보가 없을 경우, 익명유저 값 적용
             return BoardDTO.of(board, false);
             //Board 객체와 false 합쳐서 BoardDTO생성
         } else { //인증정보가 존재할 경우, 인증정보에 있는 id를 추출해 내어 member객체를 찾아내고, Board의 Member객체와 일치 여부 boolean 값을 얻어옴
-
-            Member member = memberRepository.findById(Long.parseLong(authentication.getName())).orElseThrow();
-            //   Member member = memberRepository.findById(accessToken.get);
-            System.out.println("");
             boolean result = board.getMember().equals(member);
+            log.info("result " + result);
             return BoardDTO.of(board, result);
 
         }
-    }
+    }*/
     /*public Page<PageResponseDto> pageArticle(int pageNum) {
        return articleRepository.searchAll(PageRequest.of(pageNum - 1, 20));
    }*/
@@ -93,58 +93,43 @@ public class BoardService {
     @Transactional
     public BoardDTO postBoard(BoardDTO boardDTO) {
         System.out.println(boardDTO);
-  /*      Long mno2 = 1L;
-        Member member = new Member(mno2);*/
-/*        Long mno = boardDTO.getBno();
-        Optional<Member> member2 = memberRepository.findById(mno);
-        MemberResDTO member3 = MemberResDTO.of2(member2);
-        Member member = Member(member3);
-        System.out.println("변환한 member 객체 : " + member.toString());*/
-        Member member = isMemberCurrent();
-
-        // Board board = Board.createBoard(bno, title, content, member);
-        Board board = dtoToEntity(boardDTO, member);
+        Board board = dtoToEntity(boardDTO);
 
         System.out.println("board : " + board);
-        return BoardDTO.of(repository.save(board), true);
+        repository.save(board);
+        return BoardDTO.of(board, true);
     }
 
     /* 게시글 수정 */
-    @Transactional
+/*    @Transactional
     public BoardDTO changeBoard(Long bno, String title, String content) {
-        Board board = authorizationArticleWriter(bno);
+        Board board = authorizationArticleWriter(bno, board);
         return BoardDTO.of(repository.save(Board.changeBoard(board, title, content)), true);
-    }
+    }*/
 
-    /* 게시글 삭제 */
+    /* 게시글 삭제 *//*
     @Transactional
     public void deleteBoard(Long bno) {
         Board board = authorizationArticleWriter(bno);
         repository.delete(board);
-    }
-
-    /* 토큰 확인 메서드 : 수정과 삭제에 사용 */
-    public Member isMemberCurrent() {
-        Long mno = memberRepository.findByMid2(SecurityUtil.getCurrentMemberMid());
-        Optional<Member> member = memberRepository.findById(mno); //getCurrentMemberId
-        Member member2 = member.get();
-        System.out.println("현재 로그인한 멤버" + member2);
-        return member2;
-    }
-/*    public Member isMemberCurrent() {
-        Long mno = findByMid2() //mid로 mno를 찾아서
-        Member member = memberRepository.findById(mno) //mno에 해당하는 member 객체 넣음
-                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
-        System.out.println("member" + member);
-        return member;
     }*/
 
+    /* 토큰 확인 메서드 : 수정과 삭제에 사용 */
+    public Member isMemberCurrent(BoardDTO boardDTO) {
+        System.out.println("isMemberCurrent 진입");
+        Long mno = boardDTO.getMno();
+        System.out.println("mno : " + mno);
+        Optional<Member> members = memberRepository.findById(mno); //Optional<Member> : member null 포함
+        Member member = members.get();
+        System.out.println("현재 로그인한 멤버 확인" + member);
+        return member;
+    }
+
     /* 토큰 Member객체와 일치하는지 확인 */
-    public Board authorizationArticleWriter(Long bno) {
-        //bno로 Board객체 DB에서 불러옴
-        Member member = isMemberCurrent();
-        Board board = repository.findById(bno).orElseThrow(() -> new RuntimeException("글이 없습니다."));
-        if (!board.getMember().equals(member)) {
+    public Board authorizationArticleWriter(Long bno, BoardDTO boardDTO) {
+        Member member = isMemberCurrent(boardDTO); //현재 로그인한 멤버객체
+        Board board = repository.findById(bno).orElseThrow(() -> new RuntimeException("글이 없습니다.")); //bno로 board객체 가져옴
+        if (!board.getMember().equals(member)) { //board객체의 member와 현재 로그인한 멤버가 같은지 비교
             throw new RuntimeException("로그인한 유저와 작성 유저가 같지 않습니다.");
         }  //Board객체에서 Member객체 추출하여 토큰에서 추출한 Member객체와 일치하는지 확인
         return board;
@@ -168,7 +153,7 @@ public class BoardService {
     }*/
 
     //인증정보 없이 게시글 상세조회
-/*    public BoardDTO findById(Long bno) {
+    public BoardDTO findById(Long bno) {
         Optional<Board> optionalBoard = repository.findById(bno);
         if (optionalBoard.isPresent()) {
             System.out.println("if문 진입");
@@ -180,27 +165,33 @@ public class BoardService {
             System.out.println("return null");
             return null;
         }
-    }*/
+    }
 
-    /*    // 인증 정보 없이 글 수정
+    // 인증 정보 없이 글 수정
     @Transactional
     public Long modify(BoardDTO boardDTO) {
         // getOne() : 필요한 순간까지 로딩을 지연하는 방식
         Board board = repository.getOne(boardDTO.getBno());
+        System.out.println("board" + board);
 
-        board.updateTitle(boardDTO.getTitle());
-        board.updateContent(boardDTO.getContent());
+        board.changeTitle(boardDTO.getTitle());
+        board.changeContent(boardDTO.getContent());
 
         repository.save(board);
-        return board.getBno();
-    }*/
+        System.out.println("board" + board);
 
-    /*   //인증정보 없이 게시글 삭제
-       public void delete(Long bno) {
-           System.out.println("서비스 진입");
-           repository.deleteById(bno);
-       }*/
-}
+        return board.getBno();
+    }
+
+    //인증정보 없이 게시글 삭제
+    public void delete(Long bno) {
+        System.out.println("삭제 서비스 진입");
+        log.info(bno);
+        repository.deleteById(bno);
+        log.info(bno +"삭제완료");
+
+
+    }
 /*    public void postBoard(BoardDTO boardDTO, Member member) throws IOException {
         // 파일 첨부 여부에 따라 로직 분리
         if(boardDTO.getBoardFile().isEmpty()) {
@@ -239,6 +230,7 @@ public class BoardService {
 
     }*/
 
+}
 
 
 

@@ -16,6 +16,11 @@ function MyPage() {
   const navigate = useNavigate();
   const [mno, setMno] = useState(""); // 토큰에서 추출한 sub 값 상태
   const [isEditing, setIsEditing] = useState(false); // 회원 정보 수정 여부 상태
+  const [isChangingPassword, setIsChangingPassword] = useState(false); // 비밀번호 수정 여부 상태
+  const [pwd, setpwd] = useState(""); // 현재 비밀번호 상태
+  const [changePwd, setchangePwd] = useState(""); // 변경할 비밀번호 상태
+  const [confirmPassword, setConfirmPassword] = useState(""); // 변경할 비밀번호 확인 상태
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
   // 로컬 스토리지에서 토큰 값을 가져옴
   const token = localStorage.getItem('accessToken');
@@ -60,13 +65,12 @@ function MyPage() {
     e.preventDefault();
 
     // Implement the logic to handle updating user information
-    const { email, pwd, detailAddress, address, ph } = userData;
+    const { email, detailAddress, address, ph } = userData;
 
     // Create a MemberReqDTO object with the updated information
     const memberReqDTO = {
       mno, // Include the mno value
       email,
-      pwd,
       detailAddress,
       address,
       ph
@@ -96,6 +100,66 @@ function MyPage() {
       });
   };
 
+  // Function to handle updating the password
+  const handleChangePassword = (e) => {
+    e.preventDefault();
+
+    // Implement the logic to handle changing password
+    if (changePwd !== confirmPassword) {
+      alert("변경할 비밀번호가 일치하지 않습니다.");
+      return;
+    }
+    if (changePwd === pwd) {
+      alert("현재 비밀번호와 새로운 비밀번호가 동일합니다. 다른 비밀번호를 입력해주세요.");
+      return;
+    }
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  if (!passwordRegex.test(changePwd)) {
+    alert(
+      "비밀번호는 8자 이상의 영문자, 숫자, 특수문자(@$!%*#?&)를 최소 한 개씩 포함해야 합니다."
+    );
+    return;
+  }
+    const passwordReqDTO = {
+      mno, // Include the mno value
+      pwd,
+      changePwd
+    };
+
+    // Send the password update request to the backend
+    axios
+    .post("/changePassword", passwordReqDTO)
+    .then((response) => {
+      // Successful password change
+      const result = response.data;
+
+      if (result.success) {
+        // Password changed successfully
+        setpwd("");
+        setchangePwd("");
+        setConfirmPassword("");
+        setIsChangingPassword(false);
+        console.log("Password changed successfully");
+        alert("비밀번호가 성공적으로 변경되었습니다.");
+      } else {
+        // Failed to change password
+        console.log("Failed to change password");
+        alert("비밀번호 변경에 실패했습니다.");
+      }
+    })
+    .catch((error) => {
+      // Error occurred while changing password
+      console.error(error);
+      alert("비밀번호 변경 중 에러가 발생했습니다.");
+    });
+};
+
+
+
+
+
+
+
   // Function to handle changes in the input fields
   const handleChange = (field, value) => {
     setUserData(prevState => ({
@@ -105,37 +169,50 @@ function MyPage() {
   };
 
   // 회원 삭제 함수
-const handleDelete = () => {
-  // Send the mno value to the backend
-  axios.post("/memberDelete", { mno })
-    .then(response => {
-      // Successful deletion
-      setUserData({
-        mname: "",
-        mid: "",
-        regno: "",
-        email: "",
-        address: "",
-        detailAddress: "",
-        ph: "",
-        pwd: "" // Include pwd in the initial state
-      });
-      alert("회원 정보가 삭제되었습니다.");
+  const handleDelete = () => {
+    // Display a confirmation prompt before deleting the member
+    const confirmDelete = window.confirm("정말 회원을 삭제하시겠습니까?");
+  
+    if (confirmDelete) {
+      // Send the mno value to the backend
+      axios
+        .post("/memberDelete", { mno })
+        .then((response) => {
+          // Successful deletion
+          setUserData({
+            mname: "",
+            mid: "",
+            regno: "",
+            email: "",
+            address: "",
+            detailAddress: "",
+            ph: "",
+            pwd: "", // Include pwd in the initial state
+          });
+          alert("회원 정보가 삭제되었습니다.");
+  
+          // Clear the access token from localStorage
+          localStorage.removeItem("accessToken");
+  
+          navigate("/login");
+        })
+        .catch((error) => {
+          // Error occurred while deleting
+          console.error(error);
+        });
+    }
+  };
 
-      // Clear the access token from localStorage
-      localStorage.removeItem('accessToken');
+  const handleGoBack = () => {
+    navigate(-1); // Go back one step in the browser history
+  };
+  
 
-      navigate("/login");
-    })
-    .catch(error => {
-      // Error occurred while deleting
-      console.error(error);
-    });
-};
   return (
+    
     <div>
       <h1>마이페이지</h1>
-      {userData.mname && !isEditing && (
+      {userData.mname && !isEditing && !isChangingPassword && (
         <>
           <p>이름: {userData.mname}</p>
           <p>아이디: {userData.mid}</p>
@@ -147,7 +224,7 @@ const handleDelete = () => {
         </>
       )}
 
-      {isEditing && (
+      {isEditing && !isChangingPassword && (
         <form>
           <div>
             <label htmlFor="email">이메일</label>
@@ -156,15 +233,6 @@ const handleDelete = () => {
               id="email"
               value={userData.email}
               onChange={(e) => handleChange("email", e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="pwd">패스워드</label>
-            <input
-              type="password"
-              id="pwd"
-              value={userData.pwd}
-              onChange={(e) => handleChange("pwd", e.target.value)}
             />
           </div>
           <div>
@@ -198,12 +266,58 @@ const handleDelete = () => {
         </form>
       )}
 
-      {userData.mname && !isEditing && (
-        <button onClick={() => setIsEditing(true)}>회원 정보 수정</button>
-      )}
+{isChangingPassword && (
+  <form>
+    <div>
+      <label htmlFor="pwd">현재 비밀번호</label>
+      <input
+        type="password"
+        id="pwd"
+        value={pwd}
+        onChange={(e) => setpwd(e.target.value)}
+      />
+    </div>
+    <div>
+      <label htmlFor="changePwd">변경할 비밀번호</label>
+      <input
+        type="password"
+        id="changePwd"
+        value={changePwd}
+        onChange={(e) => setchangePwd(e.target.value)}
+      />
+    </div>
+    <div>
+      <label htmlFor="confirmPassword">변경할 비밀번호 확인</label>
+      <input
+        type="password"
+        id="confirmPassword"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+    </div>
+    {changePwd && !passwordRegex.test(changePwd) && (
+      <p className="password-requirements">
+        비밀번호는 8자 이상의 영문자, 숫자, 특수문자(@$!%*#?&)를 최소 한 개씩 포함해야 합니다.
+      </p>
+    )}
+    {changePwd !== confirmPassword && (
+      <p className="password-mismatch">
+        비밀번호 확인이 일치하지 않습니다.
+      </p>
+    )}
+    <button onClick={handleChangePassword}>비밀번호 변경</button>
+  </form>
+)}
 
-      {/* 회원 삭제 버튼 */}
-      <button onClick={handleDelete}>회원 삭제</button>
+{userData.mname && !isEditing && !isChangingPassword && (
+  <>
+    <button onClick={() => setIsEditing(true)}>회원 정보 수정</button>
+    <button onClick={() => setIsChangingPassword(true)}>비밀번호 수정</button>
+    <button onClick={handleDelete}>회원 삭제</button>
+   
+  </>
+)}
+<button onClick={handleGoBack}>뒤로 가기</button>
     </div>
   );
 }
