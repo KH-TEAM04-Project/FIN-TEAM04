@@ -60,13 +60,9 @@ public class MemberService {
         String address = memberDTO.getAddress();
         String detailAddress = memberDTO.getDetailaddress();
 
-        Member entMember = Member.dtoToEntity2(memberDTO, passwordEncoder);
-
-        String password = entMember.getPwd();
-
         Member memberorigin = memberRepository.findById(mno).get();
 
-        memberorigin.toUpdate(password, email, ph, address, detailAddress);
+        memberorigin.toUpdate(email, ph, address, detailAddress);
 
         memberRepository.save(memberorigin);
 
@@ -85,13 +81,23 @@ public class MemberService {
 
     }
 
-    public void changePwd(MemberReqDTO memberDTO) {
+    public boolean changePwd(MemberReqDTO memberDTO) {
         Member entMember = Member.dtoToEntity2(memberDTO, passwordEncoder);
-        String password = entMember.getPwd();
+        String password = entMember.getPwd();   // 변환된 pwd
         Member member = memberRepository.findById(memberDTO.getMno()).get();
-        member.setPwd(memberDTO.getChangePwd());
-        memberRepository.save(member);
-        System.out.println("적용완료?");
+
+        if (password.equals(member.getPwd())) {
+            member.setPwd(memberDTO.getChangePwd());
+            memberRepository.save(member);
+            System.out.println("적용완료");
+            return true;
+        } else {
+            System.out.println("비번틀림");
+            return false;
+        }
+
+
+
     }
 
 

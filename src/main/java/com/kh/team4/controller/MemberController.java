@@ -63,10 +63,10 @@ public class MemberController {
         return ResponseEntity.ok(memberService.Update(memberReqDTO));
     }
 
-    @PostMapping("/changePwd")
-    public void changePwd(@RequestBody MemberReqDTO memberDTO) {
+    @PostMapping("/changePassword")
+    public boolean changePwd(@RequestBody MemberReqDTO memberDTO) {
         System.out.println("받은 값 확인 : Mno - " + memberDTO.getMno() + ", 현재 패스워드 - " + memberDTO.getPwd() + ", 변경할 패스워드 - " + memberDTO.getChangePwd());
-        memberService.changePwd(memberDTO);
+        return memberService.changePwd(memberDTO);
     }
 
     @PostMapping("/reissue")

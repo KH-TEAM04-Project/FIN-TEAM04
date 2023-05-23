@@ -111,8 +111,7 @@ public  static Member findMid(MemberResDTO memberResDTO){
                 .build();
     }
 
-    public void toUpdate(String pwd, String email, String ph, String address, String detailAddress) {
-        this.pwd = pwd;
+    public void toUpdate(String email, String ph, String address, String detailAddress) {
         this.email = email;
         this.ph = ph;
         this.address = new Address(address, detailAddress);
