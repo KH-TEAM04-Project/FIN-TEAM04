@@ -85,6 +85,15 @@ public class MemberService {
 
     }
 
+    public void changePwd(MemberReqDTO memberDTO) {
+        Member entMember = Member.dtoToEntity2(memberDTO, passwordEncoder);
+        String password = entMember.getPwd();
+        Member member = memberRepository.findById(memberDTO.getMno()).get();
+        member.setPwd(memberDTO.getChangePwd());
+        memberRepository.save(member);
+        System.out.println("적용완료?");
+    }
+
 
     private final AuthenticationManagerBuilder managerBuilder;
     private final TokenProvider tokenProvider;

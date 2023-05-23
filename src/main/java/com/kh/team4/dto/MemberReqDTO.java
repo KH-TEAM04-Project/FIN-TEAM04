@@ -24,6 +24,7 @@ public class MemberReqDTO {
     private String ph;
     private String mtype;
     private Authority authority;
+    private String changePwd;
 
     @Override
     public String toString(){

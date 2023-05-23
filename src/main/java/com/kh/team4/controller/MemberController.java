@@ -35,7 +35,7 @@ public class MemberController {
         return memberService.regist(memberDTO);
     }
 
-    @PostMapping("/intoMyPage") // 마이페이지 진입 전 확인
+    @PostMapping("/intoMyPage") // 마이페이지 진입 전 확인 -- 이건 get 으로 변경해야 하지 않나(조회니까)
     public boolean intoCheck(@RequestBody MemberReqDTO memberDTO) {
         System.out.println("마이페이지 진입 시 패스워드 확인");
         Long mno = memberDTO.getMno();
@@ -44,14 +44,14 @@ public class MemberController {
         return memberService.confirmpwd(mno, pwd);
     }
 
-    @PostMapping("/MyPageCont") // 마이페이지
+    @PostMapping("/MyPageCont") // 마이페이지  -- 이것도 get 으로 바꾸는게 좋겠고
     public ResponseEntity<MemberResDTO> memberDetail(@RequestBody MemberReqDTO memreqDTO) {
         Long mno = memreqDTO.getMno();
         System.out.println("회원정보 페이지 진입 및 받은 값 : " + mno);
         return ResponseEntity.ok(memberService.detail(mno));
     }
 
-    @PostMapping("/memberDelete")   // 회원 삭제
+    @PostMapping("/memberDelete")   // 회원 삭제  -- 이건 delete로 변경
     public void memberDelete(@RequestBody MemberReqDTO memberDTO) {
         // mid 가 아닌 mno를 기준으로 삼은 것은 delete메서드가 ID를 기본 골자로 삼고 있기 때문이다.
         Long mno = memberDTO.getMno();
@@ -59,12 +59,17 @@ public class MemberController {
         memberService.delete(mno);
     }
 
-    @PostMapping("/memberUpdate")   // 회원 정보 갱신
+    @PostMapping("/memberUpdate")   // 회원 정보 갱신 이건.. put이나 patch로 변경하는게 맞을 것 같다.
     public ResponseEntity<MemberResDTO> memberUpdate(@RequestBody MemberReqDTO memberReqDTO) throws Exception {
         System.out.println("받은 값 확인 : " + memberReqDTO.toString());
         return ResponseEntity.ok(memberService.Update(memberReqDTO));
     }
 
+    @PostMapping("/changePwd")
+    public void changePwd(@RequestBody MemberReqDTO memberDTO) {
+        System.out.println("받은 값 확인 : Mno - " + memberDTO.getMno() + ", 현재 패스워드 - " + memberDTO.getPwd() + ", 변경할 패스워드 - " + memberDTO.getChangePwd());
+        memberService.changePwd(memberDTO);
+    }
 
     @PostMapping("/reissue")
     public ResponseEntity<TokenDTO> reissue(@RequestBody TokenDTO reissue) {
