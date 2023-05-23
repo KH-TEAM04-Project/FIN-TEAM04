@@ -105,31 +105,33 @@ function MyPage() {
   };
 
   // 회원 삭제 함수
-  const handleDelete = () => {
-    // Send the mno value to the backend
-    axios.post("/memberDelete", { mno })
-      .then(response => {
-        // Successful deletion
-        setUserData({
-          mname: "",
-          mid: "",
-          regno: "",
-          email: "",
-          address: "",
-          detailAddress: "",
-          ph: "",
-          pwd: "" // Include pwd in the initial state
-        });
-        alert("회원 정보가 삭제되었습니다.");
-        document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        navigate("/login");
-      })
-      .catch(error => {
-        // Error occurred while deleting
-        console.error(error);
+const handleDelete = () => {
+  // Send the mno value to the backend
+  axios.post("/memberDelete", { mno })
+    .then(response => {
+      // Successful deletion
+      setUserData({
+        mname: "",
+        mid: "",
+        regno: "",
+        email: "",
+        address: "",
+        detailAddress: "",
+        ph: "",
+        pwd: "" // Include pwd in the initial state
       });
-  };
+      alert("회원 정보가 삭제되었습니다.");
 
+      // Clear the access token from localStorage
+      localStorage.removeItem('accessToken');
+
+      navigate("/login");
+    })
+    .catch(error => {
+      // Error occurred while deleting
+      console.error(error);
+    });
+};
   return (
     <div>
       <h1>마이페이지</h1>

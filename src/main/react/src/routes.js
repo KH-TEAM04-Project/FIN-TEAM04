@@ -24,6 +24,7 @@ import QnaUpdatePage from './pages/QnaUpdatePage';
 
 // ----------------------------------------------------------------------
 export default function Router() {
+  const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
   const routes = useRoutes([
     {
       path: '/',
@@ -39,7 +40,7 @@ export default function Router() {
     },
     {
       path: '/login',
-      element: <LoginPage />,
+      element: isLoggedIn ? <Navigate to="/Main" /> : <LoginPage />,
     },
     {
       path: '/MyPage',
