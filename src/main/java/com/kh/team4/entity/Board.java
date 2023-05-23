@@ -1,7 +1,11 @@
 package com.kh.team4.entity;
 
 import com.kh.team4.dto.BoardDTO;
+import com.kh.team4.dto.QnaDTO;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
+@DynamicInsert //Insert시 Null인 필드를 제외하기위해 사용
+@DynamicUpdate
 @ToString(exclude = "member") //fetch 방식이 Lazy일 경우 사용
 //Eager Loading(즉시로딩):특정 엔티티를 조회할 때 연관관계를 가진 모든 엔티티를 같이 로딩 -> 성능 저하
 // LAZY : 지연로딩,즉시로딩과 반대, 필요할 때만 사용, LAZY 사용하면 @ToString(exclude) 무조건 사용
@@ -48,42 +54,43 @@ public class Board extends Base {
     @JoinColumn(name = "member_mno")
     private Member member;
 
-    // 첨부파일 관련
-    @Column
+    @Column(columnDefinition = "integer default 0")
     private Integer fileAttached; //파일 첨부 여부 (첨부 1, 미첨부 0)
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Files> FilesList = new ArrayList<>();
     // 게시글 하나에 보드파일이 여러개가 올 수 있도록 참조 관계 설정
 
-
-    public static Board dtoToEntity(BoardDTO dto, Member member) {
-        //Member member = Member.builder().mid(dto.getWriterID()).build();
+    public static Board dtoToEntity(BoardDTO dto) {
+        Member member = Member.builder().mno(dto.getMno()).build();
         Board board = Board.builder()
+                .bno(dto.getBno())
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .hits(dto.getHits())
                 .member(member)
+                .fileAttached(dto.getFileAttached())
                 .build();
         return board;
     }
 
-/*    public static Board createBoard(Long bno, String title, String content, Member member) {
-        Board board = new Board();
-        board.bno = bno;
-        board.title = title;
-        board.content = content;
-        board.member = member;
-        board.hits = 0;
+    /*    public static Board createBoard(Long bno, String title, String content, Member member) {
+            Board board = new Board();
+            board.bno = bno;
+            board.title = title;
+            board.content = content;
+            board.member = member;
+            board.hits = 0;
 
-        //board.fileAttached = 0; // 0 = 파일 없음
-        return board;
-    }*/
+            //board.fileAttached = 0; // 0 = 파일 없음
+            return board;
+        }*/
     /* 게시글 수정 */
-    public static Board changeBoard(Board board, String title, String content) {
-        board.title = title;
-        board.content = content;
-        return board;
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+    public void changeContent(String content) {
+        this.content = content;
     }
 
     public static Board toSaveFile(BoardDTO boardDTO) {

@@ -38,7 +38,7 @@ public class BoardController {
     }*/
 
 
-    @PostMapping("/board/regist") 
+    @PostMapping("/board/regist")
     public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO boardDTO) {
         return ResponseEntity.ok(service.postBoard(boardDTO));
     }
@@ -59,21 +59,27 @@ public class BoardController {
         log.info("상세페이지/수정 컨트롤러");
         // 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함
         service.updateHits(bno);
-        return ResponseEntity.ok(service.oneBoard(bno));
+        return ResponseEntity.ok(service.findById(bno));
     }
 
     //게시글 수정 등록
     @PostMapping("/board/update/{bno}")
-    public ResponseEntity<BoardDTO> update(@RequestBody BoardDTO request) {
-        return ResponseEntity.ok(service.changeBoard(
-                request.getBno(), request.getTitle(), request.getContent()
-        ));
+    public ResponseEntity<Long> update(@PathVariable Long bno, @RequestBody BoardDTO dto) {
+        log.info("업데이트 컨트롤러 진입");
+        //새로 추가된 엔티티의 번호
+        dto.setBno(bno);
+        log.info("수정 dto: " + dto);
+        Long updateBno = service.modify(dto);
+        log.info("수정 완료 BNO: " + updateBno);
+        return ResponseEntity.ok(updateBno);
     }
 
     //게시글 삭제
-    @DeleteMapping ("/boardDelete/{bno}")
-    public ResponseEntity<String> delete(@PathVariable("bno") Long bno) {
-        service.deleteBoard(bno);
-        return new ResponseEntity<>("회원가입이 완료되었습니다.", HttpStatus.OK);
+    @GetMapping("/boardDelete/{bno}")
+    public String delete(@PathVariable("bno") Long bno) {
+        System.out.println("삭제 컨트롤러 진입");
+        service.delete(bno);
+        System.out.println("서비스에서 delete 함수 호출");
+        return "/delete";
     }
 }

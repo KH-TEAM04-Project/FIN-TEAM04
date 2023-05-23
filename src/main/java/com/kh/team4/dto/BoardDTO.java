@@ -17,7 +17,6 @@ import java.util.List;
 // Entity - 다른 목적을 가진 클래스, 하나의 객체에 담아서 주고 받는 용도
 
 @Getter
-@Setter
 @Data
 @Builder
 @ToString   // 필드 값 확인 시 사용
@@ -44,15 +43,17 @@ public class BoardDTO {
     private int fileAttached;   // 파일 첨부 여부(첨부 1, 미첨부 0)
 
     public static BoardDTO entityToDTO(Board board) {
-            BoardDTO boardDTO = BoardDTO.builder()
-                    .bno(board.getBno())
-                    .title(board.getTitle())
-                    .content(board.getContent())
-                    .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                    .hits(board.getHits())
-                    //.isWritten(bool)
-                    .build();
-        // 파일첨부
+        BoardDTO boardDTO = BoardDTO.builder()
+                .bno(board.getBno())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .writerID(board.getMember().getMid())
+                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .hits(board.getHits())
+                .mno(board.getMember().getMno())
+                //.isWritten(bool)
+                .build();
+// 파일첨부
         if(board.getFileAttached() == 0) {
             boardDTO.setFileAttached(board.getFileAttached());    // 0
             // 보드 DTO 에 FileAttached 의 값을 엔티티에 담겨있는 어테치드의 값으로 세팅
@@ -75,16 +76,10 @@ public class BoardDTO {
             boardDTO.setStoredFile(storedFileList);
         }
 
-            return boardDTO;
-        }
-/*    public static PageResponseDto  of(Board board) {
-        return PageResponseDto.builder()
-                .bno(board.getBno())
-                .title(board.getTitle())
-                .writerID(board.getMember().getMid())
-                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                .build();
-    }*/
+        return boardDTO;
+
+    }
+
 
     public static BoardDTO of(Board board, boolean bool) {
         return BoardDTO.builder()
@@ -93,7 +88,7 @@ public class BoardDTO {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .hits(board.getHits())
-                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+//                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .isWritten(bool)
                 .build();
     }

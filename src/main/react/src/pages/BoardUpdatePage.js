@@ -342,9 +342,9 @@ console.log(mno);
           </TextField>
 
           <TextField name="writer" label="작성자"
-            defaultValue={data.writer} onChange={handleChange}
+            defaultValue={data.writerID} onChange={handleChange}
             sx={{my: {  xs: 3, sm: 5 ,mr: 1 } }}>
-            {data.writer}
+            {data.writerID}
           </TextField>
 
           <TextField
