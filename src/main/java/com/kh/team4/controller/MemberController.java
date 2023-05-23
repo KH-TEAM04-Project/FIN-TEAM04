@@ -4,14 +4,12 @@ import com.kh.team4.dto.MailDTO;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TokenDTO;
-import com.kh.team4.service.CustomUserDetailsService;
 import com.kh.team4.service.MemberService;
 import com.kh.team4.service.SendEmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -111,7 +109,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/logout")
-    public String logout(@AuthenticationPrincipal CustomUserDetailsService customDetails, @RequestBody TokenDTO tokenDTO) {
+    public String logout(@RequestBody TokenDTO tokenDTO) {
         return memberService.logout(tokenDTO);
     }
 }
