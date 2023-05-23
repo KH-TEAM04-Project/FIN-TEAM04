@@ -7,12 +7,33 @@ import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover 
 // mocks_
 import account from '../../../_mock/account';
 
+
+// ----------------------------------------------------------------------
+const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
+const MENU_OPTIONS = [
+  
+  {
+    label: 'Home',
+    icon: 'eva:home-fill',
+  },
+  {
+    label: 'Profile',
+    icon: 'eva:person-fill',
+    onClick: isLoggedIn ? '/MyPage' : '/login',
+  },
+  {
+    label: 'Settings',
+    icon: 'eva:settings-2-fill',
+  },
+];
+
+
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
-  const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -28,10 +49,9 @@ export default function AccountPopover() {
     }
     handleClose();
   };
-
   const handleLogout = async () => {
     const accessToken = localStorage.getItem('accessToken');
-
+  
     try {
       await axios.post('http://localhost:8082/logout', { accessToken });
       localStorage.removeItem('accessToken');
@@ -40,22 +60,6 @@ export default function AccountPopover() {
       console.error('Logout failed:', error);
     }
   };
-
-  const MENU_OPTIONS = [
-    {
-      label: 'Home',
-      icon: 'eva:home-fill',
-    },
-    {
-      label: 'Profile',
-      icon: 'eva:person-fill',
-      onClick: isLoggedIn ? '/MyPage' : '/login',
-    },
-    {
-      label: 'Settings',
-      icon: 'eva:settings-2-fill',
-    },
-  ];
 
   return (
     <>
@@ -119,10 +123,11 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          Logout
-        </MenuItem>
-      </Popover>
+      <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
+        Logout
+      </MenuItem>
+    </Popover>
+
     </>
   );
 }
