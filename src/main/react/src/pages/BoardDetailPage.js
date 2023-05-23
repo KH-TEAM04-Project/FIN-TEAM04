@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import React, { useEffect, useState } from 'react';
-import { useParams ,useNavigate} from 'react-router-dom';
+import {useParams, useNavigate, Link} from 'react-router-dom';
 import axios from 'axios';
 import TableCell from '@mui/material/TableCell';
 // @mui
@@ -12,6 +12,7 @@ import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
+import Iconify from "../components/iconify";
 // import { number } from 'prop-types';
 // import Clock from 'react-live-clock'
 // ----------------------------------------------------------------------
@@ -102,16 +103,34 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
 
    useEffect(() => {
      getPosts();
-   }, [getPosts]);
+   }, [bno]);
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate('/board/list', { replace: true });
   };
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
+
+    const handleEditClick = () => {
+        navigate(`/board/edit/${bno}`);
+    };
+
+    const handleDelete = (bno) => {
+        axios.get(`/boardDelete/${bno}`).then((response) => {
+            console.log('게시글이 삭제되었습니다.');
+            // 삭제 후 게시글 리스트를 다시 불러옴
+            navigate('/board/list', { replace: true });
+        });
+    };
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    const [open1, setOpen1] = React.useState(false);
+    const handleOpen1 = () => {
+        setOpen1(true);
+    };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -134,12 +153,13 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
     setAnchorElUser(null);
   };
 
+
   return (
     <>
       <Helmet>
         <title> 게시글보기| 꽁머니 </title>
       </Helmet>
-   
+
       <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -267,7 +287,7 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
           <Typography variant="h5" paragraph  defaultValue="Normal">
             게시글 보세유
           </Typography>
-      
+
           <Typography sx={{ color: 'text.secondary' }}>
         무엇이든 보세유
           </Typography>
@@ -276,17 +296,17 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
           <TextField defaultValue={data.title} name="text" label="제목" readOnly disabled
            sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
 
-          <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자" disabled
+          <TextField defaultValue={data.writerID} color="secondary"   name="text" label="작성자" disabled
           sx={{my: {  xs: 3, sm: 5 ,mr: 1
-          } }}> {data.writer} </TextField>
+          } }}> {data.writerID} </TextField>
 
           <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일" disabled
                     sx={{my: {  xs: 3, sm: 5 ,mr: 1
                     } }}> {data.regDate} </TextField>
-        
 
-           
-        
+
+
+
           <TextField
           id="outlined-multiline-static"
           disabled
@@ -300,8 +320,39 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
       <Button variant="contained" component="label">
         재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
         <input hidden accept="image/*" multiple type="file" />
-        
       </Button>
+             <div className="edit-delete-button">
+                 {/* 해당 글의 작성자가 로그인을 했을 때만 수정, 삭제 버튼이 보이도록 설정.
+      토큰에서 사용자의 mno 값을 추출한 후, 게시글의 작성자의 mno 값과 비교하여 같으면 수정, 삭제 버튼이 보이도록 */}
+                 {mno === data.mno && (
+                     <>
+                         <Link to={`/board/update/${data.bno}`}>
+                             <Button>
+                                 <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                                 글 수정
+                             </Button>
+                         </Link>
+                         <Button color='error' onClick={handleOpen1}>
+                             <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+                             글 삭제
+                         </Button>
+                     </>
+                 )}
+          <Modal
+              open={open1}
+              onClose={handleClose}
+              aria-labelledby="parent-modal-title"
+              aria-describedby="parent-modal-description"
+          >
+              <Box sx={{ ...style, width: 400 }}>
+                  <h2 id="parent-modal-title">게시글 삭제</h2>
+                  <p id="parent-modal-description">
+                      정말로 삭제하시겠습니까?
+                  </p>
+                  <Button href="http://localhost:3000/board/list" onClick={() => handleDelete(data.bno)}>삭제</Button>
+              </Box>
+          </Modal>
+      </div>
       </Stack>
 
 
