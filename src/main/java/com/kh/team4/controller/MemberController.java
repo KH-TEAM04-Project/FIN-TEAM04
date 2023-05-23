@@ -39,7 +39,7 @@ public class MemberController {
     public boolean intoCheck(@RequestBody MemberReqDTO memberDTO) {
         System.out.println("마이페이지 진입 시 패스워드 확인");
         Long mno = memberDTO.getMno();
-        String  pwd = memberDTO.getPwd();
+        String pwd = memberDTO.getPwd();
         System.out.println("받은 값 확인 : Mno - " + mno + ", Pwd - " + pwd);
         return memberService.confirmpwd(mno, pwd);
     }
@@ -111,14 +111,9 @@ public class MemberController {
     }
 
     @DeleteMapping("/logout")
-    public ResponseEntity<String> logout(
-            @AuthenticationPrincipal CustomUserDetailsService customDetails,
-            @RequestBody TokenDTO tokenDTO
-    ) {
-
-        return ResponseEntity.ok(memberService.logout(tokenDTO));
+    public String logout(@AuthenticationPrincipal CustomUserDetailsService customDetails, @RequestBody TokenDTO tokenDTO) {
+        return memberService.logout(tokenDTO);
     }
-
 }
 
 
