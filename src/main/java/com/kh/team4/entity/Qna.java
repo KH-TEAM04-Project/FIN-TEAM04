@@ -46,27 +46,35 @@ public class Qna extends Base {
     @ColumnDefault("0")
     private Integer secret;
 
-    @Column
-    @ColumnDefault("0")
+    @Column(columnDefinition = "integer default 0", nullable = false)
     private Integer hits;
 
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "member_mno", nullable = false)
-    @Column
-    private String writer;
+    @Column(name = "member_id")
+    private String memberId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_mno")
+    private Member writer;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replyList = new ArrayList<>();
 
     public static Qna dtoToEntity(QnaDTO qnaDTO) {
+        Long mno = Long.parseLong(qnaDTO.getMemberId()); // String 값을 Long 타입으로 변환
+
+        Member writer = Member.builder()
+                .mno(mno) // mno 값을 사용하여 Member 객체 생성
+                .build();
+
         Qna qna = Qna.builder()
             .qno(qnaDTO.getQno())
             .title(qnaDTO.getTitle())
             .content(qnaDTO.getContent())
             .secret(qnaDTO.getSecret())
             .hits(qnaDTO.getHits())
-            .writer(qnaDTO.getWriter())
+            .writer(writer)
             .build();
+
         return qna;
     }
 

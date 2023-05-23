@@ -4,144 +4,128 @@ import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 //
 import BlogPage from './pages/BlogPage';
-import QnaPage from './pages/QnaPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
-
-import BoardPage from './pages/BoardPage';
-import CoardPage from './pages/CoardPage';
-import DoardPage from './pages/DoardPage';
-import EoardPage from './pages/EoardPage';
 import SignUpPage from './pages/SignUpPage';
-import EditPage from './pages/EditPage';
-import QEditPage from './pages/QEditPage';
-import RetryPage from './pages/RetryPage';
-// import FetchPage from './pages/FetchPage';
-import BoardReadPage from './pages/BoardReadPage';
-
 import MyPage from './pages/MyPage';
-import QnaReadPage from './pages/QnaReadPage';
-import IdPwPage from './pages/IdPwPage';
-
+import PwMyPage from './pages/PwMyPage';
+import PasswordResetModal from './pages/FindPwPage';
+import UsernameRecoveryModal from './pages/FindIdPage';
+import BoardListPage from './pages/BoardListPage';
+import BoardRegistPage from './pages/BoardRegistPage';
+import BoardUpdatePage from './pages/BoardUpdatePage';
+import BoardDetailPage from './pages/BoardDetailPage';
+import QnaListPage from './pages/QnaListPage';
+import QnaRegistPage from './pages/QnaRegistPage';
+import QnaDetailPage from './pages/QnaDetailPage';
+import QnaUpdatePage from './pages/QnaUpdatePage';
 
 // ----------------------------------------------------------------------
 export default function Router() {
+  const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
   const routes = useRoutes([
     {
       path: '/',
       element: <DashboardLayout />,
       children: [
-
         { element: <Navigate to="/Main" />, index: true },
         { path: '/Main', element: <DashboardAppPage /> },
-        { path: '/QnA', element: <QnaPage /> },
         { path: '/products', element: <ProductsPage /> },
         { path: '/blog', element: <BlogPage /> },
-        { path: '/board', element: <BoardPage /> },
-        { path: '/re', element: <RetryPage /> },
-        { path: 'EoardPage', element: <EoardPage/> }
-
+        { path: '/qna/list', element: <QnaListPage /> },
+        { path: '/board/list', element: <BoardListPage /> },
       ],
     },
     {
       path: '/login',
-      element: <LoginPage />,
-    },
-    {
-
-      path: '/login',
-      element: <LoginPage />,
+      element: isLoggedIn ? <Navigate to="/Main" /> : <LoginPage />,
     },
     {
       path: '/MyPage',
-      element: <MyPage />
-    }
-    ,
+      element: <PwMyPage />,
+    },
     {
-
+      path: '/MyPage/main',
+      element: <MyPage />,
+    },
+    {
       path: '/SignUp',
       element: <SignUpPage />,
     },
     {
       path: '/IdPw',
-      element: <IdPwPage />,
+      element: <UsernameRecoveryModal />,
     },
     {
-      path: '/Coardpage',
-      element: <CoardPage />,
+      path: '/IdPw2',
+      element: <PasswordResetModal />,
     },
     {
-      path: '/Doardpage',
-      element: <DoardPage />,
+      path: '/qna/regist',
+      element: <QnaRegistPage />,
     },
     {
-      path: '/EditPage',
-      element: <EditPage />,
-    },
-     {
-      element: <EditPage />,
-      path: '/EditPage/:bno',
-    },
-      {
-          path: '/QEditPage',
-          element: <QEditPage />,
-        },
-         {
-          element: <QEditPage />,
-          path: '/QEditPage/:qno',
-        },
-    {
-
-      element: <BoardReadPage />,
-      path: '/BoardReadPage',
+      path: '/board/update',
+      element: <BoardUpdatePage />,
     },
     {
-      element: <QnaReadPage />,
-      path: '/QnaReadPage/:qno',
+      path: '/board/update/:bno',
+      element: <BoardUpdatePage />,
     },
     {
-      element: <BoardReadPage />,
-      path: '/BoardReadPage/:bno',
-    },
-
-    {
-
-      element: <BoardReadPage />,
-      path: '/BoardReadPage',
-
+      path: '/qna/update',
+      element: <QnaUpdatePage />,
     },
     {
-      element: <QnaReadPage />,
-      path: '/QnaReadPage:qno',
+      path: '/qna/update/:qno',
+      element: <QnaUpdatePage />,
     },
     {
-      element: <BoardReadPage />,
-      path: '/BoardReadPage:bno',
-    }
-    ,
-    {
-      path: '/re',
-      element: <RetryPage />
+      path: '/board/detail',
+      element: <BoardDetailPage />,
     },
     {
-      path: '/BoardReadPage',
-      element: <BoardReadPage />
-
+      path: '/board/detail/:bno',
+      element: <BoardDetailPage />,
     },
     {
-      element: <SimpleLayout />,
-      children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: '404', element: <Page404 /> },
-        // { path: '*', element: <Navigate to="/404" /> },
-      ],
+      path: '/qna/detail',
+      element: <QnaDetailPage />,
     },
-    // {
-    //   path: '*',
-    //   element: <Navigate to="/404" replace />,
-    // },
+    {
+      path: '/qna/detail/:qno',
+      element: <QnaDetailPage />,
+    },
+    {
+      path: '/board/list',
+      element: <BoardListPage />,
+    },
+    {
+      path: '/board/detail',
+      element: <BoardDetailPage />,
+    },
+    {
+      path: '/board/detail/:bno',
+      element: <BoardDetailPage />,
+    },
+    {
+      path: '/boardDetail',
+      element: <BoardDetailPage />,
+    },
+    {
+      path: '/qna/detail:qno',
+      element: <QnaDetailPage />,
+    },
+    {
+      path: '/board/detail:bno',
+      element: <BoardDetailPage />,
+    },
+    {
+      path: '*',
+      element: <Navigate to="/main" replace />,
+    },
   ]);
 
   return routes;

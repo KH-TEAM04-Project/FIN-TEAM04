@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import  React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -8,9 +8,24 @@ AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
-import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import CollectionsIcon from '@mui/icons-material/Collections';
 import axios from "axios";
 // ----------------------------------------------------------------------
+const style13 = {
+  position: 'absolute' ,
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+   pt: 10,
+   px: 10,
+   pb: 15
+};
+
 
 const StyledContent2 = styled('div')(({ theme }) => ({
   maxWidth: 1000,
@@ -38,62 +53,102 @@ const style = {
 // ----------------------------------------------------------------------
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-export default function DoardPage() {
-  const [data, setData] = useState({
-    title: "",
-    RegDate: "",
-    writer: "",
-    content: ""
-  });
+export default function Yaya() {
+const token = localStorage.getItem('accessToken');
+const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
+const navigate = useNavigate();
+console.log(mno);
+ useEffect(() => {
+    if (token) {
+      // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
-  const handleChange = ({ target }) => {
-    const { value, name } = target;
-    setData((prevData) => ({
-        ...prevData,
-        [name]: value
-    }));
-  };
+      // payload에서 MNO 값을 추출하여 상태에 저장
+      setMno(decodedToken.mno);
+      console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const userData = {
-      title: data.title,
-      RegDate: data.RegDate,
-      writer: data.writer,
-      content: data.content
-    };
-    axios
-      .post("/DoardPage", userData)
-      .then((response) => {
-        console.log(response.status, response.data);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log("이거 에러인걸?");
-          console.log(userData);
-        } else if (error.request) {
-          console.log("network error");
-        } else {
-          console.log(error);
-        }
+      const mno = decodedToken.mno;
+      // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
+      axios.post("/MyPageCont", {mno} )
+
+
+      .then(response => {
+        // 사용자 데이터를 성공적으로 가져온 경우
+        const userData = response.data;
+ })
+      .catch(error => {
+        // API 호출 중 에러 발생한 경우
+        console.error(error);
       });
-  };
+    }
+  }, [token]);
 
-  // const [value, setValue] = React.useState<number ||  null>(2);
-  const navigate = useNavigate();
+const [data, setData] = useState({
+  title: "",
+  RegDate: "",
+  writerID: sub,
+  hits: 0,
+  content: "",
+  mno // 축약 구문으로 변경
+});
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setData((prevData) => ({
+    ...prevData,
+    [name]: value
+  }));
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const userData = {
+    title: data.title,
+    RegDate: data.RegDate,
+    writerID: data.writerID,
+    hits: data.hits,
+    content: data.content,
+    mno // 축약 구문으로 변경
+  };
+  axios
+    .post("/qna/regist", userData)
+    .then((response) => {
+      console.log(response.status, response.data);
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log("이거 에러인걸?");
+        console.log(userData);
+      } else if (error.request) {
+        console.log("network error");
+      } else {
+        console.log(error);
+      }
+    });
+};
 
     const handleClick = () => {
-      navigate('/re', { replace: true });
+      navigate('/qna/list', { replace: true });
     };
 
     const [open, setOpen] = useState(false);
+    const [open1, setOpen1] = React.useState(false);
 
     const handleOpen = () => {
       setOpen(true);
     };
 
+   const handleOpen1 = () => {
+         setOpen1(true);
+         };
+
     const handleClose = () => {
       setOpen(false);
+    };
+
+     const handleClose1 = () => {
+          setOpen1(false);
     };
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -113,9 +168,26 @@ export default function DoardPage() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  
+  
+
+  
+
+ const [imageSrc, setImageSrc] = useState('');
+ const encodeFileToBase64 = (fileBlob) => {
+     const reader = new FileReader();
+     reader.readAsDataURL(fileBlob);
+     return new Promise((resolve) => {
+       reader.onload = () => {
+         setImageSrc(reader.result);
+         resolve();
+       };
+     });
+   };
 
   return (
     <>
+    
       <Helmet>
         <title> QnA 작성| 꽁머니 </title>
       </Helmet>
@@ -255,15 +327,15 @@ export default function DoardPage() {
          {/* 여기서 부터 내용 */}
 
 
-         <TextField    name="title" label="제목" 
+         <TextField    name="title" label="제목"
           value={data.title}
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
 
-          <TextField    name="writer" label="작성자" 
-          value={data.writer}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
+         <TextField    name="writer" label="작성자"
+          value={sub}
+          InputProps={{  readOnly: true,  }}
+           sx={{ my: { xs: 3, sm: 5, mr: 1 } }}/>
 
         <TextField    name="content" label="내용" 
           value={data.content}
@@ -272,14 +344,38 @@ export default function DoardPage() {
           onChange={handleChange}
           defaultValue=" 글 작성"
          />
-       
-         <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
-      <Button variant="contained" component="label">
-        Upload  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
-        <input hidden accept="image/*" multiple type="file" />
-        
-      </Button>
-      </Stack>
+<div>
+            <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
+          <Button variant="contained" component="label">
+              Upload File &nbsp;<AddAPhotoIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
+            <input hidden accept="image/*" multiple type="file"
+            onChange={(e) => {encodeFileToBase64(e.target.files[0]); }}
+            />
+          </Button>
+
+
+            <Button variant="contained"  component="label" onClick={handleOpen1}
+            type="file" >
+            이미지 미리보기 &nbsp; <CollectionsIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}}/></Button>
+                <Modal
+                  open={open1}
+                  onClose={handleClose1}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style13}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                  &nbsp; &nbsp; &nbsp; 미리 보기 에유
+                    </Typography>
+                   <Container
+                   style={{ width: '200%', height: '150px' }}
+                   className="preview"> {imageSrc && <img src={imageSrc} alt="preview-img"
+                   style={{ width: '400px', height: '150%' }}/>}
+                   </Container>
+                  </Box>
+                </Modal>
+                   </Stack>
+          </div>
          
       <div>
       <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>

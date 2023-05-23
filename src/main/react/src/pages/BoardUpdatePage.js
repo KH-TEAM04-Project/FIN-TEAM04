@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
-import  React, {useState} from "react";
-import { useNavigate } from 'react-router-dom';
+import React, {useCallback, useEffect, useState } from 'react';
+import { useParams ,useNavigate} from 'react-router-dom';
+import axios from 'axios';
 // @mui
 import { styled } from '@mui/material/styles';
 import { TextField, Typography, Container,Stack,Button,Box,Modal,
@@ -9,11 +10,9 @@ import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
-import axios from "axios";
+// import { number } from 'prop-types';
+// import Clock from 'react-live-clock'
 // ----------------------------------------------------------------------
-
- 
-
 
 const StyledContent2 = styled('div')(({ theme }) => ({
   maxWidth: 1000,
@@ -44,60 +43,127 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 
+export default function BoardUpdate() {
+    const token = localStorage.getItem('accessToken');
+const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
+const navigate = useNavigate();
+console.log(mno);
+ useEffect(() => {
+    if (token) {
+      // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
-export default function CoardPage1() {
+      // payload에서 MNO 값을 추출하여 상태에 저장
+      setMno(decodedToken.mno);
+      console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
 
-  const [data, setData] = useState({
-    title: "",
-    RegDate: "",
-    writer:  "",
-    content: ""
-  });
+      const mno = decodedToken.mno;
+      // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
+      axios.post("/MyPageCont", {mno} )
 
-  const handleChange = (e) => { const value = e.target.value;
-    setData({
-      ...data,
-      [e.target.name]: value
-    });
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const userData = {
-      title: data.title,
-      RegDate: data.RegDate,
-      writer: data.writer,
-      content: data.content
-    };
-    axios
-      .post("/CoardPage", userData)
-      .then((response) => {
-        console.log(response.status, response.data);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.log("이거 에러인걸?");
-          console.log(userData);
-        } else if (error.request) {
-          console.log("network error");
-        } else {
-          console.log(error);
-        }
+      .then(response => {
+        // 사용자 데이터를 성공적으로 가져온 경우
+        const userData = response.data;
+ })
+      .catch(error => {
+        // API 호출 중 에러 발생한 경우
+        console.error(error);
       });
-  };
-  
-// 여기까지 axios
+    }
+  }, [token]);
 
- 
-  const navigate = useNavigate();
+
+   const { bno } = useParams();
+
+   const [data, setData] = useState({
+   bno : "",
+     title: "",
+     regDate: "",
+   writerID: sub,
+     content: "",
+     mno
+   });
+
+   const [posts, setPosts] = useState([]);
+
+   const getPosts = useCallback(() => {
+     axios
+       .get(`/board/update/${bno}`)
+       .then((response) => {
+         setPosts([response.data]);
+         console.log(response.data);
+         console.log("yaya");
+       })
+       .catch((error) => {
+         if (error.response) {
+           console.log("이거 에러인걸?");
+         } else if (error.request) {
+           console.log("network error");
+         } else {
+           console.log(error);
+         }
+       });
+   }, [bno]);
+
+   const handleChange = useCallback((e) => {
+     const value = e.target.value;
+     setData((prevData) => ({
+       ...prevData,
+       [e.target.name]: value,
+     }));
+   }, []);
+
+   const handleSubmit = useCallback(
+     (e) => {
+       e.preventDefault();
+       const userData = {
+         bno: data.bno,
+         title: data.title,
+         regDate: data.regDate,
+         writerID: data.writerID,
+         content: data.content,
+         mno
+       };
+       axios
+         .post(`/board/update/${bno}`, userData)
+         .then((response) => {
+           console.log(response.status, response.data);
+           console.log(response.data);
+         })
+         .catch((error) => {
+           if (error.response) {
+             console.log("이거 포스트 에러인걸?");
+             console.log(userData);
+             console.log(error.response.data);
+           } else if (error.request) {
+             console.log("network error");
+           } else {
+             console.log(error);
+           }
+         });
+     },
+     [data, bno]
+   );
+
+   useEffect(() => {
+     if (bno) {
+       getPosts();
+     }
+   }, [bno, getPosts]);
+
+
+
+
 
   const handleClick = () => {
-    navigate('/board', { replace: true });
+    navigate('/board/list', { replace: true });
   };
   const [open, setOpen] = React.useState(false);
-
-
-
+  const handleOpen = () => {
+    setOpen(true);
+  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -120,20 +186,12 @@ export default function CoardPage1() {
     setAnchorElUser(null);
   };
 
-
-
- 
-       const handleOpen = () => {
-        
-        setOpen(true);
-       
-      };
   return (
     <>
       <Helmet>
-        <title> 게시글 작성| 꽁머니 </title>
+        <title> 게시글보기| 꽁머니 </title>
       </Helmet>
-   
+
       <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -255,85 +313,81 @@ export default function CoardPage1() {
         </Toolbar>
       </Container>
     </AppBar>
-       <form onSubmit={handleSubmit}>       
-      <Container width="10000" >
+
+
+     {posts.map((data) => (
+<form onSubmit={handleSubmit} key={data.bno}>
+      <Container  width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            게시글 작성하세유
+            게시글 수정 해보세유
           </Typography>
-                
+
           <Typography sx={{ color: 'text.secondary' }}>
-        무엇이든 물어보세유 
+        무엇이든 보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-            
-       
+           <TextField name="bno" label="게시글 번호"
+                      defaultValue={data.bno}
+                      sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
 
-          {/* 여기서 부터 내용 */}
-                
-             
-          <TextField    name="title" label="제목" 
-          value={data.title}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
-                  
-          
+          <TextField name="title" label="제목"
+            defaultValue={data.title} onChange={handleChange}
+            sx={{ my: { xs: 3, sm: 5, mr: 5 } }}/>
+
+          <TextField name="regDate" label="작성일"
+            defaultValue={data.regDate} onChange={handleChange}
+            sx={{my: {  xs: 3, sm: 5 ,mr: 1 } }}>
+            {data.regDate}
+          </TextField>
+
+          <TextField name="writer" label="작성자"
+            defaultValue={data.writerID} onChange={handleChange}
+            sx={{my: {  xs: 3, sm: 5 ,mr: 1 } }}>
+            {data.writerID}
+          </TextField>
+
+          <TextField
+            id="outlined-multiline-static"
+            name="content"
+            defaultValue={data.content} onChange={handleChange}
+            multiline
+            rows={10}
+            >{data.content}
+          </TextField>
+
+         <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
+      <Button variant="contained" component="label">
+        재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
+        <input hidden accept="image/*" multiple type="file" />
+
+      </Button>
+      </Stack>
 
 
+      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 500 }}>
+          <h2 id="parent-modal-title">꽁 머 니</h2>
+          <p id="parent-modal-description">
+            수정이 완료됐습니다람쥐.
+          </p>
+          <LoadingButton fullWidth size="large"  variant="contained" onClick={handleClick}>
+       등록
+      </LoadingButton>
+        </Box>
+      </Modal>
 
-          
+      </StyledContent2>
+      </Container>
+</form>
+ ))}
 
-          <TextField    name="writer" label="작성자" 
-
-          value={data.writer}
-          onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
-        
-                
-            
-           
-        <TextField    name="content" label="내용" 
-          value={data.content}
-          multiline
-          rows={10}
-          onChange={handleChange}
-          defaultValue=" 글 작성"
-         />
-
-        
-          
-            <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
-          <Button variant="contained" component="label">
-            Upload  &nbsp; <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
-            <input hidden accept="image/*" multiple type="file" />
-        
-          </Button>
-          </Stack>
-            
-          <div>
-          <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-          aria-labelledby="parent-modal-title"
-              aria-describedby="parent-modal-description"
-            >
-              <Box sx={{ ...style, width: 500 }}>
-                <h2 id="parent-modal-title">꽁 머 니</h2>
-                <p id="parent-modal-description">
-                  게시글이 작성됐습니다람쥐.
-                </p>
-                      <LoadingButton fullWidth size="large"  variant="contained" onClick={handleClick}>
-                  등록
-            </LoadingButton>
-              </Box>
-            </Modal>
-          </div>
-  
-            </StyledContent2>
-            </Container>
-            </form>      
     </>
-  ) ;
+  );
 }
-

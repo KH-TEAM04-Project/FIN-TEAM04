@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.Id;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor // (@NoArgsConstructor 이거 쓰면서 @Builder 도 동시에 쓰기 위해 사용)
@@ -21,15 +19,15 @@ public class MemberReqDTO {
     private String regno;
     private String email;
     private String pwd;
-    private String detailaddress;
     private String address;
+    private String detailaddress;
     private String ph;
     private String mtype;
     private Authority authority;
 
     @Override
     public String toString(){
-        return mid + pwd;
+        return "mno - " + mno + ", Email - " + email + ", Address - " + address + ", DetailAddress - " + detailaddress + ", ph - " + ph + ", 비번 - " + pwd;
 
     }
 

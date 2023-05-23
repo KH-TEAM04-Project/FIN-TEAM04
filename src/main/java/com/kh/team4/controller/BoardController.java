@@ -18,24 +18,33 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor    // 생성자 주입
 @CrossOrigin(origins = "http://localhost:3000") //CORS 문제 해결 위함
-@RequestMapping("/")
+@RequestMapping("/") //board로 변경
 
 public class BoardController {
     private final BoardService service;
+/*    @GetMapping("/EoardPage") //list로 변경
+    public ResponseEntity<Page<PageResponseDto>> pageArticle(@RequestParam(name = "page") int page) {
+        return ResponseEntity.ok(service.pageArticle(page));
+    }*/
 
-
-    //게시글 등록
-    @PostMapping("/CoardPage")
-    public ResponseEntity<Long> register(@RequestBody BoardDTO dto) {
-        log.info("컨트롤러 진입");
-        //새로 추가된 엔티티의 번호
-        Long bno = service.register(dto);
-
-        log.info("저장 완료 BNO: " + bno);
+/*    @PostMapping("/CoardPage") //register로 변경
+    public ResponseEntity<Long> createArticle(@RequestBody BoardDTO dto) {
+        log.info("등록 컨트롤러");
+        log.info("writer :" + dto.getWriterID());
+        Long bno = service.postBoard(dto);
+        log.info("BNO: " + bno);
         return ResponseEntity.ok(bno);
+
+    }*/
+
+
+    @PostMapping("/board/regist")
+    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO boardDTO) {
+        return ResponseEntity.ok(service.postBoard(boardDTO));
     }
+
     //게시글 목록
-    @GetMapping("/EoardPage")
+    @GetMapping("/board/list")
     public List<BoardDTO> boardList() {
         System.out.println("컨트롤러 진입");
         List<BoardDTO> boardDTOList = service.findAll();
@@ -43,35 +52,34 @@ public class BoardController {
 
         return boardDTOList;
     }
+
+    //게시글 상세조회/수정 불러오기
+    @GetMapping({"/board/detail/{bno}", "/board/update/{bno}"})
+    public ResponseEntity<BoardDTO> getOneBoard(@PathVariable("bno") Long bno) {
+        log.info("상세페이지/수정 컨트롤러");
+        // 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함
+        service.updateHits(bno);
+        return ResponseEntity.ok(service.findById(bno));
+    }
+
+    //게시글 수정 등록
+    @PostMapping("/board/update/{bno}")
+    public ResponseEntity<Long> update(@PathVariable Long bno, @RequestBody BoardDTO dto) {
+        log.info("업데이트 컨트롤러 진입");
+        //새로 추가된 엔티티의 번호
+        dto.setBno(bno);
+        log.info("수정 dto: " + dto);
+        Long updateBno = service.modify(dto);
+        log.info("수정 완료 BNO: " + updateBno);
+        return ResponseEntity.ok(updateBno);
+    }
+
     //게시글 삭제
     @GetMapping("/boardDelete/{bno}")
     public String delete(@PathVariable("bno") Long bno) {
-        System.out.println("삭제 컨트롤러");
+        System.out.println("삭제 컨트롤러 진입");
         service.delete(bno);
         System.out.println("서비스에서 delete 함수 호출");
         return "/delete";
     }
-    //게시글 상세조회/수정 불러오기
-    @GetMapping({"/BoardReadPage/{bno}", "/EditPage/{bno}"})
-    public ResponseEntity<BoardDTO> read(@PathVariable("bno") Long bno) {
-        log.info("상세페이지/수정 컨트롤러");
-        /* 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함*/
-        log.info("bno: " + bno);
-        service.updateHits(bno);
-        BoardDTO boardDTO = service.findById(bno);
-
-        log.info(boardDTO);
-        return ResponseEntity.ok(boardDTO);
-
-    }
-    //게시글 수정 등록
-        @PostMapping("/EditPage/{bno}")
-        public ResponseEntity<Long> update(@RequestBody BoardDTO dto) {
-            log.info("업데이트 컨트롤러 진입");
-            //새로 추가된 엔티티의 번호
-            Long bno = service.modify(dto);
-            log.info("수정 완료 BNO: " + bno);
-            return ResponseEntity.ok(bno);
-        }
-
 }

@@ -4,6 +4,7 @@ import com.kh.team4.entity.Member;
 import lombok.*;
 
 import javax.persistence.Id;
+import java.util.Optional;
 
 @ToString
 @Getter
@@ -21,6 +22,7 @@ public class MemberResDTO {
     private String email;
     private String ph;
     private String address;
+    private String detailAddress;
 
     public MemberResDTO(Member member){
         this.mno = member.getMno();
@@ -30,6 +32,8 @@ public class MemberResDTO {
         this.pwd = member.getPwd();
         this.email = member.getEmail();
         this.ph = member.getPh();
+        this.address = member.getAddress().getAddress();
+        this.detailAddress = member.getAddress().getDetailAddress();
     }
 
     // 로그인 하려고 만든거임
@@ -48,7 +52,22 @@ public class MemberResDTO {
                 .regno(member.getRegno())
                 .email(member.getEmail())
                 .ph(member.getPh())
-
+                .address(member.getAddress().getAddress())
+                .detailAddress(member.getAddress().getDetailAddress())
                 .build();
     }
+
+    public static MemberResDTO of2(Optional<Member> member) {   // Optional 사용 위한 메서드
+        return MemberResDTO.builder()
+                .mid(member.get().getMid())
+                .mno(member.get().getMno())
+                .mname(member.get().getMname())
+                .regno(member.get().getRegno())
+                .email(member.get().getEmail())
+                .ph(member.get().getPh())
+                .address(member.get().getAddress().getAddress())
+                .detailAddress(member.get().getAddress().getDetailAddress())
+                .build();
+    }
+
 }

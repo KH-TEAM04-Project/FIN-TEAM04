@@ -1,16 +1,18 @@
 import { Helmet } from 'react-helmet-async';
 import React, { useEffect, useState } from 'react';
-import { Link,useParams ,useNavigate} from 'react-router-dom';
+import {useParams, useNavigate, Link} from 'react-router-dom';
 import axios from 'axios';
 import TableCell from '@mui/material/TableCell';
 // @mui
 import { styled } from '@mui/material/styles';
-import { TextField, Typography, Container,Stack,Button,Box,Modal,
+import { TextField,Typography, Container,Stack,Button,Box,Modal,
 AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem} from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+
 import WbSunnyIcon  from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
+
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
+import Iconify from "../components/iconify";
 // import { number } from 'prop-types';
 // import Clock from 'react-live-clock'
 // ----------------------------------------------------------------------
@@ -44,15 +46,49 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 
-export default function Page404() {
+export default function BoardDetail() {
+    const token = localStorage.getItem('accessToken');
+const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
+
+console.log(mno);
+ useEffect(() => {
+    if (token) {
+      // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+
+      // payload에서 MNO 값을 추출하여 상태에 저장
+      setMno(decodedToken.mno);
+      console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
+
+      const mno = decodedToken.mno;
+      // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
+      axios.post("/MyPageCont", {mno} )
+
+
+      .then(response => {
+        // 사용자 데이터를 성공적으로 가져온 경우
+        const userData = response.data;
+ })
+      .catch(error => {
+        // API 호출 중 에러 발생한 경우
+        console.error(error);
+      });
+    }
+  }, [token]);
+
+const [data, setData] = useState({mno // 축약 구문으로 변경
+});
+
    const { bno } = useParams();
    const [posts, setPosts] = useState([]);
 
    const getPosts = () => {
-     axios.get(`/BoardReadPage/${bno}`).then((response) => {
+     axios.get(`/board/detail/${bno}`).then((response) => {
        setPosts([response.data]); // 배열 형태로 설정
        console.log(response.data);
        console.log("yaya");
+
      })
      .catch((error) => {
        if (error.response) {
@@ -67,16 +103,34 @@ export default function Page404() {
 
    useEffect(() => {
      getPosts();
-   }, []);
+   }, [bno]);
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/EoardPage', { replace: true });
+    navigate('/board/list', { replace: true });
   };
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
+
+    const handleEditClick = () => {
+        navigate(`/board/edit/${bno}`);
+    };
+
+    const handleDelete = (bno) => {
+        axios.get(`/boardDelete/${bno}`).then((response) => {
+            console.log('게시글이 삭제되었습니다.');
+            // 삭제 후 게시글 리스트를 다시 불러옴
+            navigate('/board/list', { replace: true });
+        });
+    };
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    const [open1, setOpen1] = React.useState(false);
+    const handleOpen1 = () => {
+        setOpen1(true);
+    };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -99,12 +153,13 @@ export default function Page404() {
     setAnchorElUser(null);
   };
 
+
   return (
     <>
       <Helmet>
         <title> 게시글보기| 꽁머니 </title>
       </Helmet>
-   
+
       <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -227,12 +282,12 @@ export default function Page404() {
       </Container>
     </AppBar>
      {posts.map((data) => (
-      <Container key={data.bno} Width="10000">
+      <Container key={data.bno} width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
             게시글 보세유
           </Typography>
-      
+
           <Typography sx={{ color: 'text.secondary' }}>
         무엇이든 보세유
           </Typography>
@@ -241,17 +296,17 @@ export default function Page404() {
           <TextField defaultValue={data.title} name="text" label="제목" readOnly disabled
            sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
 
-          <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자" disabled
+          <TextField defaultValue={data.writerID} color="secondary"   name="text" label="작성자" disabled
           sx={{my: {  xs: 3, sm: 5 ,mr: 1
-          } }}> {data.writer} </TextField>
+          } }}> {data.writerID} </TextField>
 
           <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일" disabled
                     sx={{my: {  xs: 3, sm: 5 ,mr: 1
                     } }}> {data.regDate} </TextField>
-        
 
-           
-        
+
+
+
           <TextField
           id="outlined-multiline-static"
           disabled
@@ -265,9 +320,42 @@ export default function Page404() {
       <Button variant="contained" component="label">
         재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
         <input hidden accept="image/*" multiple type="file" />
-        
       </Button>
+             <div className="edit-delete-button">
+                 {/* 해당 글의 작성자가 로그인을 했을 때만 수정, 삭제 버튼이 보이도록 설정.
+      토큰에서 사용자의 mno 값을 추출한 후, 게시글의 작성자의 mno 값과 비교하여 같으면 수정, 삭제 버튼이 보이도록 */}
+                 {mno === data.mno && (
+                     <>
+                         <Link to={`/board/update/${data.bno}`}>
+                             <Button>
+                                 <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                                 글 수정
+                             </Button>
+                         </Link>
+                         <Button color='error' onClick={handleOpen1}>
+                             <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+                             글 삭제
+                         </Button>
+                     </>
+                 )}
+          <Modal
+              open={open1}
+              onClose={handleClose}
+              aria-labelledby="parent-modal-title"
+              aria-describedby="parent-modal-description"
+          >
+              <Box sx={{ ...style, width: 400 }}>
+                  <h2 id="parent-modal-title">게시글 삭제</h2>
+                  <p id="parent-modal-description">
+                      정말로 삭제하시겠습니까?
+                  </p>
+                  <Button href="http://localhost:3000/board/list" onClick={() => handleDelete(data.bno)}>삭제</Button>
+              </Box>
+          </Modal>
+      </div>
       </Stack>
+
+
 
 
       <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}
@@ -286,6 +374,7 @@ export default function Page404() {
 
         </Box>
       </Modal>
+
 
       </StyledContent2>
       </Container>
