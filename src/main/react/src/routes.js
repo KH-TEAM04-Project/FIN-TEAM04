@@ -63,6 +63,10 @@ export default function Router() {
       element: <PasswordResetModal />,
     },
     {
+      path: '/board/regist',
+      element: <BoardRegistPage />,
+    },
+    {
       path: '/qna/regist',
       element: <QnaRegistPage />,
     },
