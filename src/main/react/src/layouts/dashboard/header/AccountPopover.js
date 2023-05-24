@@ -1,17 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import jwtDecode from 'jwt-decode';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
-// mocks_
-import account from '../../../_mock/account';
+import { LoadingButton } from '@mui/lab';
+import Iconify from '../../../components/iconify';
 
+const account = {
+  displayName: '로그인해주세요',
+  email: 'demo@minimals.cc',
+  photoURL: '/assets/images/avatars/avatar_default.jpg',
+};
 
-// ----------------------------------------------------------------------
+const accessToken = localStorage.getItem('accessToken');
+
+if (accessToken) {
+  const decodedToken = jwtDecode(accessToken);
+  account.displayName = decodedToken.sub;
+  delete account.email;
+  delete account.photoURL;
+}
+
 const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
 const MENU_OPTIONS = [
-  
   {
     label: 'Home',
     icon: 'eva:home-fill',
@@ -27,11 +40,23 @@ const MENU_OPTIONS = [
   },
 ];
 
-
-// ----------------------------------------------------------------------
-
 export default function AccountPopover() {
-  
+  const account = {
+  displayName: '로그인해주세요',
+  email: 'demo@minimals.cc',
+  photoURL: '/assets/images/avatars/avatar_default.jpg',
+};
+
+const accessToken = localStorage.getItem('accessToken');
+
+if (accessToken) {
+  const decodedToken = jwtDecode(accessToken);
+  account.displayName = decodedToken.sub;
+  delete account.email;
+  delete account.photoURL;
+}
+
+const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
 
@@ -49,11 +74,12 @@ export default function AccountPopover() {
     }
     handleClose();
   };
+
   const handleLogout = async () => {
     const accessToken = localStorage.getItem('accessToken');
-  
+
     try {
-      await axios.post('http://localhost:8082/logout', { accessToken });
+      await axios.post('/logout', { accessToken }, { withCredentials: true });
       localStorage.removeItem('accessToken');
       navigate('/login'); // Adjust the path according to your routing configuration
     } catch (error) {
@@ -123,11 +149,10 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-      <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-        Logout
-      </MenuItem>
-    </Popover>
-
+        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
+          Logout
+        </MenuItem>
+      </Popover>
     </>
   );
 }

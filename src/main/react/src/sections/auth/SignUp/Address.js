@@ -28,7 +28,7 @@ const AddressButton = styled.button`
 `;
 
 
-const Address = () => {
+const Address = ({ onAddressChange }) => {
   // 주소 상태 관리
   const [address, setAddress] = useState('');
 
@@ -37,7 +37,9 @@ const Address = () => {
 
   // 주소 입력 시
   const handleAddressChange = (event) => {
-    setAddress(event.target.value);
+    const { value } = event.target;
+    setAddress(value);
+    onAddressChange(value); // Call the onAddressChange handler with the new address value
   };
 
   // 팝업창 열기
@@ -71,15 +73,15 @@ const Address = () => {
   return(
     <div>
       <AddressWrapper>
-        <AddressInput
-          type="text"
-          id="address"
-          name="address"
-          value={address}
-          onChange={handleAddressChange}
-          required
-          placeholder='주소'
-        />
+      <AddressInput
+        type="text"
+        id="address"
+        name="address"
+        value={address}
+        onChange={handleAddressChange}
+        required
+        placeholder='주소'
+      />
         <AddressButton type='button' onClick={openPostCode}>주소 검색</AddressButton>
       </AddressWrapper>
       <div id='popupDom'>
