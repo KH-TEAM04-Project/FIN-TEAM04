@@ -92,6 +92,9 @@ const StyledSearch = styled(OutlinedInput)(({theme}) => ({
 
 export default function BoardList() {
 
+    const token = localStorage.getItem('accessToken');
+    const auth = token ? JSON.parse(atob(token.split('.')[1])).auth : '';
+    console.log(auth);
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -179,11 +182,13 @@ export default function BoardList() {
                 }
             />
 
+                {auth === "ROLE_ADMIN" && (
+                    <Button href='http://localhost:3000/board/regist' variant="contained"
+                            startIcon={<Iconify icon="eva:plus-fill"/>}>
+                        게시글 작성하기
+                    </Button>
+                )}
 
-            <Button href='http://localhost:3000/board/regist' variant="contained"
-                    startIcon={<Iconify icon="eva:plus-fill"/>}>
-                게시글 작성하기
-            </Button>
 
 
             <TableContainer component={Paper}>
