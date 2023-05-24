@@ -48,7 +48,7 @@ const StyledButton = styled.button`
   width: 80px; /* Adjust the width to your desired size */
 `;
 
-export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
+export default function SignUpForm({ formValues, onFormSubmit, onFormChange, onAddressChange }) {
   const { pwd, confirmPassword } = formValues;
   const isPasswordMatch = pwd === confirmPassword;
 
@@ -72,7 +72,7 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange }) {
       <StyledInputWrapper>
         <StyledInput type="email" id="email" name="email" value={formValues.email} onChange={onFormChange} required placeholder='이메일'/>
       </StyledInputWrapper>
-      <Address /> 
+      <Address onAddressChange={onAddressChange} /> {/* Pass the onAddressChange handler */}
       <StyledInputWrapper>
         
         <StyledInput type="text" id="detailaddress" name="detailaddress" value={formValues.detailaddress} onChange={onFormChange} required placeholder='상세주소'/>
@@ -106,4 +106,6 @@ SignUpForm.propTypes = {
   }).isRequired,
   onFormSubmit: PropTypes.func.isRequired,
   onFormChange: PropTypes.func.isRequired,
+  onAddressChange: PropTypes.func.isRequired, // Add prop type for onAddressChange
+
 };

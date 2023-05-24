@@ -133,7 +133,7 @@ function MyPage() {
       // Successful password change
       const result = response.data;
 
-      if (result.success) {
+      if (result.true) {
         // Password changed successfully
         setpwd("");
         setchangePwd("");
