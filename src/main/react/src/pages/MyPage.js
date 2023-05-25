@@ -236,21 +236,21 @@ function MyPage() {
             />
           </div>
           <div>
-            <label htmlFor="detailaddress">상세주소</label>
-            <input
-              type="text"
-              id="detailaddress"
-              value={userData.detailAddress}
-              onChange={(e) => handleChange("detailAddress", e.target.value)}
-            />
-          </div>
-          <div>
             <label htmlFor="address">주소</label>
             <input
               type="text"
               id="address"
               value={userData.address}
               onChange={(e) => handleChange("address", e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="detailaddress">상세주소</label>
+            <input
+              type="text"
+              id="detailaddress"
+              value={userData.detailAddress}
+              onChange={(e) => handleChange("detailAddress", e.target.value)}
             />
           </div>
           <div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import PopupDom from './PopupDom';
-import PopupPostCode from './PopupPostCode';
+import ReactDOM from 'react-dom';
+import DaumPostcode from 'react-daum-postcode';
 
 const AddressWrapper = styled.div`
   display: flex;
@@ -24,35 +24,45 @@ const AddressButton = styled.button`
   border-radius: 4px;
   margin-left: 10px;
   cursor: pointer;
-  margin-right: 10px; /* 주소 입력칸과 오른쪽에 공간을 주기 위한 우측 마진 추가 */
+  margin-right: 10px;
 `;
 
+const PopupContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PopupContent = styled.div`
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+`;
 
 const Address = ({ onAddressChange }) => {
-  // 주소 상태 관리
   const [address, setAddress] = useState('');
-
-  // 팝업창 상태 관리
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  // 주소 입력 시
   const handleAddressChange = (event) => {
     const { value } = event.target;
     setAddress(value);
-    onAddressChange(value); // Call the onAddressChange handler with the new address value
+    onAddressChange(value);
   };
 
-  // 팝업창 열기
   const openPostCode = () => {
     setIsPopupOpen(true);
   };
 
-  // 팝업창 닫기
   const closePostCode = () => {
     setIsPopupOpen(false);
   };
 
-  // 우편번호 검색 후 주소 처리 함수
   const handlePostCode = (data) => {
     let fullAddress = data.address;
     let extraAddress = '';
@@ -62,37 +72,65 @@ const Address = ({ onAddressChange }) => {
         extraAddress += data.bname;
       }
       if (data.buildingName !== '') {
-        extraAddress += (extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName);
+        extraAddress += extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
       }
-      fullAddress += (extraAddress !== '' ? ` (${extraAddress})` : '');
+      fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
     }
     setAddress(fullAddress);
     closePostCode();
   };
 
-  return(
+  return (
     <div>
       <AddressWrapper>
-      <AddressInput
-        type="text"
-        id="address"
-        name="address"
-        value={address}
-        onChange={handleAddressChange}
-        required
-        placeholder='주소'
-      />
-        <AddressButton type='button' onClick={openPostCode}>주소 검색</AddressButton>
+        <AddressInput
+          type="text"
+          id="address"
+          name="address"
+          value={address}
+          onChange={handleAddressChange}
+          required
+          placeholder="주소"
+        />
+        <AddressButton type="button" onClick={openPostCode}>
+          주소 검색
+        </AddressButton>
       </AddressWrapper>
-      <div id='popupDom'>
-        {isPopupOpen && (
-          <PopupDom>
+      {isPopupOpen && (
+        <PopupContainer>
+          <PopupContent>
             <PopupPostCode onClose={closePostCode} onComplete={handlePostCode} />
-          </PopupDom>
-        )}
-      </div>
+          </PopupContent>
+        </PopupContainer>
+      )}
     </div>
   );
+};
+
+const PopupPostCode = ({ onClose, onComplete }) => {
+  return (
+    <div>
+      <DaumPostcode
+        style={{
+          display: 'block',
+          position: 'absolute',
+          top: '10%',
+          width: '600px',
+          height: '600px',
+          padding: '7px',
+        }}
+        onComplete={onComplete}
+      />
+      <button type="button" onClick={onClose} className="postCode_btn">
+        닫기
+      </button>
+    </div>
+  );
+};
+
+const PopupDom = ({ children }) => {
+  const el = document.getElementById('popupDom');
+  return ReactDOM.createPortal(children, el);
 };
 
 export default Address;
