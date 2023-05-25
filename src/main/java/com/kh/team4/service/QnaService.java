@@ -92,4 +92,8 @@ public class QnaService {
 
     }
 
+    // 게시글 존재 여부 확인
+    public boolean existsQna(Long qno) {
+        return qnaRepository.existsById(qno);
+    }
 }
