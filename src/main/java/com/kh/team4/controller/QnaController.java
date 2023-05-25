@@ -79,7 +79,7 @@ public class QnaController {
 
     // 상세보기 페이지
     @GetMapping({"/detail/{qno}", "/update/{qno}"})    // id 값을 받아온다.
-    public ResponseEntity<Map<String, Object>> findById(@PathVariable Long qno) {
+    public ResponseEntity<Map<String, Object>> findById(@PathVariable("qno") Long qno) {
         log.info("상세보기/수정 컨트롤러 진입");
         // 만약에 페이지 요청이 없는 경우도 있을 수 있으니 @PageableDefault 사용
         // 경로상의 값을 가져올 때는 @PathVariable 라는 어노테이션을 사용한다.
@@ -102,7 +102,7 @@ public class QnaController {
         } else {
             System.out.println("게시글이 존재하지 않은 경우");
             return ResponseEntity.notFound().build();
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // 게시글이 존재하지 않는 경우 404 Not Found 상태를 리턴
+//          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response); // 게시글이 존재하지 않는 경우 404 Not Found 상태를 리턴
         }
     }
 
