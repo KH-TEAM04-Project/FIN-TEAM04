@@ -58,7 +58,7 @@ public class MemberService {
         // 찾는 용도의 Mno를 써야하는군..
         Long mno = memberDTO.getMno();
         String address = memberDTO.getAddress();
-        String detailAddress = memberDTO.getDetailaddress();
+        String detailAddress = memberDTO.getDetailAddress();
 
         Member memberorigin = memberRepository.findById(mno).get();
 

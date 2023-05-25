@@ -93,7 +93,7 @@ public  static Member findMid(MemberResDTO memberResDTO){
                 .mname(memberReqDTO.getMname())
                 .pwd(passwordEncoder.encode(memberReqDTO.getPwd()))
                 .authority(Authority.ROLE_USER)
-                .address(new Address(memberReqDTO.getAddress(), memberReqDTO.getDetailaddress()))
+                .address(new Address(memberReqDTO.getAddress(), memberReqDTO.getDetailAddress()))
                 .build();
         return member;
     }
