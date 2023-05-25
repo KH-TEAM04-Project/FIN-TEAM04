@@ -50,9 +50,9 @@ const Address = ({ onAddressChange }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleAddressChange = (event) => {
-    const { value } = event.target;
-    setAddress(value);
-    onAddressChange(value);
+      const { value } = event.target;
+      setAddress(value);
+      onAddressChange(value);
   };
 
   const openPostCode = () => {
@@ -64,46 +64,47 @@ const Address = ({ onAddressChange }) => {
   };
 
   const handlePostCode = (data) => {
-    let fullAddress = data.address;
-    let extraAddress = '';
+      let fullAddress = data.address;
+      let extraAddress = '';
 
-    if (data.addressType === 'R') {
-      if (data.bname !== '') {
-        extraAddress += data.bname;
+      if (data.addressType === 'R') {
+          if (data.bname !== '') {
+              extraAddress += data.bname;
+          }
+          if (data.buildingName !== '') {
+              extraAddress += extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
+          }
+          fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
       }
-      if (data.buildingName !== '') {
-        extraAddress += extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
-      }
-      fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
-    }
-    setAddress(fullAddress);
-    closePostCode();
+      setAddress(fullAddress);
+      onAddressChange(fullAddress); // Add this line
+      closePostCode();
   };
 
   return (
-    <div>
-      <AddressWrapper>
-        <AddressInput
-          type="text"
-          id="address"
-          name="address"
-          value={address}
-          onChange={handleAddressChange}
-          required
-          placeholder="주소"
-        />
-        <AddressButton type="button" onClick={openPostCode}>
-          주소 검색
-        </AddressButton>
-      </AddressWrapper>
-      {isPopupOpen && (
-        <PopupContainer>
-          <PopupContent>
-            <PopupPostCode onClose={closePostCode} onComplete={handlePostCode} />
-          </PopupContent>
-        </PopupContainer>
-      )}
-    </div>
+      <div>
+          <AddressWrapper>
+              <AddressInput
+                type="text"
+                id="address"
+                name="address"
+                value={address}
+                onChange={handleAddressChange}
+                required
+                placeholder="주소"
+              />
+              <AddressButton type="button" onClick={openPostCode}>
+                주소 검색
+              </AddressButton>
+          </AddressWrapper>
+          {isPopupOpen && (
+            <PopupContainer>
+                <PopupContent>
+                    <PopupPostCode onClose={closePostCode} onComplete={handlePostCode} />
+                </PopupContent>
+            </PopupContainer>
+          )}
+      </div>
   );
 };
 

@@ -11,7 +11,7 @@ import Iconify from '../../../components/iconify';
 const account = {
   displayName: '로그인해주세요',
   email: 'demo@minimals.cc',
-  photoURL: '/assets/images/avatars/avatar_default.jpg',
+  photoURL: <IconButton />,
 };
 
 const accessToken = localStorage.getItem('accessToken');
@@ -30,13 +30,14 @@ const MENU_OPTIONS = [
     icon: 'eva:home-fill',
   },
   {
-    label: 'Profile',
+    label: 'Mypage',
     icon: 'eva:person-fill',
     onClick: isLoggedIn ? '/MyPage' : '/login',
   },
   {
-    label: 'Settings',
+    label: 'icon',
     icon: 'eva:settings-2-fill',
+    onClick: <IconButton />
   },
 ];
 
