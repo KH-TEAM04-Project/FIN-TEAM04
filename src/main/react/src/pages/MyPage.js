@@ -133,7 +133,7 @@ function MyPage() {
       // Successful password change
       const result = response.data;
 
-      if (result.true) {
+      if (result) {
         // Password changed successfully
         setpwd("");
         setchangePwd("");
@@ -245,10 +245,10 @@ function MyPage() {
             />
           </div>
           <div>
-            <label htmlFor="detailaddress">상세주소</label>
+            <label htmlFor="detailAddress">상세주소</label>
             <input
               type="text"
-              id="detailaddress"
+              id="detailAddress"
               value={userData.detailAddress}
               onChange={(e) => handleChange("detailAddress", e.target.value)}
             />
