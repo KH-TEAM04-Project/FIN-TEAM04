@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import ImageUpload from '../sections/auth/MyPage/imgUpload';
+import AccountPopover from "../layouts/dashboard/header/AccountPopover";
 
 function MyPage() {
+
+  const [avatarSrc, setAvatarSrc] = useState('/assets/images/avatars/avatar_default.jpg');
   const [userData, setUserData] = useState({
     mname: "",
     mid: "",
@@ -212,6 +216,8 @@ function MyPage() {
     
     <div>
       <h1>마이페이지</h1>
+      <ImageUpload avatarSrc={avatarSrc} setAvatarSrc={setAvatarSrc} />
+      
       {userData.mname && !isEditing && !isChangingPassword && (
         <>
           <p>이름: {userData.mname}</p>

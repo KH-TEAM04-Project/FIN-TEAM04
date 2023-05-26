@@ -2,16 +2,22 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-// @mui
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-import Iconify from '../../../components/iconify';
+import {
+  Box,
+  Divider,
+  Typography,
+  Stack,
+  MenuItem,
+  Avatar,
+  IconButton,
+  Popover,
+} from '@mui/material';
 
 const account = {
   displayName: '로그인해주세요',
-  email: 'demo@minimals.cc',
-  photoURL: <IconButton />,
+  
+  photoURL: '',
 };
 
 const accessToken = localStorage.getItem('accessToken');
@@ -19,8 +25,7 @@ const accessToken = localStorage.getItem('accessToken');
 if (accessToken) {
   const decodedToken = jwtDecode(accessToken);
   account.displayName = decodedToken.sub;
-  delete account.email;
-  delete account.photoURL;
+ 
 }
 
 const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
@@ -37,27 +42,11 @@ const MENU_OPTIONS = [
   {
     label: 'icon',
     icon: 'eva:settings-2-fill',
-    onClick: <IconButton />
+    onClick: <IconButton />,
   },
 ];
 
-export default function AccountPopover() {
-  const account = {
-  displayName: '로그인해주세요',
-  email: 'demo@minimals.cc',
-  photoURL: '/assets/images/avatars/avatar_default.jpg',
-};
-
-const accessToken = localStorage.getItem('accessToken');
-
-if (accessToken) {
-  const decodedToken = jwtDecode(accessToken);
-  account.displayName = decodedToken.sub;
-  delete account.email;
-  delete account.photoURL;
-}
-
-const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
+function AccountPopover() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
 
@@ -157,3 +146,5 @@ const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
     </>
   );
 }
+
+export default AccountPopover;
