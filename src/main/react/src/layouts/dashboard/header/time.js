@@ -6,9 +6,9 @@ const TokenInfo = () => {
   const [time, setTime] = useState(null);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      const decodedToken = jwtDecode(accessToken);
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken) {
+      const decodedToken = jwtDecode(refreshToken);
       setTokenExpiry(decodedToken.exp);
     }
 
