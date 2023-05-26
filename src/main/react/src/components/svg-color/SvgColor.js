@@ -4,12 +4,15 @@ import { forwardRef } from 'react';
 import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
+const token = localStorage.getItem('accessToken');
+const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+console.log(sub);
 
-const SvgColor = forwardRef(({ src, sx, ...other }, ref) => (
+const SvgColor = forwardRef(({ src, sx, ...other }, sub) => (
   <Box
     component="span"
     className="svg-color"
-    ref={ref}
+    ref={sub}
     sx={{
       width: 24,
       height: 24,
