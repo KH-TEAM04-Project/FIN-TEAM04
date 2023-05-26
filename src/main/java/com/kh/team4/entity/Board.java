@@ -69,7 +69,7 @@ public class Board extends Base {
                 .content(dto.getContent())
                 .hits(dto.getHits())
                 .member(member)
-                .fileAttached(dto.getFileAttached())
+                .fileAttached(0)
                 .build();
         return board;
     }
@@ -94,11 +94,14 @@ public class Board extends Base {
     }
 
     public static Board toSaveFile(BoardDTO boardDTO) {
+        Member member = Member.builder().mno(boardDTO.getMno()).build();
         Board board = Board.builder()
+                .bno(boardDTO.getBno())
                 .title(boardDTO.getTitle())
                 .content(boardDTO.getContent())
                 .hits(boardDTO.getHits())
-                .fileAttached(boardDTO.getFileAttached())
+                .member(member)
+                .fileAttached(1) //파일 있음
                 .build();
         return board;
     }

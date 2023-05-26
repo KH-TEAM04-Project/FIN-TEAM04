@@ -304,9 +304,6 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
                     sx={{my: {  xs: 3, sm: 5 ,mr: 1
                     } }}> {data.regDate} </TextField>
 
-
-
-
           <TextField
           id="outlined-multiline-static"
           disabled
@@ -315,6 +312,19 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
           defaultValue={data.content}
 
         ><TableCell >{data.content}</TableCell>}</TextField>
+
+
+{/*            {data.fileAttached === 1 && (
+                <tr>
+                    <th>image</th>
+                    {data.storedFileName.map((fileName) => (
+                        <td key={fileName}>
+                            <img src={`/upload/${fileName}`} alt="" />
+                        </td>
+                    ))}
+                </tr>
+            )}*/}
+
 
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
       <Button variant="contained" component="label">
