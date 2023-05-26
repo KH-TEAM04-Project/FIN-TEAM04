@@ -15,15 +15,15 @@ import java.time.LocalDateTime;
 public class ReplyDTO {
     private Long rno;
     private String content;
-    private Long qnaQno;
+    private Long qno;
     private LocalDateTime regDate;
 
     // entity 를 dto 로 변환하는 내용
-    public static ReplyDTO toReplyDTO(Reply Reply, Long QnaQno) {
+    public static ReplyDTO toReplyDTO(Reply Reply) {
         ReplyDTO ReplyDTO = new ReplyDTO();
         ReplyDTO.setRno(Reply.getRno());
         ReplyDTO.setContent(Reply.getContent());
-        ReplyDTO.setQnaQno(QnaQno);
+        ReplyDTO.setQno(Reply.getQna().getQno());
         ReplyDTO.setRegDate(Reply.getRegDate());
 
         return ReplyDTO;

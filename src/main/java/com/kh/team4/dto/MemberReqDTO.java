@@ -20,7 +20,7 @@ public class MemberReqDTO {
     private String email;
     private String pwd;
     private String address;
-    private String detailaddress;
+    private String detailAddress;
     private String ph;
     private String mtype;
     private Authority authority;
@@ -28,7 +28,7 @@ public class MemberReqDTO {
 
     @Override
     public String toString(){
-        return "mno - " + mno + ", Email - " + email + ", Address - " + address + ", DetailAddress - " + detailaddress + ", ph - " + ph + ", 비번 - " + pwd;
+        return "mno - " + mno + ", Email - " + email + ", Address - " + address + ", DetailAddress - " + detailAddress + ", ph - " + ph + ", 비번 - " + pwd;
 
     }
 

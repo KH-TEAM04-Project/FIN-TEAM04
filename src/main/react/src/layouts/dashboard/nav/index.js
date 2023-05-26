@@ -64,11 +64,12 @@ export default function Nav({ openNav, onCloseNav }) {
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                여기바꿀꺼임
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                이거 굳이 필요한가 ?
+                여기삭제하고넣을거 추천좀{account.role}
               </Typography>
             </Box>
           </StyledAccount>

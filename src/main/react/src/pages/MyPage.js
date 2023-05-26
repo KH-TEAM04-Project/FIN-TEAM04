@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import ImageUpload from '../sections/auth/MyPage/imgUpload';
+import AccountPopover from "../layouts/dashboard/header/AccountPopover";
 
 function MyPage() {
+
+  const [avatarSrc, setAvatarSrc] = useState('/assets/images/avatars/avatar_default.jpg');
   const [userData, setUserData] = useState({
     mname: "",
     mid: "",
@@ -133,7 +137,7 @@ function MyPage() {
       // Successful password change
       const result = response.data;
 
-      if (result.success) {
+      if (result) {
         // Password changed successfully
         setpwd("");
         setchangePwd("");
@@ -212,6 +216,8 @@ function MyPage() {
     
     <div>
       <h1>마이페이지</h1>
+      <ImageUpload avatarSrc={avatarSrc} setAvatarSrc={setAvatarSrc} />
+      
       {userData.mname && !isEditing && !isChangingPassword && (
         <>
           <p>이름: {userData.mname}</p>
@@ -236,21 +242,21 @@ function MyPage() {
             />
           </div>
           <div>
-            <label htmlFor="detailaddress">상세주소</label>
-            <input
-              type="text"
-              id="detailaddress"
-              value={userData.detailAddress}
-              onChange={(e) => handleChange("detailAddress", e.target.value)}
-            />
-          </div>
-          <div>
             <label htmlFor="address">주소</label>
             <input
               type="text"
               id="address"
               value={userData.address}
               onChange={(e) => handleChange("address", e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="detailAddress">상세주소</label>
+            <input
+              type="text"
+              id="detailAddress"
+              value={userData.detailAddress}
+              onChange={(e) => handleChange("detailAddress", e.target.value)}
             />
           </div>
           <div>
