@@ -1,18 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// @mui
+import jwtDecode from 'jwt-decode';
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
-// mocks_
-import account from '../../../_mock/account';
+import {
+  Box,
+  Divider,
+  Typography,
+  Stack,
+  MenuItem,
+  Avatar,
+  IconButton,
+  Popover,
+} from '@mui/material';
 
-// ----------------------------------------------------------------------
+const account = {
+  displayName: '로그인해주세요',
+  
+  photoURL: '',
+};
 
-export default function AccountPopover() {
+const accessToken = localStorage.getItem('accessToken');
+
+if (accessToken) {
+  const decodedToken = jwtDecode(accessToken);
+  account.displayName = decodedToken.sub;
+ 
+}
+
+const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
+const MENU_OPTIONS = [
+  {
+    label: 'Home',
+    icon: 'eva:home-fill',
+  },
+  {
+    label: 'Mypage',
+    icon: 'eva:person-fill',
+    onClick: isLoggedIn ? '/MyPage' : '/login',
+  },
+  {
+    label: 'icon',
+    icon: 'eva:settings-2-fill',
+    onClick: <IconButton />,
+  },
+];
+
+function AccountPopover() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
-  const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -33,29 +69,13 @@ export default function AccountPopover() {
     const accessToken = localStorage.getItem('accessToken');
 
     try {
-      await axios.post('http://localhost:8082/logout', { accessToken });
+      await axios.post('/logout', { accessToken }, { withCredentials: true });
       localStorage.removeItem('accessToken');
       navigate('/login'); // Adjust the path according to your routing configuration
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
-
-  const MENU_OPTIONS = [
-    {
-      label: 'Home',
-      icon: 'eva:home-fill',
-    },
-    {
-      label: 'Profile',
-      icon: 'eva:person-fill',
-      onClick: isLoggedIn ? '/MyPage' : '/login',
-    },
-    {
-      label: 'Settings',
-      icon: 'eva:settings-2-fill',
-    },
-  ];
 
   return (
     <>
@@ -126,3 +146,5 @@ export default function AccountPopover() {
     </>
   );
 }
+
+export default AccountPopover;

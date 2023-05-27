@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class BoardController {
 
 
     @PostMapping("/board/regist")
-    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO boardDTO) {
+    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO boardDTO) throws IOException {
         return ResponseEntity.ok(service.postBoard(boardDTO));
     }
 

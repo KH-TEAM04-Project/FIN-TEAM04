@@ -22,6 +22,7 @@ public class QnaDTO {
     private String regDate;
     private String modDate;
     private String memberId; // memberId 필드 추가
+    private Long mno;
 
 
     public static QnaDTO toQnaDTO(Qna qna) {
@@ -29,11 +30,10 @@ public class QnaDTO {
         qnaDTO.setQno(qna.getQno());
         qnaDTO.setTitle(qna.getTitle());
         qnaDTO.setContent(qna.getContent());
-        qnaDTO.setWriter(qna.getWriter()); // writer 필드에 Member 객체를 설정
         qnaDTO.setSecret(qna.getSecret());
         qnaDTO.setHits(qna.getHits());
         qnaDTO.setRegDate(qna.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        qnaDTO.setMemberId(qnaDTO.getMemberId());
+        qnaDTO.setMno(qnaDTO.getMno());
 
         return qnaDTO;
     }

@@ -58,15 +58,11 @@ public class MemberService {
         // 찾는 용도의 Mno를 써야하는군..
         Long mno = memberDTO.getMno();
         String address = memberDTO.getAddress();
-        String detailAddress = memberDTO.getDetailaddress();
-
-        Member entMember = Member.dtoToEntity2(memberDTO, passwordEncoder);
-
-        String password = entMember.getPwd();
+        String detailAddress = memberDTO.getDetailAddress();
 
         Member memberorigin = memberRepository.findById(mno).get();
 
-        memberorigin.toUpdate(password, email, ph, address, detailAddress);
+        memberorigin.toUpdate(email, ph, address, detailAddress);
 
         memberRepository.save(memberorigin);
 
@@ -82,6 +78,25 @@ public class MemberService {
             System.out.println("return null");
             return null;
         }
+
+    }
+
+    public boolean changePwd(MemberReqDTO memberDTO) {
+        String resistedPwd = memberRepository.findById(memberDTO.getMno()).get().getPwd();
+        Member member = memberRepository.findById(memberDTO.getMno()).get();
+
+        if (passwordEncoder.matches(memberDTO.getPwd(), resistedPwd)) {
+            String decodedPwd = passwordEncoder.encode(memberDTO.getChangePwd());
+            member.setPwd(decodedPwd);
+            memberRepository.save(member);
+            System.out.println("적용완료");
+            return true;
+        } else {
+            System.out.println("비번틀림");
+            return false;
+        }
+
+
 
     }
 

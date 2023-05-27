@@ -1,9 +1,12 @@
 import SvgColor from '../../../components/svg-color';
 
 // ----------------------------------------------------------------------
+const token = localStorage.getItem('accessToken');
+const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+console.log(sub);
 
-const icon = (name) => (
-  <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
+const icon = (sub) => (
+  <SvgColor src={`/assets/icons/navbar/${sub}.svg`} sx={{ width: 1, height: 1 }} />
 );
 
 const navConfig = [
