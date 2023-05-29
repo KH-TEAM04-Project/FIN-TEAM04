@@ -88,42 +88,13 @@ public class QnaController {
     }
 
     // 게시글 삭제(DELETE)
-    @GetMapping("/delete/{qno}")
+    @DeleteMapping("/delete/{qno}")
     public String delete(@PathVariable("qno") Long qno) {
         System.out.println("삭제 컨트롤러 진입");
         qnaService.delete(qno);
         System.out.println("서비스에서 delete 함수 호출");
         return "/delete";
     }
-//    @PreAuthorize("isAuthenticated() and hasAuthority('ROLE_USER')")
-//    @GetMapping("/delete/{qno}")
-//    public ResponseEntity<String> delete(@PathVariable("qno") Long qno) {
-//        log.info("삭제 컨트롤러 진입");
-//        Long memberId = SecurityUtil.getCurrentMemberId();
-//        log.info("memberId : " + memberId);
-//        if (memberId == null) {
-//            return new ResponseEntity<>("로그인 후에 게시글을 삭제할 수 있습니다.", HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        // 회원의 게시글 삭제 권한을 검사하는 로직
-//        boolean isAllowedToDelete = isMemberAllowedToDeletePost(memberId, qno);
-//        if (!isAllowedToDelete) {
-//            return new ResponseEntity<>("해당 게시글을 삭제할 권한이 없습니다.", HttpStatus.FORBIDDEN);
-//        }
-//
-//        qnaService.delete(qno);
-//        return new ResponseEntity<>("게시글이 삭제되었습니다.", HttpStatus.OK);
-//    }
-//
-//    private boolean isMemberAllowedToDeletePost(Long memberId, Long qno) {
-//        //현재 로그인한 회원의 ID와 게시글의 작성자 ID를 비교하여 같을 경우에만 삭제 권한을 부여합니다.
-//        QnaDTO qnaDTO = qnaService.findById(qno);
-//        if (qnaDTO != null && qnaDTO.getMemberId() != null && qnaDTO.getMemberId().equals(memberId)) {
-//            return true;
-//        }
-//
-//        return false;
-//    }
 
     @PostMapping("/update/{qno}")
     public ResponseEntity<Long> update(@PathVariable Long qno, @RequestBody QnaDTO qnaDTO) {

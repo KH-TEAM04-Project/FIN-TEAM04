@@ -86,6 +86,7 @@ const QnaDetailPage = () => {
   const [post, setPost] = useState(null); // 게시글 상태
   const [replys, setReplys] = useState([]); // 댓글 목록 상태
   const [replyContent, setReplyContent] = useState(''); // 댓글 내용 상태
+  const [liked, setLiked] = useState(false);
 
   const getPost = () => {
     axios
@@ -169,15 +170,26 @@ const QnaDetailPage = () => {
   };
 
   const handleDelete = () => {
-    console.log("삭제하기");
+    axios
+      .delete(`/qna/delete/${qno}`)
+      .then((response) => {
+        console.log("게시글이 성공적으로 삭제되었습니다.");
+        // 게시글 삭제 후, 목록 페이지로 이동하도록 처리
+        navigate('/qna/list', { replace: true });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const handleLike = () => {
-    console.log("좋아요");
+    setLiked(true);
+    // 좋아요 관련한 추가 로직을 여기에 작성할 수 있습니다.
   };
 
   const handleUnlike = () => {
-    console.log("좋아요 취소");
+    setLiked(false);
+    // 좋아요 취소 관련한 추가 로직을 여기에 작성할 수 있습니다.
   };
 
   const handleSubmit = (event) => {
@@ -193,6 +205,7 @@ const QnaDetailPage = () => {
       .then((response) => {
         console.log('댓글 작성 성공:', response.data);
         // 댓글 목록을 다시 불러옵니다.
+        setReplyContent(''); // 작성한 댓글의 내용을 초기화
         getReplys();
       })
       .catch((error) => {
@@ -261,7 +274,7 @@ const QnaDetailPage = () => {
               <MenuItem onClick={handleEdit}>
                 수정하기
               </MenuItem>
-              <MenuItem component={Link} to={`/qna/delete/${qno}`}>
+              <MenuItem onClick={handleDelete}>
                 삭제하기
               </MenuItem>
             </Menu>
@@ -377,12 +390,15 @@ const QnaDetailPage = () => {
             />
           </Stack>
           <Stack direction="row" spacing={2} sx={{ marginTop: '32px' }}>
-            <Button variant="outlined" onClick={handleLike}>
-              <ThumbUpOffAltRoundedIcon sx={{ marginRight: '8px' }} /> 좋아요
-            </Button>
-            <Button variant="outlined" onClick={handleUnlike}>
-              좋아요 취소
-            </Button>
+            {!liked ? (
+              <Button variant="outlined" onClick={handleLike}>
+                <ThumbUpOffAltRoundedIcon sx={{ marginRight: '8px' }} /> 좋아요
+              </Button>
+            ) : (
+              <Button variant="outlined" onClick={handleUnlike}>
+                좋아요 취소
+              </Button>
+            )}
           </Stack>
           <Stack sx={{ marginTop: '32px' }}>
             <Typography variant="h5">댓글</Typography>
