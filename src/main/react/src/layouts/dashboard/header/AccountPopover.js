@@ -37,7 +37,7 @@ const MENU_OPTIONS = [
   {
     label: 'Mypage',
     icon: 'eva:person-fill',
-    onClick: isLoggedIn ? '/MyPage' : '/login',
+    onClick: isLoggedIn ? '/MyPage' : '/slogin',
   },
   {
     label: 'icon',
@@ -67,11 +67,13 @@ function AccountPopover() {
 
   const handleLogout = async () => {
     const accessToken = localStorage.getItem('accessToken');
-    console.log("아오씨발진짜");
+    console.log(accessToken)
 
     try {
-      await axios.post("/logout", { accessToken }, { withCredentials: true });
-      // localStorage.removeItem('accessToken');
+      await axios.post("/logout22", { accessToken }, { withCredentials: true })
+      .then(response => console.log(response.data));
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       navigate("/slogin"); // Adjust the path according to your routing configuration
     } catch (error) {
       console.error('Logout failed:', error);
