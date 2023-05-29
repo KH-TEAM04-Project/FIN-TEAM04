@@ -67,11 +67,12 @@ function AccountPopover() {
 
   const handleLogout = async () => {
     const accessToken = localStorage.getItem('accessToken');
+    console.log("아오씨발진짜");
 
     try {
-      await axios.post('/logout', { accessToken }, { withCredentials: true });
-      localStorage.removeItem('accessToken');
-      navigate('/login'); // Adjust the path according to your routing configuration
+      await axios.post("/logout", { accessToken }, { withCredentials: true });
+      // localStorage.removeItem('accessToken');
+      navigate("/slogin"); // Adjust the path according to your routing configuration
     } catch (error) {
       console.error('Logout failed:', error);
     }

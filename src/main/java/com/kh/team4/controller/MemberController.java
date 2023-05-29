@@ -115,6 +115,8 @@ public class MemberController {
 
     @DeleteMapping("/logout")
     public String logout(@RequestBody TokenDTO tokenDTO) {
+        System.out.println("로그아웃 컨트롤러 진입");
+
         return memberService.logout(tokenDTO);
     }
 }
