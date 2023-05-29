@@ -44,8 +44,7 @@ class ReplyServiceTest {
         ReplyDTO replyDTO = ReplyDTO.builder()
                 .rno(1L)
                 .content("This is a valid reply.")
-                .qnaQno(1L)
-                .regDate(LocalDateTime.now())
+                .qno(1L)
                 .build();
 
         Qna qna = Qna.builder()
@@ -76,8 +75,7 @@ class ReplyServiceTest {
         ReplyDTO replyDTO = ReplyDTO.builder()
                 .rno(1L)
                 .content("This is an invalid reply.")
-                .qnaQno(1L)
-                .regDate(LocalDateTime.now())
+                .qno(1L)
                 .build();
 
         when(qnaRepository.findById(1L)).thenReturn(Optional.empty());

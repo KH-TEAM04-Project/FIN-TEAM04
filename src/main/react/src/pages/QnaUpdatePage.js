@@ -82,7 +82,6 @@ const [data, setData] = useState({
   qno: "",
   title: "",
   regDate: "",
-  writerID: sub,
   content: "",
 });
 
@@ -122,7 +121,6 @@ const handleSubmit = useCallback(
       qno: data.qno,
       title: data.title,
       regDate: data.regDate,
-      writerID: data.writerID,
       content: data.content,
       mno,
     };
@@ -335,12 +333,6 @@ const handleCloseUserMenu = () => {
             defaultValue={data.regDate} onChange={handleChange}
             sx={{my: {  xs: 3, sm: 5 ,mr: 1 } }}>
             {data.regDate}
-          </TextField>
-
-          <TextField name="writer" label="작성자"
-            defaultValue={data.writer} onChange={handleChange}
-            sx={{my: {  xs: 3, sm: 5 ,mr: 1 } }}>
-            {data.writer}
           </TextField>
 
           <TextField
