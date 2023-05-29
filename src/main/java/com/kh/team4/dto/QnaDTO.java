@@ -21,7 +21,6 @@ public class QnaDTO {
     private Integer hits;
     private String regDate;
     private String modDate;
-    private String memberId; // memberId 필드 추가
     private Long mno;
 
 
