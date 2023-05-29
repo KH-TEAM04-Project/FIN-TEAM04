@@ -279,7 +279,6 @@ const QnaDetailPage = () => {
         </AppBar>
         <Container>
           <Stack sx={{ marginTop: '80px' }}>
-<<<<<<< HEAD
             <Grid container alignItems="center" sx={{ mb: 2 }}>
               <Grid item xs={2}>
                 <Typography variant="h5">제목:</Typography>
@@ -349,13 +348,6 @@ const QnaDetailPage = () => {
               defaultValue={post && post.content}
               sx={{ width: '100%', padding: '10px', borderRadius: '5px', marginTop: '20px' }}
             />
-=======
-            <Typography variant="h4">{post && post.title}</Typography>
-            <Typography variant="subtitle1" color="textSecondary">
-              {post && post.writer} | {post && post.createdTime}
-            </Typography>
-            <Typography variant="body1">{post && post.content}</Typography>
->>>>>>> 988b2c06fc5b48945b5b57758d2484dc68b81c3a
           </Stack>
           <Stack direction="row" spacing={2} sx={{ marginTop: '32px' }}>
             <Button variant="outlined" onClick={handleLike}>
