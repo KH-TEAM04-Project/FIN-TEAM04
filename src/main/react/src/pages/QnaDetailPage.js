@@ -22,7 +22,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Grid,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
@@ -279,75 +278,11 @@ const QnaDetailPage = () => {
         </AppBar>
         <Container>
           <Stack sx={{ marginTop: '80px' }}>
-            <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
-                <Typography variant="h5">제목:</Typography>
-              </Grid>
-              <Grid item xs={10}>
-                <TextField
-                  value={post && post.title}
-                  name="text"
-                  disabled
-                  sx={{
-                    width: '100%',
-                    padding: '10px',
-                    borderRadius: '5px',
-                    fontSize: '24px',
-                    fontWeight: 'bold',
-                  }}
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
-                <Typography variant="h6">작성자:</Typography>
-              </Grid>
-              <Grid item xs={10}>
-                <TextField
-                  value={post && post.writerID}
-                  color="secondary"
-                  name="text"
-                  disabled
-                  sx={{
-                    width: '100%',
-                    padding: '10px',
-                    borderRadius: '5px',
-                    fontSize: '20px',
-                  }}
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
-                <Typography variant="h6">작성일:</Typography>
-              </Grid>
-              <Grid item xs={10}>
-                <TextField
-                  value={post && post.regDate}
-                  color="secondary"
-                  name="text"
-                  disabled
-                  sx={{
-                    width: '100%',
-                    padding: '10px',
-                    borderRadius: '5px',
-                    fontSize: '20px',
-                  }}
-                />
-              </Grid>
-            </Grid>
-
-            <Typography variant="h6">내용:</Typography>
-            <TextField
-              id="outlined-multiline-static"
-              disabled
-              multiline
-              rows={10}
-              defaultValue={post && post.content}
-              sx={{ width: '100%', padding: '10px', borderRadius: '5px', marginTop: '20px' }}
-            />
+            <Typography variant="h4">{post && post.title}</Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              {post && post.writer} | {post && post.createdTime}
+            </Typography>
+            <Typography variant="body1">{post && post.content}</Typography>
           </Stack>
           <Stack direction="row" spacing={2} sx={{ marginTop: '32px' }}>
             <Button variant="outlined" onClick={handleLike}>
@@ -370,7 +305,7 @@ const QnaDetailPage = () => {
               <TableBody>
                 {replys?.map((reply) => (
                   <TableRow key={reply.rno}>
-                    <TableCell>{reply.writerID}</TableCell>
+                    <TableCell>{reply.writer}</TableCell>
                     <TableCell>{reply.content}</TableCell>
                     <TableCell>{reply.regDate}</TableCell>
                   </TableRow>
