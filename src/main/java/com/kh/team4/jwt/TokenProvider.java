@@ -30,7 +30,8 @@ public class TokenProvider {
     private static final String BEARER_TYPE = "bearer";
 
     // 토큰 만료 시간 설정
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
+    // private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 1;            //  실험용 1분
     // private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;  // 30 임의로 지정
     private final Key key;
@@ -126,7 +127,7 @@ public class TokenProvider {
         // 토큰 복호화
         Claims claims = parseClaims(accessToken); // String형태의 토큰을 claims형태로 생성
         // 클레임 : json 형태로 키-벨류의 한쌍, 등록된클레임, 공개클레임, 비공개클레임 세종류.
-
+        System.out.println("클레임? : " + claims.toString());
         if (claims.get(AUTHORITIES_KEY) == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
@@ -137,6 +138,7 @@ public class TokenProvider {
                         .map(SimpleGrantedAuthority::new)
                         // 스트림 사용해서 클래임 형태의 토큰을 정렬해서 SimpleGrantedAuthority형태의 리스트 생성(인가 있음.)
                         .collect(Collectors.toList());
+        System.out.println("권한 정보 : " + authorities.toString());
 
         UserDetails principal = new User(claims.getSubject(), "", authorities);
         // userDetails(스프링시큐리티에서 유저정보 담는 인터페이스)에 토큰에서 가져온 정보랑 인가 넣어서
