@@ -116,23 +116,10 @@ public class MemberService {
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        // TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
-
-        // id를 기준으로 mno 값 가져오기
-        // 상경 데이터 실험 -- mno 매칭 데이터 필요.
         Long midex1 = memberRepository.findByMid2(reqDto.getMid());
         System.out.println("넣은 값 확인 : midex1 = " + midex1);
         TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication, midex1);
         System.out.println("Access 토큰값 확인 " + tokenDto.getAccessToken());
-
-        // 4. RefreshToken 저장
-       /* RefreshToken refreshToken = RefreshToken.builder()
-                .key(authentication.getName())
-                .value(tokenDto.getRefreshToken())
-                .build();
-        System.out.println("refreshtoken 생성중" + refreshToken);*/
-        // refreshTokenRepository.save(refreshToken);
 
         redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenDto.getRefreshToken(), tokenDto.getTokenExpiresIn(), TimeUnit.MILLISECONDS);
         System.out.println(redisTemplate.getClientList());
@@ -150,28 +137,14 @@ public class MemberService {
         // 2. Access Token 에서 Member ID 가져오기
         Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
 
-        // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
-        /*RefreshToken refreshToken = refreshTokenRepository.findByKey(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));*/
-
         String refreshToken = redisTemplate.opsForValue().get("refreshToken" + authentication.getName());
-
-        // 4. Refresh Token 일치하는지 검사
-        /*if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
-            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
-        }*/
 
         if (!refreshToken.equals(tokenRequestDto.getRefreshToken())) {
             throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
-
         // 5. 새로운 토큰 생성
         TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
-
-        // 6. 저장소 정보 업데이트
-       /* RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
-        refreshTokenRepository.save(newRefreshToken);*/
 
         redisTemplate.opsForValue()
                 .set("RefreshToken:" + authentication.getName(), tokenDto.getRefreshToken(),
@@ -182,15 +155,17 @@ public class MemberService {
     }
 
     @Transactional
-    public String logout(TokenDTO logout){
+    public String logout(TokenDTO token){
         // 로그아웃 하고 싶은 토큰이 유효한 지 먼저 검증하기
-        if (!tokenProvider.validateToken(logout.getAccessToken())){
+        System.out.println("받은 값 확인 : " + token.getAccessToken());
+
+        if (!tokenProvider.validateToken(token.getAccessToken())){
             throw new IllegalArgumentException("로그아웃 : 유효하지 않은 토큰입니다.");
         }
 
-        // Access Token에서 User Mid을 가져온다
-        // String authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
-        Authentication authentication = tokenProvider.getAuthentication(logout.getAccessToken());
+        Authentication authentication = tokenProvider.getAuthentication(token.getAccessToken());
+
+        System.out.println("삭제할 녀석 : " + authentication.getName());
 
         // Redis에서 해당 User getName 저장된 Refresh Token 이 있는지 여부를 확인 후에 있을 경우 삭제를 한다.
         if (redisTemplate.opsForValue().get("RT:"+authentication.getName())!=null){
@@ -200,8 +175,9 @@ public class MemberService {
 
         // 해당 Access Token 유효시간을 가지고 와서 BlackList에 저장하기
 
-        Long expiration = tokenProvider.getExpiration(logout.getAccessToken()); //(tokenRequestDto.getAccessToken());
-        redisTemplate.opsForValue().set(logout.getAccessToken(),"logout",expiration,TimeUnit.MILLISECONDS);
+        Long expiration = tokenProvider.getExpiration(token.getAccessToken()); //(tokenRequestDto.getAccessToken());
+        System.out.println("유효시간 값 확인 :" + expiration);
+        redisTemplate.opsForValue().set(token.getAccessToken(),"logout",expiration,TimeUnit.MILLISECONDS);
         return "로그아웃 완료";
     }
 

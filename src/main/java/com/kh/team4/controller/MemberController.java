@@ -113,7 +113,7 @@ public class MemberController {
         sendEmailService.mailSend(dto);
     }
 
-    @DeleteMapping("/logout")
+    @PostMapping("/logout22")
     public String logout(@RequestBody TokenDTO tokenDTO) {
         System.out.println("로그아웃 컨트롤러 진입");
 

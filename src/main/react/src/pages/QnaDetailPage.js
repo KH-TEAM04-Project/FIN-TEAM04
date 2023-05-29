@@ -303,8 +303,8 @@ const QnaDetailPage = () => {
             <Avatar alt="User Avatar" src="/avatar.png" />
           </Toolbar>
         </AppBar>
-
         <Container>
+
           <Stack sx={{ marginTop: '80px' }}>
             <Grid container alignItems="center" sx={{ mb: 2 }}>
               <Grid item xs={2}>
@@ -376,10 +376,7 @@ const QnaDetailPage = () => {
               sx={{ width: '100%', padding: '10px', borderRadius: '5px', marginTop: '20px' }}
             />
           </Stack>
-
-
           <Stack direction="row" spacing={2} sx={{ marginTop: '32px' }}>
-
             <Button variant="outlined" onClick={handleLike}>
               <ThumbUpOffAltRoundedIcon sx={{ marginRight: '8px' }} /> 좋아요
             </Button>
