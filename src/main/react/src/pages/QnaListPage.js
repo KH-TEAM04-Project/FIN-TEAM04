@@ -191,10 +191,9 @@ return (
       <Table sx={{ maxWidth: 2000, overflow: 'hidden' }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>게시판</TableCell>
+            <TableCell>QnA</TableCell>
             <TableCell align="right">번호</TableCell>
             <TableCell align="right">제목</TableCell>
-            <TableCell align="right">내용</TableCell>
             <TableCell align="right">작성일</TableCell>
             <TableCell align="right">조회수</TableCell>
             <TableCell align="right">작성자</TableCell>
@@ -215,10 +214,9 @@ return (
               <TableCell align="right">
                 <Link to={`/qna/detail/${data.qno}`}>{data.title}</Link>
               </TableCell>
-              <TableCell align="right">{data.content}</TableCell>
               <TableCell align="right">{data.regDate}</TableCell>
               <TableCell align="right">{data.hits}</TableCell>
-              <TableCell align="right">{data.writer}</TableCell>
+              <TableCell align="right">{data.writerID}</TableCell>
 
 
               <TableCell align="right">
