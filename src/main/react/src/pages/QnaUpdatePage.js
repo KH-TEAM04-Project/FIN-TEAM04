@@ -314,11 +314,10 @@ const handleCloseUserMenu = () => {
       <Container  width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            게시글 수정 해보세유
+            게시글 수정
           </Typography>
-
           <Typography sx={{ color: 'text.secondary' }}>
-        무엇이든 보세유
+        제목과 내용만 수정할 수 있습니다.
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
            <TextField name="qno" label="게시글 번호"
@@ -353,7 +352,7 @@ const handleCloseUserMenu = () => {
       </Stack>
 
 
-      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
+      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>수정하기</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -363,7 +362,7 @@ const handleCloseUserMenu = () => {
         <Box sx={{ ...style, width: 500 }}>
           <h2 id="parent-modal-title">꽁 머 니</h2>
           <p id="parent-modal-description">
-            수정이 완료됐습니다람쥐.
+            수정이 완료되었습니다.
           </p>
           <LoadingButton fullWidth size="large"  variant="contained" onClick={handleClick}>
        등록

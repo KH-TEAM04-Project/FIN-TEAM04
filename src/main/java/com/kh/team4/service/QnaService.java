@@ -31,7 +31,7 @@ public class QnaService {
     }
 
     public void delete(Long qno) {
-        System.out.println("서비스 진입");
+        System.out.println("게시글 삭제 서비스 진입");
         qnaRepository.deleteById(qno);
     }
 
