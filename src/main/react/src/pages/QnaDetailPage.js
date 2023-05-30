@@ -23,12 +23,17 @@ import {
   TableRow,
   TableCell,
   Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
 import styled from 'styled-components'; // styled-components 추가
+import DeleteIcon from '@mui/icons-material/Delete';
 // ----------------------------------------------------------------------
 
 const StyledContent2 = styled('div')(({ theme }) => ({
@@ -161,6 +166,7 @@ const QnaDetailPage = () => {
       axios.put(`/qna/update/${qno}`, data)
         .then((response) => {
           console.log("게시글이 성공적으로 수정되었습니다.");
+          alert("수정이 완료되었습니다.");
           // 수정된 게시글 정보로 상태 업데이트
           setPost(response.data.qnaDTO);
         })
@@ -174,6 +180,7 @@ const QnaDetailPage = () => {
       .delete(`/qna/delete/${qno}`)
       .then((response) => {
         console.log("게시글이 성공적으로 삭제되었습니다.");
+        alert("게시글이 삭제되었습니다.");
         // 게시글 삭제 후, 목록 페이지로 이동하도록 처리
         navigate('/qna/list', { replace: true });
       })
@@ -184,13 +191,36 @@ const QnaDetailPage = () => {
 
   const handleLike = () => {
     setLiked(true);
-    // 좋아요 관련한 추가 로직을 여기에 작성할 수 있습니다.
+    // 좋아요 관련한 추가 로직
   };
 
   const handleUnlike = () => {
     setLiked(false);
-    // 좋아요 취소 관련한 추가 로직을 여기에 작성할 수 있습니다.
+    // 좋아요 취소 관련한 추가 로직
   };
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // 삭제 다이얼로그 열림/닫힘 상태
+  // 삭제 다이얼로그 열기
+  const handleOpenDeleteDialog = () => {
+    setOpenDeleteDialog(true);
+  };
+  // 삭제 다이얼로그 닫기
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+  // 댓글 삭제 함수
+  const handleDeleteReply = (rno) => {
+    axios
+      .delete(`/qna/replys/${qno}/${rno}`)
+      .then((response) => {
+        console.log('댓글이 성공적으로 삭제되었습니다.');
+        alert('댓글이 삭제되었습니다.');
+        getReplys();
+      })
+      .catch((error) => {
+        console.error('댓글 삭제 실패:', error);
+      });
+    };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -204,6 +234,7 @@ const QnaDetailPage = () => {
       .post(`/qna/replys/${qno}`, replyData)
       .then((response) => {
         console.log('댓글 작성 성공:', response.data);
+        alert("댓글이 작성되었습니다.");
         // 댓글 목록을 다시 불러옵니다.
         setReplyContent(''); // 작성한 댓글의 내용을 초기화
         getReplys();
@@ -400,28 +431,7 @@ const QnaDetailPage = () => {
               </Button>
             )}
           </Stack>
-          <Stack sx={{ marginTop: '32px' }}>
-            <Typography variant="h5">댓글</Typography>
-            <Table sx={{ marginTop: '16px' }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>작성자</TableCell>
-                  <TableCell>내용</TableCell>
-                  <TableCell>작성일시</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {replys?.map((reply) => (
-                  <TableRow key={reply.rno}>
-                    <TableCell>{reply.writerID}</TableCell>
-                    <TableCell>{reply.content}</TableCell>
-                    <TableCell>{reply.regDate}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Stack>
-          <Stack sx={{ marginTop: '32px' }}>
+            <Stack sx={{ marginTop: '32px' }}>
             <Typography variant="h5">댓글 작성</Typography>
             <form onSubmit={handleSubmit}>
               <Stack direction="row" spacing={2}>
@@ -448,6 +458,50 @@ const QnaDetailPage = () => {
               </LoadingButton>
             </form>
           </Stack>
+          <Stack sx={{ marginTop: '32px' }}>
+            <Typography variant="h5">댓글</Typography>
+            <Table sx={{ marginTop: '16px' }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>작성자</TableCell>
+                  <TableCell>내용</TableCell>
+                  <TableCell>작성일시</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {replys?.map((reply) => (
+                  <TableRow key={reply.rno}>
+                    <TableCell>{reply.writerID}</TableCell>
+                    <TableCell>{reply.content}</TableCell>
+                    <TableCell>{reply.regDate}</TableCell>
+                    <TableCell>
+                      <IconButton color="error" onClick={() => handleOpenDeleteDialog(reply.rno)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Stack>
+          <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+            <DialogTitle>댓글 삭제</DialogTitle>
+            <DialogContent>
+              <Typography variant="body1">댓글을 삭제하시겠습니까?</Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDeleteDialog}>취소</Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  handleCloseDeleteDialog();
+                }}
+              >
+                삭제
+              </Button>
+            </DialogActions>
+          </Dialog>
+
         </Container>
       </div>
     </div>
