@@ -165,7 +165,7 @@ public class MemberService {
 
         Authentication authentication = tokenProvider.getAuthentication(token.getAccessToken());
 
-        System.out.println("삭제할 녀석 : " + authentication.getName());
+        System.out.println("삭제할 '그'녀석 : " + authentication.getName());
 
         // Redis에서 해당 User getName 저장된 Refresh Token 이 있는지 여부를 확인 후에 있을 경우 삭제를 한다.
         if (redisTemplate.opsForValue().get("RT:"+authentication.getName())!=null){

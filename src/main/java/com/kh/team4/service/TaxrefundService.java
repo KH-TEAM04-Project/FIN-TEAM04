@@ -13,7 +13,7 @@ public class TaxrefundService {
 
     public TaxrefundDTO detail(Long mno) {
         TaxrefundDTO dto = TaxrefundDTO.entityToDTO(repository.findByMno(mno));
-        System.out.println("마이페이지로 보낼 값 (3가지만 선정) : " + dto.toString());
+        System.out.println("연말정산 페이지 들어가여: " + dto.toString());
         return dto;
     }
 }

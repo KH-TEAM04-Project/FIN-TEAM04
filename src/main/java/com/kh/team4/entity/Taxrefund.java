@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -37,6 +38,8 @@ public class Taxrefund {
 
     @Column
     private String year; //연도
+
+    @Column(columnDefinition = "0")
     private Long lifeinsurance; //건강보험
     private Long npension; //국민연금
     private Long insurance; //보험료
