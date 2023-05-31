@@ -43,6 +43,12 @@ const navConfig = [
     // isLogin 변수에 따라 메뉴 표시 여부 결정
     isLogin: !localStorage.getItem('accessToken'), // 토큰이 없는 경우에만 표시
   },
+  {
+    title: 'tax',
+    path: '/tax',
+    icon: icon('ic_tax'),
+    
+  },
 ].filter((item) => {
   // 로그인 상태에 따라 'Login' 메뉴 필터링
   return !(item.title === 'login' && !item.isLogin);

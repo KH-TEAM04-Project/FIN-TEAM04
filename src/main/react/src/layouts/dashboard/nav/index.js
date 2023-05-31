@@ -68,8 +68,8 @@ export default function Nav({ openNav, onCloseNav }) {
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                이거 굳이 필요한가 ?
-                여기삭제하고넣을거 추천좀{account.role}
+                
+                {account.role}
               </Typography>
             </Box>
           </StyledAccount>

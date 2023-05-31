@@ -314,16 +314,7 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
         ><TableCell >{data.content}</TableCell>}</TextField>
 
 
-{/*            {data.fileAttached === 1 && (
-                <tr>
-                    <th>image</th>
-                    {data.storedFileName.map((fileName) => (
-                        <td key={fileName}>
-                            <img src={`/upload/${fileName}`} alt="" />
-                        </td>
-                    ))}
-                </tr>
-            )}*/}
+
 
 
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
