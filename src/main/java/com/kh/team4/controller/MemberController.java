@@ -74,6 +74,13 @@ public class MemberController {
         return ResponseEntity.ok(memberService.reissue(reissue));
     }
 
+/* 미리 생성
+    @PostMapping("/reissue")
+    public ResponseEntity<TokenDTO> reissue(@RequestHeader("Authorization") String AccessToken) {
+        return ResponseEntity.ok(memberService.reissue(AccessToken);
+    }*/
+    
+
     @PostMapping("/sLogin")
     public ResponseEntity<TokenDTO> login(MemberReqDTO requestDto) { // RequestBody사용시 에러뜸.
         System.out.println("컨트롤러에 집입하였습니다. " + requestDto.toString());

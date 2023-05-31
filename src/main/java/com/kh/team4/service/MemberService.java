@@ -12,10 +12,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+import org.springframework.util.StringUtils;
 import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -128,26 +128,42 @@ public class MemberService {
     }
 
     @Transactional
-    public TokenDTO reissue(TokenDTO tokenRequestDto) {
+    public TokenDTO reissue(TokenDTO token) {
+// 미리만든 생성자
+// public TokenDTO reissue(String Token) {  아래쪽 쓰는것들도 다 바꿔야 함.
         // 1. Refresh Token 검증
-        if (!tokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
+        if (!tokenProvider.validateToken(token.getRefreshToken())) {
+            // 근데 RefreshToken 의 경우 백쪽에서만 저장하는거 아닌가요?
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
         }
 
         // 2. Access Token 에서 Member ID 가져오기
-        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
+        Authentication authentication = tokenProvider.getAuthentication(token.getAccessToken());
+    
+        // ... "RT"라고 써야지 소연아
+        String refreshToken = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
-        String refreshToken = redisTemplate.opsForValue().get("refreshToken" + authentication.getName());
-
-        if (!refreshToken.equals(tokenRequestDto.getRefreshToken())) {
+        if (!refreshToken.equals(token.getRefreshToken())) {
             throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+        }
+
+        // 만료된 값을 사용하는 코드를 짜 보았다.
+        // 블랙리스트 기능을 사용했다고.. 볼수있나?
+        // Refresh Token 을 대체하는 Access 토큰 : logout 사용처가 발견되면 해당 코드는 삭제할 것.
+        String accessToken = token.getAccessToken();
+        String rediskey = redisTemplate.opsForValue().get(accessToken);
+        if(StringUtils.hasText(rediskey)) {
+            // redisTemplate.delete(rediskey);
+            // 두 명 이상의 해커가 탈취했을 경우 한놈은 막지만, 삭제하면 다른 한놈은 못막기에
+            // 삭제하지 않고 여전히 유지시키는가 보다.
+            throw new RuntimeException("해킹하지마라 숨지고싶지 않으면");
         }
 
         // 5. 새로운 토큰 생성
         TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
 
         redisTemplate.opsForValue()
-                .set("RefreshToken:" + authentication.getName(), tokenDto.getRefreshToken(),
+                .set("RT:" + authentication.getName(), tokenDto.getRefreshToken(),
                         tokenDto.getTokenExpiresIn(), TimeUnit.MILLISECONDS);
 
         // 토큰 발급
@@ -174,7 +190,8 @@ public class MemberService {
         }
 
         // 해당 Access Token 유효시간을 가지고 와서 BlackList에 저장하기
-
+        // 블랙 리스트에 mno 값을 추가하면 로그인 했을 때 기존의 logout 값을 레디스에서 삭제할 수 있을거같은데...
+        // 굳이 안하더라도 새벽 4시쯤 매일 서버업뎃한답시고 레디스서버를 조져버리면 해결될 일이기도 하다.
         Long expiration = tokenProvider.getExpiration(token.getAccessToken()); //(tokenRequestDto.getAccessToken());
         System.out.println("유효시간 값 확인 :" + expiration);
         redisTemplate.opsForValue().set(token.getAccessToken(),"logout",expiration,TimeUnit.MILLISECONDS);

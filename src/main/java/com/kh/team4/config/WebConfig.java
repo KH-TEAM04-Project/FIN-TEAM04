@@ -16,6 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations(savePath);
     }
 
+    // 써야할까? Http Header안에 인가정보 넣으면 에러날지도... 추후에 확인 후 삭제 or 유지하도록 설정할 것
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
