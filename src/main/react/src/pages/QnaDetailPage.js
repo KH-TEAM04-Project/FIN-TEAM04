@@ -224,10 +224,10 @@ const QnaDetailPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     // replyContent 값을 서버로 전송하고, 성공적으로 작성된 댓글을 화면에 추가하는 로직을 구현해야 합니다.
     const replyData = {
       content: replyContent,
+      mno,
     };
 
     axios

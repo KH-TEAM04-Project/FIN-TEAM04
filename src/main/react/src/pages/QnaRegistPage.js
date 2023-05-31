@@ -317,11 +317,11 @@ const handleSubmit = (e) => {
       <Container width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
-            QnA 작성하세유
+            게시글을 작성해주세요.
           </Typography>
       
           <Typography sx={{ color: 'text.secondary' }}>
-        무엇이든 물어보세유 
+        무엇이든 물어보세요.
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
          {/* 여기서 부터 내용 */}
