@@ -63,7 +63,7 @@ public class ReplyController {
         System.out.println("삭제 컨트롤러 진입");
         qnaService.delete(rno);
         System.out.println("서비스에서 delete 함수 호출");
-        return "/delete";
+        return "/qna/list";
     }
 
 

@@ -36,13 +36,19 @@ public class Reply extends Base {
     @JoinColumn(name = "qna_qno")
     private Qna qna;
 
-    public static Reply toSaveEntity(ReplyDTO replyDTO, Qna writer) {
-        Qna qna = Qna.builder().qno(replyDTO.getQno()).build();
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "member_mno")
+    private Member member;
+
+    public static Reply toSaveEntity(ReplyDTO replyDTO, Qna qna) {
+        Member member = Member.builder().mno(replyDTO.getMno()).build();
 
         Reply reply = Reply.builder()
                 .content(replyDTO.getContent())
                 .qna(qna)
+                .member(member)
                 .build();
+
         return reply;
 
     }
