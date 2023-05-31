@@ -1,0 +1,25 @@
+/* TaxForm.css */
+.tax-form__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .tax-form__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+  
+  /* 간단한 스타일링을 적용한 테이블 */
+  table {
+    border-collapse: collapse;
+  }
+  table, th, td {
+    border: 1px solid black;
+  }
+  th, td {
+    padding: 0.25rem 0.5rem;
+  }
+  

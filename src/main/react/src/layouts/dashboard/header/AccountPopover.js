@@ -16,7 +16,7 @@ import {
 
 const account = {
   displayName: '로그인해주세요',
-  
+  onClick: '/login',
   photoURL: '',
 };
 
@@ -60,7 +60,11 @@ function AccountPopover() {
 
   const handleOptionClick = (option) => {
     if (option.onClick) {
-      navigate(option.onClick);
+      if (option.onClick === '/login') {
+        navigate(option.onClick);
+      } else {
+        // Handle other option clicks here
+      }
     }
     handleClose();
   };
@@ -124,6 +128,7 @@ function AccountPopover() {
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
             {account.displayName}
+            
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {account.email}
