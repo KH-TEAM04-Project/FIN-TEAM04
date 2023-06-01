@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +41,9 @@ public class BoardController {
 
 
     @PostMapping("/board/regist")
-    public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO boardDTO) throws IOException {
+    public ResponseEntity<BoardDTO> createArticle(@ModelAttribute BoardDTO boardDTO) throws IOException {
+        log.info("게시글 작성 컨트롤러 진입");
+        log.info("boardDTO 값 : " + boardDTO);
         return ResponseEntity.ok(service.postBoard(boardDTO));
     }
 

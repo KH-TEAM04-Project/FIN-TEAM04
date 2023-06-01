@@ -1,10 +1,8 @@
 
 package com.kh.team4.service;
 
-import com.kh.team4.config.SecurityUtil;
 import com.kh.team4.dto.BoardDTO;
 
-import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.entity.*;
 
 import com.kh.team4.repository.BoardRepository;
@@ -13,8 +11,6 @@ import com.kh.team4.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,8 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static com.kh.team4.entity.Board.dtoToEntity;
 
 
 @Service
@@ -128,14 +122,18 @@ public class BoardService {
     @Transactional
     public BoardDTO postBoard(BoardDTO boardDTO) throws IOException {
         // 파일 첨부 여부에 따라 로직 분리
-        if (boardDTO.getBoardFile().isEmpty()) {
+        if (boardDTO.getBoardFile() == null ||boardDTO.getBoardFile().isEmpty()) {
             // 첨부 파일이 없는 경우
-            Board board = dtoToEntity(boardDTO);
+            log.info("첨부파일이 없는 경우 서비스 진입");
+            Board board = Board.dtoToEntity(boardDTO);
+            log.info("첨부파일 없는 경우 boardDTO 값 : " + boardDTO);
             repository.save(board);
             return BoardDTO.of(board, true);
         } else {
+            log.info("첨부 파일이 있는 경우 서비스 진입");
             // 6. board_table에 해당 데이터 save 처리 //다중 파일일 경우 먼저 부모 객체 가쟈옴
             Board board = Board.toSaveFile(boardDTO);
+            log.info("첨부파일 있는 경우 boardDTO 값 : " + boardDTO);
             Long saveBno = repository.save(board).getBno(); //board저장 후 bno값 가져옴
             Board board1 = repository.findById(saveBno).get(); //bno값 있는 board
 

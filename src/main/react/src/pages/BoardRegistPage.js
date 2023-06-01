@@ -25,8 +25,6 @@ const style13 = {
    px: 10,
    pb: 15
 };
- 
-
 
 const StyledContent2 = styled('div')(({ theme }) => ({
   maxWidth: 1000,
@@ -55,77 +53,99 @@ const style = {
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-
-
-
 export default function BoardRegist() {
+  const token = localStorage.getItem('accessToken');
+  const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+  const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
+  const navigate = useNavigate();
+  console.log(mno);
 
-const token = localStorage.getItem('accessToken');
-const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
-const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
-const navigate = useNavigate();
-console.log(mno);
- useEffect(() => {
+  useEffect(() => {
     if (token) {
       // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
-
       // payload에서 MNO 값을 추출하여 상태에 저장
       setMno(decodedToken.mno);
       console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
-
       const mno = decodedToken.mno;
       // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
       axios.post("/MyPageCont", {mno} )
-
-
-      .then(response => {
+        .then(response => {
         // 사용자 데이터를 성공적으로 가져온 경우
         const userData = response.data;
- })
-      .catch(error => {
+        })
+        .catch(error => {
         // API 호출 중 에러 발생한 경우
         console.error(error);
-      });
+        });
     }
   }, [token]);
 
 const [data, setData] = useState({
-  title: "",
-  RegDate: "",
-  writerID: sub,
-  hits: 0,
-  content: "",
-  mno // 축약 구문으로 변경
-});
+    title: "",
+    writerID: sub,
+    hits: 0,
+    content: "",
+    mno,
+    boardFiles: [] // Changed from 'boardFile' to 'boardFiles'
+  });
+
+const [files, setFiles] = useState([]);
+const [open, setOpen] = React.useState(false);
+const [open1, setOpen1] = React.useState(false);
 
 const handleChange = (e) => {
-  const { name, value } = e.target;
-  setData((prevData) => ({
-    ...prevData,
-    [name]: value
-  }));
-};
+    const { name, value } = e.target;
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+    // 첨부 파일이 선택되면 boardFile 업데이트
+    if (name === "boardFiles") {
+          setFiles(e.target.files); // Update the selected files
+        }
+      };
+
+  const changeFileHandler = (event) => {
+    setFiles(event.target.files[0]);
+  };
+
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
 const handleSubmit = (e) => {
   e.preventDefault();
-  const userData = {
-    title: data.title,
-    RegDate: data.RegDate,
-    writerID: data.writerID,
-    hits: data.hits,
-    content: data.content,
-    mno // 축약 구문으로 변경
-  };
+
+  const formData = new FormData();
+  formData.append("title", data.title);
+  formData.append("RegDate", data.RegDate);
+  formData.append("writerID", data.writerID);
+  formData.append("hits", data.hits);
+  formData.append("content", data.content);
+  formData.append("mno", mno);
+
+  if (files) {
+    formData.append("boardFiles", files);
+  }
+
+  data.boardFiles.forEach((files) => {
+    formData.append("boardFiles", files);
+  });
+
   axios
-    .post("/board/regist", userData)
+    .post("/board/regist", formData)
     .then((response) => {
       console.log(response.status, response.data);
+      navigate("/board/list");
     })
     .catch((error) => {
       if (error.response) {
         console.log("이거 에러인걸?");
-        console.log(userData);
+        console.log(formData); // Modified this line
       } else if (error.request) {
         console.log("network error");
       } else {
@@ -133,73 +153,39 @@ const handleSubmit = (e) => {
       }
     });
 };
-  
 // 여기까지 axios
-
- 
-  
-
   const handleClick = () => {
     navigate('/board/list', { replace: true });
-  };
-  const [open, setOpen] = React.useState(false);
-   const [open1, setOpen1] = React.useState(false);
-
-  const handleClose1 = () => {
-    setOpen1(false);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const handleOpen1 = () => {
+    setOpen1(true);
+  };
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-       const handleOpen1 = () => {
-             setOpen1(true);
-             };
- 
-       const handleOpen = () => {
-             setOpen(true);
-             };
-
-
- const [imageSrc, setImageSrc] = useState('');
-
- const encodeFileToBase64 = (fileBlob) => {
-     const reader = new FileReader();
-     reader.readAsDataURL(fileBlob);
-     return new Promise((resolve) => {
-       reader.onload = () => {
-         setImageSrc(reader.result);
-         resolve();
-       };
-     });
-   };
-
+  const [imageSrc, setImageSrc] = useState('');
   return (
     <>
       <Helmet>
         <title> 게시글 작성| 꽁머니 </title>
       </Helmet>
-   
       <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -221,7 +207,6 @@ const handleSubmit = (e) => {
           >
             꽁 머 니
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -321,91 +306,58 @@ const handleSubmit = (e) => {
         </Toolbar>
       </Container>
     </AppBar>
-       <form onSubmit={handleSubmit}>       
+       <form onSubmit={handleSubmit}>
       <Container width="10000" >
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
           <Typography variant="h5" paragraph  defaultValue="Normal">
             게시글 작성하세유
           </Typography>
-                
           <Typography sx={{ color: 'text.secondary' }}>
-        무엇이든 물어보세유 
+        무엇이든 물어보세유
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-            
-       
-
           {/* 여기서 부터 내용 */}
-                
-             
-          <TextField    name="title" label="제목" 
+          <TextField    name="title" label="제목"
           value={data.title}
           onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
-                  
-          
-
-
-
-          
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>
 
           <TextField    name="writerID" label="작성자"
 
           value={data.writerID}
           onChange={handleChange}
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
+          sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>
 
-                
-            
-           
-        <TextField    name="content" label="내용" 
+        <TextField    name="content" label="내용"
           value={data.content}
           multiline
           rows={10}
           onChange={handleChange}
           defaultValue=" 글 작성"
          />
-
-        
-          <div>
-            <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
-          <Button variant="contained" component="label">
-              Upload File &nbsp;<AddAPhotoIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
-            <input hidden accept="image/*" multiple type="file"
-            onChange={(e) => {encodeFileToBase64(e.target.files[0]); }}
-            />
-          </Button>
-
-
-            <Button variant="contained"  component="label" onClick={handleOpen1}
-            type="file" >
-            이미지 미리보기 &nbsp; <CollectionsIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}}/></Button>
-                <Modal
-                  open={open1}
-                  onClose={handleClose1}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style13}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                  &nbsp; &nbsp; &nbsp; 미리 보기 에유
-                    </Typography>
-                   <Container
-                   style={{ width: '200%', height: '150px' }}
-                   className="preview"> {imageSrc && <img src={imageSrc} alt="preview-img"
-                   style={{ width: '400px', height: '150%' }}/>}
-                   </Container>
-                  </Box>
-                </Modal>
-                   </Stack>
-          </div>
-
-
-
-
-
-
-
+                          <Box>
+                            <input
+                              accept="image/*"
+                              style={{ display: 'none' }}
+                              id="icon-button-file"
+                              type="file"
+                              onChange={changeFileHandler}
+                            />
+                            <label htmlFor="icon-button-file">
+                              <Button
+                                variant="contained"
+                                component="span"
+                                startIcon={<AddAPhotoIcon />}
+                              >
+                                첨부파일
+                              </Button>
+                            </label>
+                            {files && (
+                              <Typography variant="body2" sx={{ mt: 1 }}>
+                                파일 선택됨: {files.name}
+                              </Typography>
+                            )}
+                          </Box>
           <div>
           <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
             <Modal
@@ -425,10 +377,9 @@ const handleSubmit = (e) => {
               </Box>
             </Modal>
           </div>
-  
             </StyledContent2>
             </Container>
-            </form>      
+            </form>
     </>
   ) ;
 }
