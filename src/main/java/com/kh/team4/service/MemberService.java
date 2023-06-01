@@ -28,6 +28,9 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final RedisUtil redisUtil;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManagerBuilder managerBuilder;
+    private final TokenProvider tokenProvider;
+    private final RedisTemplate<String, String> redisTemplate;
 
     // 회원가입 기능 구현
     public String regist(MemberReqDTO memberDTO) {
@@ -95,16 +98,7 @@ public class MemberService {
             System.out.println("비번틀림");
             return false;
         }
-
-
-
     }
-
-
-    private final AuthenticationManagerBuilder managerBuilder;
-    private final TokenProvider tokenProvider;
-    private final RedisTemplate<String, String> redisTemplate;
-
 
     @Transactional
     public TokenDTO login(MemberReqDTO reqDto) {
@@ -152,6 +146,7 @@ public class MemberService {
         // Refresh Token 을 대체하는 Access 토큰 : logout 사용처가 발견되면 해당 코드는 삭제할 것.
         String accessToken = token.getAccessToken();
         String rediskey = redisTemplate.opsForValue().get(accessToken);
+
         if(StringUtils.hasText(rediskey)) {
             // redisTemplate.delete(rediskey);
             // 두 명 이상의 해커가 탈취했을 경우 한놈은 막지만, 삭제하면 다른 한놈은 못막기에
@@ -160,7 +155,8 @@ public class MemberService {
         }
 
         // 5. 새로운 토큰 생성
-        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
+        Long mno = memberRepository.findByMid2(authentication.getName());
+        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication, mno);
 
         redisTemplate.opsForValue()
                 .set("RT:" + authentication.getName(), tokenDto.getRefreshToken(),

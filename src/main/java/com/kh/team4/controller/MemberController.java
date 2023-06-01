@@ -34,6 +34,8 @@ public class MemberController {
     }
 
     @PostMapping("/intoMyPage") // 마이페이지 진입 전 확인 -- 이건 get 으로 변경해야 하지 않나(조회니까)
+    // 필터 적용 필요
+    // req로 전환 필요
     public boolean intoCheck(@RequestBody MemberReqDTO memberDTO) {
         System.out.println("마이페이지 진입 시 패스워드 확인");
         Long mno = memberDTO.getMno();

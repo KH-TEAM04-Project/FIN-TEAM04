@@ -45,44 +45,6 @@ public class TokenProvider {
         this.redisUtil = redisUtil;
     }
 
-
-    // 토큰 생성
-    public TokenDTO generateTokenDto(Authentication authentication) { // 매개변수 받아서 String으로 변환
-        // 권한 가져오기
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
-        long now = (new Date()).getTime();
-
-        Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 만료시간 설정
-
-        System.out.println(tokenExpiresIn);
-
-        String accessToken = Jwts.builder() // 토큰dto에 정보 담아
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .setExpiration(tokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
-
-
-        // Refresh Token 생성
-        String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
-
-        System.out.println("토큰생성 ing~");
-        return TokenDTO.builder()
-                .grantType(BEARER_TYPE)
-                .accessToken(accessToken)
-                .tokenExpiresIn(tokenExpiresIn.getTime())
-                .refreshToken(refreshToken)
-                .build();
-    }
-
-
     public TokenDTO generateTokenDto(Authentication authentication, Long mno) { // 매개변수 받아서 String으로 변환
         // 권한 가져오기
         String authorities = authentication.getAuthorities().stream()

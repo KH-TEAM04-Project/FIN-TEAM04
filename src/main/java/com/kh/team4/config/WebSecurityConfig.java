@@ -37,7 +37,8 @@ public class WebSecurityConfig {
         http
                 .httpBasic().disable()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
                 .exceptionHandling()
@@ -53,6 +54,12 @@ public class WebSecurityConfig {
                 // 권한테스트
                 .antMatchers("/mypage").hasRole("USER")
                 .anyRequest().authenticated()
+                
+                // 인증 , 인가 테스트
+                /*.and()
+                .authorizeRequests()
+                .antMatchers("/풀어버릴 놈들 지정 후 대입/").permitAll()
+                .anyRequest().authenticated()*/
 
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider, redisTemplate));
