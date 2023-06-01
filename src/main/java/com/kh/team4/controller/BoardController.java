@@ -41,6 +41,8 @@ public class BoardController {
 
     @PostMapping("/board/regist")
     public ResponseEntity<BoardDTO> createArticle(@RequestBody BoardDTO boardDTO) throws IOException {
+        System.out.println("작성 컨트롤러 진입");
+        System.out.println("받은 값 확인 : " + boardDTO.toString());
         return ResponseEntity.ok(service.postBoard(boardDTO));
     }
 

@@ -55,9 +55,6 @@ const style = {
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-
-
-
 export default function BoardRegist() {
 
 const token = localStorage.getItem('accessToken');
@@ -77,7 +74,6 @@ console.log(mno);
       const mno = decodedToken.mno;
       // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
       axios.post("/MyPageCont", {mno} )
-
 
       .then(response => {
         // 사용자 데이터를 성공적으로 가져온 경우
@@ -115,6 +111,7 @@ const handleSubmit = (e) => {
     writerID: data.writerID,
     hits: data.hits,
     content: data.content,
+      files: data.files,
     mno // 축약 구문으로 변경
   };
   axios
@@ -135,9 +132,6 @@ const handleSubmit = (e) => {
 };
   
 // 여기까지 axios
-
- 
-  
 
   const handleClick = () => {
     navigate('/board/list', { replace: true });
@@ -170,8 +164,6 @@ const handleSubmit = (e) => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-
        const handleOpen1 = () => {
              setOpen1(true);
              };
@@ -179,7 +171,6 @@ const handleSubmit = (e) => {
        const handleOpen = () => {
              setOpen(true);
              };
-
 
  const [imageSrc, setImageSrc] = useState('');
 
@@ -332,33 +323,19 @@ const handleSubmit = (e) => {
         무엇이든 물어보세유 
           </Typography>
           <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
-            
-       
-
           {/* 여기서 부터 내용 */}
-                
-             
-          <TextField    name="title" label="제목" 
+          <TextField    name="title" label="제목"
           value={data.title}
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>  
                   
-          
-
-
-
-          
-
           <TextField    name="writerID" label="작성자"
 
           value={data.writerID}
           onChange={handleChange}
           sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>    
 
-                
-            
-           
-        <TextField    name="content" label="내용" 
+        <TextField    name="content" label="내용"
           value={data.content}
           multiline
           rows={10}
@@ -366,7 +343,6 @@ const handleSubmit = (e) => {
           defaultValue=" 글 작성"
          />
 
-        
           <div>
             <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
           <Button variant="contained" component="label">
@@ -375,7 +351,6 @@ const handleSubmit = (e) => {
             onChange={(e) => {encodeFileToBase64(e.target.files[0]); }}
             />
           </Button>
-
 
             <Button variant="contained"  component="label" onClick={handleOpen1}
             type="file" >
@@ -399,13 +374,6 @@ const handleSubmit = (e) => {
                 </Modal>
                    </Stack>
           </div>
-
-
-
-
-
-
-
           <div>
           <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
             <Modal
@@ -425,7 +393,6 @@ const handleSubmit = (e) => {
               </Box>
             </Modal>
           </div>
-  
             </StyledContent2>
             </Container>
             </form>      
