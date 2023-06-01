@@ -18,11 +18,11 @@ const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: 'eva:home-fill',
-  },
+ },
   {
     label: 'Mypage',
     icon: 'eva:person-fill',
-   
+    onClick: '/mypage' // 마이페이지 경로를 추가합니다.
   },
   {
     label: 'icon',
@@ -51,6 +51,8 @@ function AccountPopover() {
   const handleOptionClick = (option) => {
     if (option.onClick) {
       if (option.onClick === '/login') {
+        navigate(option.onClick);
+      } else if (option.onClick === '/mypage') { // 마이페이지로 이동하도록 추가합니다.
         navigate(option.onClick);
       } else {
         // Handle other option clicks here

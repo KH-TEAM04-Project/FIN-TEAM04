@@ -63,3 +63,10 @@ spring:
   # mybatis 연동 설정
   mybatis:
     mapper-locations: classpath:mapper/*.xml
+
+
+  # 이미지 파일 연동설정
+  file:
+    upload-dir: src/main/resources/static/images/profiles
+
+

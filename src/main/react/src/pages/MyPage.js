@@ -29,31 +29,36 @@ function MyPage() {
   // 로컬 스토리지에서 토큰 값을 가져옴
   const token = localStorage.getItem('accessToken');
 
-  useEffect(() => {
-    if (token) {
-      // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+useEffect(() => {
+  if (token) {
+    // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
-      // payload에서 MNO 값을 추출하여 상태에 저장
-      setMno(decodedToken.mno);
-      console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
+    // payload에서 MNO 값을 추출하여 상태에 저장
+    setMno(decodedToken.mno);
+    console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
 
-      const mno = decodedToken.mno;
-      // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
-      axios.post("/MyPageCont", { mno })
-        .then(response => {
-          // 사용자 데이터를 성공적으로 가져온 경우
-          const userData = response.data;
+    const mno = decodedToken.mno;
+    // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
+    axios.post("/MyPageCont", { mno }, {
+        headers: {
+          // http 헤더의 auth 부분에 accessToken 값 설정
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        // 사용자 데이터를 성공적으로 가져온 경우
+        const userData = response.data;
 
-          // 사용자 정보를 상태에 설정
-          setUserData(userData);
-        })
-        .catch(error => {
-          // API 호출 중 에러 발생한 경우
-          console.error(error);
-        });
-    }
-  }, [token]);
+        // 사용자 정보를 상태에 설정
+        setUserData(userData);
+      })
+      .catch(error => {
+        // API 호출 중 에러 발생한 경우
+        console.error(error);
+      });
+  }
+}, [token]);
 
   // Function to display only the first six digits of the Resident Registration Number
   const getMaskedRegNo = () => {
