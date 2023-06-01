@@ -108,3 +108,7 @@ WHERE sequence_owner = 'TEAM4'
 #### QNA 관련 오라클 명령어
 INSERT INTO QNA (QNO, TITLE, content, regdate) VALUES (QNA_SEQ.NEXTVAL, '테스트2', '테스트2', TO_DATE('12:30:30', 'HH24:MI:SS'));
 
+#### 2023.05.25 전달사항
+1. Redis를 통하여 토큰을 관리하기 때문에 깔아줄 것.
+2. https://github.com/microsoftarchive/redis/releases
+

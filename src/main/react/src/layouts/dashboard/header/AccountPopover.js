@@ -14,21 +14,6 @@ import {
   Popover,
 } from '@mui/material';
 
-const account = {
-  displayName: '로그인해주세요',
-  
-  photoURL: '',
-};
-
-const accessToken = localStorage.getItem('accessToken');
-
-if (accessToken) {
-  const decodedToken = jwtDecode(accessToken);
-  account.displayName = decodedToken.sub;
- 
-}
-
-const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
 const MENU_OPTIONS = [
   {
     label: 'Home',
@@ -37,7 +22,7 @@ const MENU_OPTIONS = [
   {
     label: 'Mypage',
     icon: 'eva:person-fill',
-    onClick: isLoggedIn ? '/MyPage' : '/login',
+   
   },
   {
     label: 'icon',
@@ -49,6 +34,11 @@ const MENU_OPTIONS = [
 function AccountPopover() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
+  const [account, setAccount] = useState({
+    displayName: '로그인해주세요',
+    onClick: '/login',
+    photoURL: '',
+  });
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -60,22 +50,40 @@ function AccountPopover() {
 
   const handleOptionClick = (option) => {
     if (option.onClick) {
-      navigate(option.onClick);
+      if (option.onClick === '/login') {
+        navigate(option.onClick);
+      } else {
+        // Handle other option clicks here
+      }
     }
     handleClose();
   };
 
   const handleLogout = async () => {
     const accessToken = localStorage.getItem('accessToken');
+    console.log(accessToken)
 
     try {
-      await axios.post('/logout', { accessToken }, { withCredentials: true });
+      await axios.post("/logout22", { accessToken }, { withCredentials: true })
+      .then(response => console.log(response.data));
       localStorage.removeItem('accessToken');
-      navigate('/login'); // Adjust the path according to your routing configuration
+      localStorage.removeItem('refreshToken');
+      navigate("/slogin"); // Adjust the path according to your routing configuration
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      const decodedToken = jwtDecode(accessToken);
+      setAccount((prevAccount) => ({
+        ...prevAccount,
+        displayName: decodedToken.sub,
+      }));
+    }
+  }, []);
 
   return (
     <>

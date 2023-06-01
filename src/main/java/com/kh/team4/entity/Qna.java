@@ -51,7 +51,7 @@ public class Qna extends Base {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_mno")
-    private Member writer;
+    private Member member;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replyList = new ArrayList<>();
@@ -65,7 +65,7 @@ public class Qna extends Base {
             .content(qnaDTO.getContent())
             .secret(qnaDTO.getSecret())
             .hits(qnaDTO.getHits())
-            .writer(member)
+            .member(member)
             .build();
 
         return qna;

@@ -1,10 +1,7 @@
-import { Helmet } from 'react-helmet-async';
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import TableCell from '@mui/material/TableCell';
-// @mui
-import { styled } from '@mui/material/styles';
 import {
   TextField,
   Typography,
@@ -24,11 +21,20 @@ import {
   TableHead,
   TableBody,
   TableRow,
+  TableCell,
+  Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
+import styled from 'styled-components'; // styled-components 추가
+import DeleteIcon from '@mui/icons-material/Delete';
+// ----------------------------------------------------------------------
 
 const StyledContent2 = styled('div')(({ theme }) => ({
   maxWidth: 1000,
@@ -41,23 +47,21 @@ const StyledContent2 = styled('div')(({ theme }) => ({
 }));
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute" ,
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   pt: 2,
   px: 4,
-  pb: 3,
+  pb: 3
 };
+// ----------------------------------------------------------------------
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
-export default function Yaya() {
+const QnaDetailPage = () => {
   const token = localStorage.getItem('accessToken');
   const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
   const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
@@ -84,13 +88,35 @@ export default function Yaya() {
   const [data, setData] = useState({ mno });
 
   const { qno } = useParams();
-  const [posts, setPosts] = useState([]);
+  const [post, setPost] = useState(null); // 게시글 상태
+  const [replys, setReplys] = useState([]); // 댓글 목록 상태
+  const [replyContent, setReplyContent] = useState(''); // 댓글 내용 상태
+  const [liked, setLiked] = useState(false);
 
-  const getPosts = () => {
+  const getPost = () => {
     axios
       .get(`/qna/detail/${qno}`)
       .then((response) => {
-        setPosts([response.data]);
+        setPost(response.data); // 게시글 업데이트
+        console.log(response.data);
+        console.log("yaya");
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log("이거 에러인걸?");
+        } else if (error.request) {
+          console.log("network error");
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
+  const getReplys = () => {
+    axios
+      .get(`/qna/replys/${qno}`)
+      .then((response) => {
+        setReplys(response.data); // 댓글 목록 업데이트
         console.log(response.data);
         console.log("yaya");
       })
@@ -106,7 +132,8 @@ export default function Yaya() {
   };
 
   useEffect(() => {
-    getPosts();
+    getPost();
+    getReplys();
   }, []);
 
   const navigate = useNavigate();
@@ -125,140 +152,115 @@ export default function Yaya() {
   };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenMenu = (event) => {
+  const handleClickMenu = (event) => {
     setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
 
-  const handleThemeToggle = () => {
-    // TODO: Toggle theme logic
+  const handleEdit = () => {
+    // 게시글 수정 기능 구현
+      axios.put(`/qna/update/${qno}`, data)
+        .then((response) => {
+          console.log("게시글이 성공적으로 수정되었습니다.");
+          alert("수정이 완료되었습니다.");
+          // 수정된 게시글 정보로 상태 업데이트
+          setPost(response.data.qnaDTO);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
   };
 
-  const handleMenuClose = () => {
-    // TODO: Menu close logic
-  };
-
-  const [replys, setReplys] = useState([]);
-  const [reply, setReply] = useState({
-    title: "",
-    RegDate: "",
-    writer: "",
-    content: ""
-  });
-
-  const handleChange = ({ target }) => {
-    const { value, name } = target;
-    setReply((prevReply) => ({
-      ...prevReply,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-<Box
-  key={reply.rno}
-  sx={{
-    border: '1px solid #ccc',
-    borderRadius: '5px',
-    padding: '10px',
-    marginTop: '10px',
-  }}
->
-  <Typography variant="subtitle1" gutterBottom>
-    {reply.writer}
-  </Typography>
-  <Typography variant="body2" gutterBottom>
-    {reply.content}
-  </Typography>
-</Box>
-
-    const userReply = {
-      rno: reply.rno,
-      content: reply.content,
-      qno: reply.qno
-    };
+  const handleDelete = () => {
     axios
-      .post(`/qna/detail/${qno}`, userReply)
+      .delete(`/qna/delete/${qno}`)
       .then((response) => {
-        console.log(response.status, response.replys);
-        addReply(response.data.replys.map((reply) => ({
-          rno: response.data.reply.rno || '',
-          content: response.data.reply.content,
-          qno: response.data.reply.qno || ''
-        })));
+        console.log("게시글이 성공적으로 삭제되었습니다.");
+        alert("게시글이 삭제되었습니다.");
+        // 게시글 삭제 후, 목록 페이지로 이동하도록 처리
+        navigate('/qna/list', { replace: true });
       })
       .catch((error) => {
-        if (error.response) {
-          console.log("댓글 에러 발생");
-          console.log(userReply);
-        } else if (error.request) {
-          console.log("네트워크 오류");
-        } else {
-          console.log(error);
-        }
+        console.error(error);
       });
   };
 
-  const addReply = (newReply) => {
-    setReplys((prevReplys) => [...prevReplys, newReply]);
+  const handleLike = () => {
+    setLiked(true);
+    // 좋아요 관련한 추가 로직
+  };
+
+  const handleUnlike = () => {
+    setLiked(false);
+    // 좋아요 취소 관련한 추가 로직
+  };
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // 삭제 다이얼로그 열림/닫힘 상태
+  // 삭제 다이얼로그 열기
+  const handleOpenDeleteDialog = () => {
+    setOpenDeleteDialog(true);
+  };
+  // 삭제 다이얼로그 닫기
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+  // 댓글 삭제 함수
+  const handleDeleteReply = (rno) => {
+    axios
+      .delete(`/qna/replys/${qno}/${rno}`)
+      .then((response) => {
+        console.log('댓글이 성공적으로 삭제되었습니다.');
+        alert('댓글이 삭제되었습니다.');
+        getReplys();
+      })
+      .catch((error) => {
+        console.error('댓글 삭제 실패:', error);
+      });
+    };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // replyContent 값을 서버로 전송하고, 성공적으로 작성된 댓글을 화면에 추가하는 로직을 구현해야 합니다.
+    const replyData = {
+      content: replyContent,
+      mno,
+    };
+
+    axios
+      .post(`/qna/replys/${qno}`, replyData)
+      .then((response) => {
+        console.log('댓글 작성 성공:', response.data);
+        alert("댓글이 작성되었습니다.");
+        // 댓글 목록을 다시 불러옵니다.
+        setReplyContent(''); // 작성한 댓글의 내용을 초기화
+        getReplys();
+      })
+      .catch((error) => {
+        console.error('댓글 작성 실패:', error);
+      });
   };
 
   return (
-    <>
+    <div>
       <Helmet>
-        <title>Q&A Detail</title>
+        <title>게시글 상세 | Q&A</title>
       </Helmet>
-
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Yaya
-          </Typography>
-          <Box>
-            <Tooltip title="Toggle light/dark theme">
-              <IconButton
-                size="large"
-                aria-label="toggle theme"
-                color="inherit"
-                onClick={handleThemeToggle}
-              >
-                <WbSunnyIcon />
-              </IconButton>
-            </Tooltip>
+      <div className="qna-detail">
+        <AppBar position="fixed" sx={{ zIndex: 10 }}>
+          <Toolbar>
             <IconButton
               size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-haspopup="true"
-              onClick={handleOpenMenu}
+              edge="start"
               color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={handleClickMenu}
             >
-              <Avatar
-                src="/static/images/avatar/1.jpg"
-                alt="profile"
-                sx={{ width: 32, height: 32 }}
-              />
+              <MenuIcon />
             </IconButton>
             <Menu
               anchorEl={anchorEl}
@@ -294,123 +296,216 @@ export default function Yaya() {
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting}>{setting}</MenuItem>
-              ))}
+              <MenuItem component={Link} to="/qna/list">
+                Q&A 목록
+              </MenuItem>
+              <MenuItem component={Link} to="/qna/write">
+                새로 작성하기
+              </MenuItem>
+              <MenuItem onClick={handleEdit}>
+                수정하기
+              </MenuItem>
+              <MenuItem onClick={handleDelete}>
+                삭제하기
+              </MenuItem>
             </Menu>
-          </Box>
-        </Toolbar>
-      </AppBar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Q&A 상세
+            </Typography>
+            <Tooltip title="Light / Dark" edge="end">
+              <IconButton color="inherit" onClick={handleOpen}>
+                <WbSunnyIcon />
+              </IconButton>
+            </Tooltip>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: 400,
+                  bgcolor: 'background.paper',
+                  border: '2px solid #000',
+                  boxShadow: 24,
+                  p: 4,
+                }}
+              >
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  기능 준비 중
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  이 기능은 준비 중에 있습니다.
+                </Typography>
+              </Box>
+            </Modal>
+            <Avatar alt="User Avatar" src="/avatar.png" />
+          </Toolbar>
+        </AppBar>
+        <Container>
 
-      <StyledContent2>
-        <Box sx={{ flexGrow: 1 }}>
-          <Container maxWidth="lg">
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <Typography variant="h4" component="h1" sx={{ flexGrow: 1 }}>
-                Q&A Detail
-              </Typography>
-              <Button variant="outlined" onClick={handleClick}>
-                Back
+          <Stack sx={{ marginTop: '80px' }}>
+            <Grid container alignItems="center" sx={{ mb: 2 }}>
+              <Grid item xs={2}>
+                <Typography variant="h5">제목:</Typography>
+              </Grid>
+              <Grid item xs={10}>
+                <TextField
+                  value={post && post.title}
+                  name="text"
+                  disabled
+                  sx={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                  }}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container alignItems="center" sx={{ mb: 2 }}>
+              <Grid item xs={2}>
+                <Typography variant="h6">작성자:</Typography>
+              </Grid>
+              <Grid item xs={10}>
+                <TextField
+                  value={post && post.writerID}
+                  color="secondary"
+                  name="text"
+                  disabled
+                  sx={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    fontSize: '20px',
+                  }}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container alignItems="center" sx={{ mb: 2 }}>
+              <Grid item xs={2}>
+                <Typography variant="h6">작성일:</Typography>
+              </Grid>
+              <Grid item xs={10}>
+                <TextField
+                  value={post && post.regDate}
+                  color="secondary"
+                  name="text"
+                  disabled
+                  sx={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    fontSize: '20px',
+                  }}
+                />
+              </Grid>
+            </Grid>
+
+            <Typography variant="h6">내용:</Typography>
+            <TextField
+              id="outlined-multiline-static"
+              disabled
+              multiline
+              rows={10}
+              defaultValue={post && post.content}
+              sx={{ width: '100%', padding: '10px', borderRadius: '5px', marginTop: '20px' }}
+            />
+          </Stack>
+          <Stack direction="row" spacing={2} sx={{ marginTop: '32px' }}>
+            {!liked ? (
+              <Button variant="outlined" onClick={handleLike}>
+                <ThumbUpOffAltRoundedIcon sx={{ marginRight: '8px' }} /> 좋아요
               </Button>
-            </Stack>
-
-            <Table>
+            ) : (
+              <Button variant="outlined" onClick={handleUnlike}>
+                좋아요 취소
+              </Button>
+            )}
+          </Stack>
+            <Stack sx={{ marginTop: '32px' }}>
+            <Typography variant="h5">댓글 작성</Typography>
+            <form onSubmit={handleSubmit}>
+              <Stack direction="row" spacing={2}>
+                <TextField
+                  label="댓글 내용"
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                  fullWidth
+                  required
+                  value={replyContent} // 댓글 내용 표시
+                  onChange={(event) => setReplyContent(event.target.value)} // 댓글 내용 업데이트
+                />
+              </Stack>
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                loading={false}
+                loadingPosition="start"
+                startIcon={<ThumbUpOffAltRoundedIcon />}
+                sx={{ marginTop: '16px' }}
+              >
+                작성하기
+              </LoadingButton>
+            </form>
+          </Stack>
+          <Stack sx={{ marginTop: '32px' }}>
+            <Typography variant="h5">댓글</Typography>
+            <Table sx={{ marginTop: '16px' }}>
               <TableHead>
                 <TableRow>
-                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>
-                    Title
-                  </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: 'bold' }}>
-                    Content
-                  </TableCell>
+                  <TableCell>작성자</TableCell>
+                  <TableCell>내용</TableCell>
+                  <TableCell>작성일시</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {posts.map((post) => (
-                  <TableRow key={post.qno}>
-                    <TableCell align="center">{post.title}</TableCell>
-                    <TableCell align="center">{post.content}</TableCell>
+                {replys?.map((reply) => (
+                  <TableRow key={reply.rno}>
+                    <TableCell>{reply.writerID}</TableCell>
+                    <TableCell>{reply.content}</TableCell>
+                    <TableCell>{reply.regDate}</TableCell>
+                    <TableCell>
+                      <IconButton color="error" onClick={() => handleOpenDeleteDialog(reply.rno)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
+          </Stack>
+          <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+            <DialogTitle>댓글 삭제</DialogTitle>
+            <DialogContent>
+              <Typography variant="body1">댓글을 삭제하시겠습니까?</Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDeleteDialog}>취소</Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  handleCloseDeleteDialog();
+                }}
+              >
+                삭제
+              </Button>
+            </DialogActions>
+          </Dialog>
 
-            <Box>
-              <Typography variant="h6" component="h2" sx={{ marginTop: 4 }}>
-                Reply
-              </Typography>
-              {replys.map((reply) => (
-                <Box
-                  key={reply.rno}
-                  sx={{
-                    border: '1px solid #ccc',
-                    borderRadius: '5px',
-                    padding: '10px',
-                    marginTop: '10px',
-                  }}
-                >
-                  <Typography variant="subtitle1" gutterBottom>
-                    {reply.writer}
-                  </Typography>
-                  <Typography variant="body2" gutterBottom>
-                    {reply.content}
-                  </Typography>
-                </Box>
-              ))}
-              <Box component="form" onSubmit={handleSubmit} sx={{ marginTop: 2 }}>
-                <TextField
-                  required
-                  id="content"
-                  name="content"
-                  label="Reply"
-                  fullWidth
-                  multiline
-                  rows={4}
-                  value={reply.content}
-                  onChange={handleChange}
-                />
-                <LoadingButton
-                  type="submit"
-                  variant="contained"
-                  loading={false}
-                  loadingPosition="end"
-                  sx={{ mt: 2 }}
-                >
-                  Submit
-                </LoadingButton>
-              </Box>
-            </Box>
-          </Container>
-        </Box>
-      </StyledContent2>
-
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            추가적인 문의
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            문의하실 내용을 작성해주세요.
-          </Typography>
-          <TextField
-            required
-            fullWidth
-            multiline
-            rows={4}
-            label="Content"
-            variant="outlined"
-            sx={{ mt: 2 }}
-          />
-          <Button variant="outlined" sx={{ mt: 2 }}>
-            Submit
-          </Button>
-        </Box>
-      </Modal>
-    </>
+        </Container>
+      </div>
+    </div>
   );
-}
+};
+
+export default QnaDetailPage;

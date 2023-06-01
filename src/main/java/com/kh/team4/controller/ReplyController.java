@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class ReplyController {
     private final QnaService qnaService;
 
     // 댓글 작성
-    @PostMapping("qna/detail/{qno}")
+    @PostMapping("qna/replys/{qno}")
     public ResponseEntity<?> createReply(@PathVariable Long qno, @RequestBody ReplyDTO replyDTO) {
         log.info("댓글컨트롤러 진입");
         System.out.println("replyDTO = " + replyDTO);
@@ -45,6 +47,23 @@ public class ReplyController {
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 작성에 실패하였습니다.");
         }
+    }
+
+    // 댓글 리스트 페이지
+    @GetMapping("/qna/replys/{qno}")
+    public ResponseEntity<?> getReplys(@PathVariable Long qno) {
+        List<ReplyDTO> replyDTOList = replyService.findAll(qno);
+        log.info("댓글 목록 가져오기");
+        return ResponseEntity.ok(replyDTOList);
+    }
+
+    // 댓글 삭제 기능
+    @DeleteMapping("qna/replys/delete/{qno}/{rno}")
+    public String delete(@PathVariable("rno") Long rno) {
+        System.out.println("삭제 컨트롤러 진입");
+        qnaService.delete(rno);
+        System.out.println("서비스에서 delete 함수 호출");
+        return "/qna/list";
     }
 
 
