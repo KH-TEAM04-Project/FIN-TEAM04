@@ -14,21 +14,6 @@ import {
   Popover,
 } from '@mui/material';
 
-const account = {
-  displayName: '로그인해주세요',
-  onClick: '/login',
-  photoURL: '',
-};
-
-const accessToken = localStorage.getItem('accessToken');
-
-if (accessToken) {
-  const decodedToken = jwtDecode(accessToken);
-  account.displayName = decodedToken.sub;
- 
-}
-
-const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
 const MENU_OPTIONS = [
   {
     label: 'Home',
@@ -37,7 +22,7 @@ const MENU_OPTIONS = [
   {
     label: 'Mypage',
     icon: 'eva:person-fill',
-    onClick: isLoggedIn ? '/MyPage' : '/slogin',
+   
   },
   {
     label: 'icon',
@@ -49,6 +34,11 @@ const MENU_OPTIONS = [
 function AccountPopover() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
+  const [account, setAccount] = useState({
+    displayName: '로그인해주세요',
+    onClick: '/login',
+    photoURL: '',
+  });
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -83,6 +73,17 @@ function AccountPopover() {
       console.error('Logout failed:', error);
     }
   };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      const decodedToken = jwtDecode(accessToken);
+      setAccount((prevAccount) => ({
+        ...prevAccount,
+        displayName: decodedToken.sub,
+      }));
+    }
+  }, []);
 
   return (
     <>
@@ -128,7 +129,6 @@ function AccountPopover() {
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
             {account.displayName}
-            
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {account.email}
