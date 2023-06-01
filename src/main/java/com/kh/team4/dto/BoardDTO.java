@@ -45,7 +45,7 @@ public class BoardDTO {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .writerID(board.getMember().getMid())
-                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                //.regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .hits(board.getHits())
                 .mno(board.getMember().getMno())
                 .build();

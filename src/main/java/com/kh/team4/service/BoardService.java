@@ -35,10 +35,10 @@ import static com.kh.team4.entity.Board.dtoToEntity;
 //재연
 public class BoardService {
 
-    @Autowired
     private final BoardRepository repository; //자동주입 final
     private final MemberRepository memberRepository; //자동주입 final
     private final FilesRepository filesRepository; //자동주입 final
+
 
 
     @Transactional
@@ -135,9 +135,9 @@ public class BoardService {
             return BoardDTO.of(board, true);
         } else {
             // 6. board_table에 해당 데이터 save 처리 //다중 파일일 경우 먼저 부모 객체 가쟈옴
-            Board board = Board.toSaveFile(boardDTO);
-            Long saveBno = repository.save(board).getBno(); //board저장 후 bno값 가져옴
-            Board board1 = repository.findById(saveBno).get(); //bno값 있는 board
+            Board boardEntity = Board.toSaveFile(boardDTO);
+            Long saveBno = repository.save(boardEntity).getBno(); //board저장 후 bno값 가져옴
+            Board board = repository.findById(saveBno).get(); //bno값 있는 board
 
             //1. DTO에 담긴  파일 꺼냄
             for (MultipartFile boardFile : boardDTO.getBoardFile()) {
