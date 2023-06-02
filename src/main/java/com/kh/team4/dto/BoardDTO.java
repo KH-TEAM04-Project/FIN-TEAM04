@@ -33,7 +33,7 @@ public class BoardDTO {
     private Long mno;
 
     // 첨부파일 관련
-    private List<MultipartFile> boardFile;  // 여러개의 파일을 담아주려면 List 적용
+    private List<MultipartFile> boardFiles;  // 여러개의 파일을 담아주려면 List 적용
     // MultipartFile : 스프링에서 제공하는 인터페이스 - 실제 파일을 담아줄 수 있는 역할을 함.
     private List<String> originFile;    // 원본 파일 이름
     private List<String> storedFile;    // 서버 저장용 파일 이름

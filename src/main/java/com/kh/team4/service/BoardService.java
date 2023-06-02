@@ -10,14 +10,15 @@ import com.kh.team4.repository.FilesRepository;
 import com.kh.team4.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,41 +120,47 @@ public class BoardService {
         log.info(bno + "삭제완료");
     }
 
-    @Transactional
+
     public BoardDTO postBoard(BoardDTO boardDTO) throws IOException {
         // 파일 첨부 여부에 따라 로직 분리
-        if (boardDTO.getBoardFile() == null ||boardDTO.getBoardFile().isEmpty()) {
+        if (boardDTO.getBoardFiles() == null || boardDTO.getBoardFiles().isEmpty()) {
             // 첨부 파일이 없는 경우
             log.info("첨부파일이 없는 경우 서비스 진입");
             Board board = Board.dtoToEntity(boardDTO);
-            log.info("첨부파일 없는 경우 boardDTO 값 : " + boardDTO);
+            log.info("첨부파일 없는 경우 boardDTO 값: " + boardDTO);
             repository.save(board);
             return BoardDTO.of(board, true);
         } else {
             log.info("첨부 파일이 있는 경우 서비스 진입");
             // 6. board_table에 해당 데이터 save 처리 //다중 파일일 경우 먼저 부모 객체 가쟈옴
             Board board = Board.toSaveFile(boardDTO);
-            log.info("첨부파일 있는 경우 boardDTO 값 : " + boardDTO);
-            Long saveBno = repository.save(board).getBno(); //board저장 후 bno값 가져옴
+            log.info("첨부파일 있는 경우 boardDTO 값: " + boardDTO);
+            Long saveBno = repository.save(board).getBno(); //board 저장 후 bno값 가져옴
             Board board1 = repository.findById(saveBno).get(); //bno값 있는 board
 
-            //1. DTO에 담긴  파일 꺼냄
-            for (MultipartFile boardFile : boardDTO.getBoardFile()) {
-                //2. 파일의 이름 가져옴
-                String originalFilename = boardFile.getOriginalFilename();
+            for (MultipartFile boardFile : boardDTO.getBoardFiles()) {
                 //3. 서버 저장용 이름 만듦
-                String storedFileName = System.currentTimeMillis() + "-" + originalFilename;
-                //4. 저장 경로 설정 "C:/projectFiles" 폴더 만들어주기
-                String savePath = "C:/projectFiles" + storedFileName;
+                String originalFilename = boardFile.getOriginalFilename();
+                String storedFileName = System.currentTimeMillis() + "_" + originalFilename;
+                //4. 저장 경로 설정 "C:/dev/workspace/project/3rd_project/upload/" 폴더 만들어주기
+                String savePath = "C:/projectFiles/" + storedFileName;
                 //5. 해당 경로에 파일 저장
-                boardFile.transferTo(new File(savePath));
-                // 7. board_file_table에 해당 데이터 save처리 */
-                Files files = Files.toFiles(board, originalFilename, storedFileName);
-                filesRepository.save(files); //db에 저장
+                try (InputStream inputStream = boardFile.getInputStream();
+                     OutputStream outputStream = new FileOutputStream(savePath)) {
+                    IOUtils.copy(inputStream, outputStream);
+                } catch (IOException e) {
+                    // 예외 처리
+                    e.printStackTrace();
+                }
+                // 7. board_file_table에 해당 데이터 save 처리 */
+                Files files = Files.toFiles(board1, originalFilename, storedFileName);
+                filesRepository.save(files); // db에 저장
             }
+
             return boardDTO;
         }
     }
+
 
 
 }
