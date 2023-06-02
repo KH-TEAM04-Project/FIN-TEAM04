@@ -17,6 +17,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/")
+@CrossOrigin(origins = "http://localhost:3000")
 @Log4j2
 public class ReplyController {
     private final ReplyService replyService; // ReplyService 를 주입 받음
@@ -58,12 +59,12 @@ public class ReplyController {
     }
 
     // 댓글 삭제 기능
-    @DeleteMapping("qna/replys/delete/{qno}/{rno}")
-    public String delete(@PathVariable("rno") Long rno) {
-        System.out.println("삭제 컨트롤러 진입");
-        qnaService.delete(rno);
+    @DeleteMapping("/qna/replys/delete/{qno}/{rno}")
+    public String deleteReply(@PathVariable("qno") Long qno, @PathVariable("rno") Long rno) {
+        System.out.println("댓글 삭제 컨트롤러 진입");
+        replyService.delete(rno);
         System.out.println("서비스에서 delete 함수 호출");
-        return "/qna/list";
+        return "redirect:/qna/list";
     }
 
 
