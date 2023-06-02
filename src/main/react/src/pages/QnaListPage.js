@@ -1,14 +1,11 @@
-import {Helmet} from 'react-helmet-async';
-import {filter} from 'lodash';
-import {styled, alpha} from '@mui/material/styles';
+import { Helmet } from 'react-helmet-async';
 // @mui
-
-// components
-
+import { filter } from 'lodash';
+import { styled, alpha } from '@mui/material/styles';
 import axios from 'axios';
 // mock
-import React, {useEffect, useState} from 'react';
-import {Link, useParams} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,10 +13,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import TablePagination from '@mui/material/TablePagination';
 // ----------------------------------------------------------------------  // 수정 성준 추가
+
 import Button from '@mui/material/Button';
-import {OutlinedInput, InputAdornment, Typography, Modal, Box, Container} from '@mui/material';
+import { OutlinedInput, Modal, Box, Container, Typography, InputAdornment } from '@mui/material';
+import TablePagination from '@mui/material/TablePagination';
 import Stack from '@mui/material/Stack';
 import Iconify from '../components/iconify';
 // ----------------------------------------------------------------------
@@ -38,8 +36,6 @@ const style = {
     px: 4,
     pb: 3
 };
-
-
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -71,10 +67,9 @@ function getComparator(order, orderBy) {
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
+
 // ----------------------------------------------------------------------
-
-
-const StyledSearch = styled(OutlinedInput)(({theme}) => ({
+const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
     width: 240,
     transition: theme.transitions.create(['box-shadow', 'width'], {
         easing: theme.transitions.easing.easeInOut,
@@ -90,11 +85,7 @@ const StyledSearch = styled(OutlinedInput)(({theme}) => ({
     },
 }));
 
-export default function BoardList() {
-
-    const token = localStorage.getItem('accessToken');
-    const auth = token ? JSON.parse(atob(token.split('.')[1])).auth : '';
-    console.log(auth);
+export default function Yaya() {
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -108,21 +99,21 @@ export default function BoardList() {
         setPage(0);
     };
 
-
     const handleClose = () => {
         setOpen1(false);
     };
+
     const [open1, setOpen1] = React.useState(false);
     const handleOpen = () => {
         setOpen1(true);
     };
+
     const [posts, setPosts] = useState([]);
 
     const getPosts = () => {
-        axios.get('/board/list').then((response) => {
+        axios.get('/qna/list').then((response) => {
             setPosts(response.data);
-
-            console.log(response.data.length);
+            console.log(response.data);
         })
             .catch((error) => {
                 if (error.response) {
@@ -136,19 +127,17 @@ export default function BoardList() {
             });
     };
 
-
-
-
     useEffect(() => {
         getPosts();
     }, []);
+    //    역순을 위한 코드
     const compareFunction = (a, b) => {
 
-        return b.bno - a.bno;
+        return b.qno - a.qno;
     };
     posts.sort(compareFunction);
 
-// Search를 위한 코드
+    // Search를 위한 코드
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('name');
     const [filterName, setFilterName] = useState('');
@@ -167,70 +156,76 @@ export default function BoardList() {
     return (
         <>
             <Helmet>
-                <title> retry | Minimal UI </title>
+                <title>retry | Minimal UI</title>
             </Helmet>
 
+
+
             <StyledSearch
-                sx={{mr: 160, ml: 1}}
+                sx={{ mr: 80, ml: 1 }}
                 value={filterName}
                 onChange={handleFilterByName}
-                placeholder="내용을 검색하세요우"
+                placeholder="내용을 검색하세요"
                 startAdornment={
                     <InputAdornment position="start">
-                        <Iconify icon="eva:search-fill" sx={{color: 'text.disabled', width: 20, height: 20}}/>
+                        <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
                     </InputAdornment>
                 }
             />
 
-                {auth === "ROLE_USER" && (
-                    <Button href='http://localhost:3000/board/regist' variant="contained"
-                            startIcon={<Iconify icon="eva:plus-fill"/>}>
-                        게시글 작성하기
-                    </Button>
-                )}
+            <Button href="http://localhost:3000/qna/regist" variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+                QnA 작성하기
+            </Button>
 
-
-
-            <TableContainer component={Paper}>
-                <Table sx={{minWidth: 650, overflow: 'hidden'}} aria-label="simple table">
+            <TableContainer component={Paper} align="center">
+                <Table sx={{ maxWidth: 2000, overflow: 'hidden' }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell> </TableCell>
+                            <TableCell>QnA</TableCell>
                             <TableCell align="right">번호</TableCell>
                             <TableCell align="right">제목</TableCell>
-                            <TableCell align="right">내용</TableCell>
-                            <TableCell align="right">작성자</TableCell>
                             <TableCell align="right">작성일</TableCell>
                             <TableCell align="right">조회수</TableCell>
-
+                            <TableCell align="right">작성자</TableCell>
+                            <TableCell align="right">수정</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((data) => (
-                                <TableRow
-                                    key={data.bno}
-                                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                                >
-                                    <TableCell component="th" scope="row">&nbsp;</TableCell>
+                        {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((data) => (
+                            <TableRow
+                                key={data.qno}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <TableCell component="th" scope="row">
 
-                                    <TableCell align="right">{data.bno}</TableCell>
-                                    <TableCell align="right">
-                                        <Link to={`/board/detail/${data.bno}`}>{data.title}</Link>
-                                    </TableCell>
-                                    <TableCell align="right">{data.content}</TableCell>
-                                    <TableCell align="right">{data.writerID}</TableCell>
-                                    <TableCell align="right">{data.regDate}</TableCell>
-                                    <TableCell align="right">{data.hits}</TableCell>
+                                    -
+                                </TableCell>
+                                <TableCell align="right">{data.qno}</TableCell>
+                                <TableCell align="right">
+                                    <Link to={`/qna/detail/${data.qno}`}>{data.title}</Link>
+                                </TableCell>
+                                <TableCell align="right">{data.regDate}</TableCell>
+                                <TableCell align="right">{data.hits}</TableCell>
+                                <TableCell align="right">{data.writerID}</TableCell>
 
-                                </TableRow>
-                            ))}
+
+                                <TableCell align="right">
+
+                                    <Link to={`/qna/Update/${data.qno}`}>
+                                        <Button>
+                                            <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+                                            글 수 정
+                                        </Button>
+                                    </Link>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
-
                     {isNotFound && (
                         <TableBody>
                             <TableRow>
-                                <TableCell align="center" colSpan={6} sx={{py: 3}}>
+                                <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
                                     <Paper
                                         sx={{
                                             textAlign: 'center',
@@ -243,19 +238,17 @@ export default function BoardList() {
                                         <Typography variant="body2">
                                             No results found for &nbsp;
                                             <strong>&quot;{filterName}&quot;</strong>.
-                                            <br/> 다시한번 검색해주세요 지발요~
+                                            <br /> 다시한번 검색해주세요 지발요~
                                         </Typography>
                                     </Paper>
                                 </TableCell>
                             </TableRow>
                         </TableBody>
                     )}
-
-
                 </Table>
             </TableContainer>
             <Container align="right">
-                <Stack alignItems="center" margin-top="auto" spacing={3}>
+                <Stack alignItems="center" margin-top="auto" spacing={3} >
 
                     <TablePagination
                         rowsPerPageOptions={[10, 25, 100]}
@@ -268,7 +261,6 @@ export default function BoardList() {
                     />
                 </Stack>
             </Container>
-
         </>
     );
 }
