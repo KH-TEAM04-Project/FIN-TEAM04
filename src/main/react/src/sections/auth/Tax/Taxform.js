@@ -14,7 +14,7 @@ function TaxForm() {
 
     const [columnInfo, setColumInfo] = useState({
         mno: Number,
-        lifeInsurance: Number,
+        lifeinsurance: Number,
         npension: Number,
         insurance: Number,
         medi: Number,
@@ -31,8 +31,6 @@ function TaxForm() {
         year: ""
     });
 
-
-    const [mno, setMno] = useState(""); // 토큰에서 추출한 sub 값 상태
     // 로컬 스토리지에서 토큰 값을 가져옴
     const token = localStorage.getItem('accessToken');
     const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
@@ -42,13 +40,12 @@ function TaxForm() {
             // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
             const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
-            // payload에서 MNO 값을 추출하여 상태에 저장
-            setMno(decodedToken.mno);
-            console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
-
-            const mno = decodedToken.mno;
-            // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
-            axios.post("/taxrefund", {mno})
+            axios.post("/tax/taxrefund", null, {
+                headers: {
+                    // http 헤더의 auth 부분에 accessToken 값 설정
+                    'Authorization': `Bearer ${token}`
+                }
+            })
                 .then(response => {
                     // 사용자 데이터를 성공적으로 가져온 경우
                     const columnInfo = response.data;
@@ -74,7 +71,7 @@ function TaxForm() {
                     <>
                         <p className={"info-box2"}>회원번호 : {columnInfo.mno}</p>
                         <p className={"info-box2"}>해당연도 : {columnInfo.year}</p>
-                        <p className={"info-box2"}>건강보험 : {columnInfo.lifeInsurance}</p>
+                        <p className={"info-box2"}>건강보험 : {columnInfo.lifeinsurance}</p>
                         <p className={"info-box2"}>국민연금 : {columnInfo.npension}</p>
                         <p className={"info-box2"}>보험료 : {columnInfo.insurance}</p>
                         <p className={"info-box2"}>의료비 : {columnInfo.medi}</p>
