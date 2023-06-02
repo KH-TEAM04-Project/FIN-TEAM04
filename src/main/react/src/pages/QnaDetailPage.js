@@ -187,12 +187,42 @@ const QnaDetailPage = () => {
 
   const handleLike = () => {
     setLiked(true);
-    // 좋아요 관련한 추가 로직
+
+    const requestData = {
+      qno: data.qno, // 좋아요할 질문 번호
+      mno,
+    };
+
+    axios
+      .post(`/qna/likes/{qno}`, requestData) // 요청 본문을 requestData로 전달
+      .then((response) => {
+        console.log('좋아요 요청 성공:', response.data);
+        // 좋아요 요청 성공 시 추가 동작 구현
+      })
+      .catch((error) => {
+        console.error('좋아요 요청 실패:', error);
+        // 좋아요 요청 실패 시 추가 동작 구현
+      });
   };
 
   const handleUnlike = () => {
     setLiked(false);
-    // 좋아요 취소 관련한 추가 로직
+
+    const requestData = {
+      qno: data.qno, // 좋아요 취소할 질문 번호
+      mno,
+    };
+
+    axios
+      .post(`/qna/unLikes/{qno}`, requestData) // 요청 본문을 requestData로 전달
+      .then((response) => {
+        console.log('좋아요 취소 요청 성공:', response.data);
+        // 좋아요 취소 요청 성공 시 추가 동작 구현
+      })
+      .catch((error) => {
+        console.error('좋아요 취소 요청 실패:', error);
+        // 좋아요 취소 요청 실패 시 추가 동작 구현
+      });
   };
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // 삭제 다이얼로그 열림/닫힘 상태

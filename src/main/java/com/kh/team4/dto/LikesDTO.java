@@ -10,6 +10,6 @@ import lombok.*;
 @AllArgsConstructor // 모든 필드를 매개변수로 하는 생성자
 
 public class LikesDTO {
-    private Long mid;
+    private Long mno;
     private Long qno;
 }
