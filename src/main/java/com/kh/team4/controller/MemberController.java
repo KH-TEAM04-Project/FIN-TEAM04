@@ -4,12 +4,14 @@ import com.kh.team4.dto.MailDTO;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TokenDTO;
+import com.kh.team4.jwt.JwtFilter;
 import com.kh.team4.service.MemberService;
 import com.kh.team4.service.SendEmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -42,16 +44,22 @@ public class MemberController {
         return ResponseEntity.ok(memberService.detail(atk));
     }
 
-    @PostMapping("/memberUpdate")   // 회원 정보 갱신 이건.. put이나 patch로 변경하는게 맞을 것 같다.
-    public ResponseEntity<MemberResDTO> memberUpdate(@RequestBody MemberReqDTO memberReqDTO) throws Exception {
-        System.out.println("받은 값 확인 : " + memberReqDTO.toString());
-        return ResponseEntity.ok(memberService.Update(memberReqDTO));
+    @PostMapping("/memberUpdate")
+    public ResponseEntity<MemberResDTO> memberUpdate(@RequestBody MemberReqDTO memberReqDTO, @RequestHeader("Authorization") String data) throws Exception {
+        System.out.println("마이페이지 진입 + 받은 값 확인 : " + data);
+        System.out.println("수정할 값 확인 : " + memberReqDTO.toString());
+        String atk = data.substring(7);
+        System.out.println("토큰 값만 추출 : " + atk);
+        return ResponseEntity.ok(memberService.Update(memberReqDTO, atk));
     }
 
     @PostMapping("/changePassword")
-    public boolean changePwd(@RequestBody MemberReqDTO memberDTO) {
+    public boolean changePwd(@RequestBody MemberReqDTO memberDTO, @RequestHeader("Authorization") String data) {
+        System.out.println("마이페이지 진입 + 받은 값 확인 : " + data);
+        String atk = data.substring(7);
+        System.out.println("토큰 값만 추출 : " + atk);
         System.out.println("받은 값 확인 : Mno - " + memberDTO.getMno() + ", 현재 패스워드 - " + memberDTO.getPwd() + ", 변경할 패스워드 - " + memberDTO.getChangePwd());
-        return memberService.changePwd(memberDTO);
+        return memberService.changePwd(memberDTO, atk);
     }
 
     @DeleteMapping("/memberDelete")
@@ -68,9 +76,12 @@ public class MemberController {
     }
 
     @PostMapping("/logout22")
-    public String logout(@RequestBody TokenDTO tokenDTO) {
-        System.out.println("로그아웃 컨트롤러 진입");
-        return memberService.logout(tokenDTO);
+    public String logout(@RequestHeader("Authorization") String data) {
+        System.out.println("[INFO ] ---------- 로그아웃 컨트롤러 진입");
+        System.out.println("받은 데이터 값 : " + data);
+        String atk = data.substring(7);
+        System.out.println("추출한 ATK : " + atk);
+        return memberService.logout(atk);
     }
 
 

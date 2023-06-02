@@ -34,7 +34,7 @@ useEffect(() => {
     // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
     const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
-    axios.post("/MyPageCont", null, {
+    axios.post("/member/MyPageCont", null, {
         headers: {
           // http 헤더의 auth 부분에 accessToken 값 설정
           'Authorization': `Bearer ${token}`
@@ -80,7 +80,12 @@ useEffect(() => {
     };
 
     // Send the updated user information to the backend
-    axios.post("/memberUpdate", memberReqDTO)
+    axios.post("/member/memberUpdate", memberReqDTO, {
+      headers: {
+        // http 헤더의 auth 부분에 accessToken 값 설정
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(response => {
         // Successful update
         const updatedUserData = response.data;
@@ -131,7 +136,12 @@ useEffect(() => {
 
     // Send the password update request to the backend
     axios
-    .post("/changePassword", passwordReqDTO)
+    .post("/member/changePassword", passwordReqDTO, {
+      headers: {
+        // http 헤더의 auth 부분에 accessToken 값 설정
+        'Authorization': `Bearer ${token}`
+      }
+    })
     .then((response) => {
       // Successful password change
       const result = response.data;

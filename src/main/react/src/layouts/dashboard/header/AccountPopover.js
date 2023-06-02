@@ -62,7 +62,12 @@ function AccountPopover() {
     console.log(accessToken)
 
     try {
-      await axios.post("/logout22", { accessToken }, { withCredentials: true })
+      await axios.post("/member/logout22", null,{
+        headers: {
+          // http 헤더의 auth 부분에 accessToken 값 설정
+          'Authorization': `Bearer ${accessToken}`
+        }
+      })
       .then(response => console.log(response.data));
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');

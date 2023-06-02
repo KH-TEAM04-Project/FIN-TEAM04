@@ -34,9 +34,15 @@ function PwMyPage() {
       console.log("mno:", mno); // mno 값 콘솔에 출력
       console.log("password:", password); // 비밀번호 값 콘솔에 출력
 
-      const response = await axios.post("/intoMyPage", {
+      const response = await axios.post("/member/intoMyPage", {
         mno,
         pwd: password
+      }, 
+      {
+        headers: {
+          // http 헤더의 auth 부분에 accessToken 값 설정
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       // 백엔드에서 비밀번호 일치 여부에 따른 응답 처리

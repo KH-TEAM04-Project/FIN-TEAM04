@@ -47,19 +47,11 @@ public class WebSecurityConfig {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/sLogin").permitAll()
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/qna/**").permitAll()
                 //.antMatchers("/re", "/CoardPage", "EoardPage","/BoardReadPage/**", "/EditPage/**").permitAll()
                 //.antMatchers("/**").permitAll()
-
-                // 권한테스트
-               // .antMatchers("/mypage").hasRole("USER")
-               // .anyRequest().authenticated()*/
-                
-                // 인증 , 인가 테스트
-               /* .and()
-                .authorizeRequests()
-                *//*.antMatchers("/main").permitAll()*//*
-                .anyRequest().authenticated()*/
+                .anyRequest().authenticated()
 
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider, redisTemplate));

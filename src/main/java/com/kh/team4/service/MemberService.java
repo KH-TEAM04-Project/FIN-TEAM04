@@ -64,12 +64,12 @@ public class MemberService {
     }
 
 
-    public MemberResDTO Update(MemberReqDTO memberDTO) throws Exception {
+    public MemberResDTO Update(MemberReqDTO memberDTO, String atk) throws Exception {
         // 05.12 시점에 수정할만한 컬럼 목록 3가지만 설정
         String email = memberDTO.getEmail();
         String ph = memberDTO.getPh();
         // 찾는 용도의 Mno를 써야하는군..
-        Long mno = memberDTO.getMno();
+        Long mno = memberRepository.findByMid2(tokenProvider.getAuthentication(atk).getName());
         String address = memberDTO.getAddress();
         String detailAddress = memberDTO.getDetailAddress();
 
@@ -94,9 +94,10 @@ public class MemberService {
 
     }
 
-    public boolean changePwd(MemberReqDTO memberDTO) {
-        String resistedPwd = memberRepository.findById(memberDTO.getMno()).get().getPwd();
-        Member member = memberRepository.findById(memberDTO.getMno()).get();
+    public boolean changePwd(MemberReqDTO memberDTO, String atk) {
+        Long mno = memberRepository.findByMid2(tokenProvider.getAuthentication(atk).getName());
+        String resistedPwd = memberRepository.findById(mno).get().getPwd();
+        Member member = memberRepository.findById(mno).get();
 
         if (passwordEncoder.matches(memberDTO.getPwd(), resistedPwd)) {
             String decodedPwd = passwordEncoder.encode(memberDTO.getChangePwd());
@@ -177,15 +178,15 @@ public class MemberService {
     }
 
     @Transactional
-    public String logout(TokenDTO token){
+    public String logout(String token){
         // 로그아웃 하고 싶은 토큰이 유효한 지 먼저 검증하기
-        System.out.println("받은 값 확인 : " + token.getAccessToken());
+        //System.out.println("받은 값 확인 : " + token.getAccessToken());
 
-        if (!tokenProvider.validateToken(token.getAccessToken())){
+        if (!tokenProvider.validateToken(token)){
             throw new IllegalArgumentException("로그아웃 : 유효하지 않은 토큰입니다.");
         }
 
-        Authentication authentication = tokenProvider.getAuthentication(token.getAccessToken());
+        Authentication authentication = tokenProvider.getAuthentication(token);
 
         System.out.println("삭제할 '그'녀석 : " + authentication.getName());
 
@@ -198,9 +199,9 @@ public class MemberService {
         // 해당 Access Token 유효시간을 가지고 와서 BlackList에 저장하기
         // 블랙 리스트에 mno 값을 추가하면 로그인 했을 때 기존의 logout 값을 레디스에서 삭제할 수 있을거같은데...
         // 굳이 안하더라도 새벽 4시쯤 매일 서버업뎃한답시고 레디스서버를 조져버리면 해결될 일이기도 하다.
-        Long expiration = tokenProvider.getExpiration(token.getAccessToken()); //(tokenRequestDto.getAccessToken());
+        Long expiration = tokenProvider.getExpiration(token); //(tokenRequestDto.getAccessToken());
         System.out.println("유효시간 값 확인 :" + expiration);
-        redisTemplate.opsForValue().set(token.getAccessToken(),"logout",expiration,TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(token,"logout",expiration,TimeUnit.MILLISECONDS);
         return "로그아웃 완료";
     }
 
