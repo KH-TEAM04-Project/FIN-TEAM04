@@ -1,82 +1,101 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './TaxForm.css';
+import axios from "axios";
+import {useNavigate} from 'react-router-dom';
+import Nav from '../../../layouts/dashboard';
 
 function TaxForm() {
 
-    const columnInfo = [
-        { name: "lifeInsurance", label: "건강보험" },
-        { name: "npension", label: "국민연금" },
-        { name: "insurance", label: "보험료" },
-        { name: "medi", label: "의료비" },
-        { name: "edu", label: "교육비" },
-        { name: "card", label: "신용카드" },
-        { name: "dcard", label: "체크카드" },
-        { name: "pension", label: "개인연금저축, 연금계좌" },
-        { name: "cash", label: "현금영수증" },
-        { name: "housefunds", label: "주택자금, 월세액" },
-        { name: "housesaving", label: "주택마련저축" },
-        { name: "invest", label: "장기집합투자증권저축, 벤처기업투자신탁" },
-        { name: "sbo", label: "소기업, 소상공인 공제부금" },
-        { name: "donation", label: "기부금" },
-      ];
-  const [deductionList, setDeductionList] = useState([]);
-  
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    
-    const form = event.target;
-    const formData = new FormData(form);
-    
-    if (Array.from(formData.values()).some(value => value === '')) {
-      alert('모든 분야를 기입해 주세요.');
-      return;
-    }
+    const navigate = useNavigate();
 
-    setDeductionList((prev) => {
-      return [...prev, Object.fromEntries(formData.entries())];
+    const handleGoBack = () => {
+        navigate(-2); // Go back one step in the browser history
+    };
+
+    const [columnInfo, setColumInfo] = useState({
+        mno: Number,
+        lifeInsurance: Number,
+        npension: Number,
+        insurance: Number,
+        medi: Number,
+        edu: Number,
+        card: Number,
+        dcard: Number,
+        pension: Number,
+        cash: Number,
+        housefunds: Number,
+        housesaving: Number,
+        invest: Number,
+        sbo: Number,
+        donation: Number,
+        year: ""
     });
 
-    form.reset();
-  };
+
+    const [mno, setMno] = useState(""); // 토큰에서 추출한 sub 값 상태
+    // 로컬 스토리지에서 토큰 값을 가져옴
+    const token = localStorage.getItem('accessToken');
+    const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+
+    useEffect(() => {
+        if (token) {
+            // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
+            const decodedToken = JSON.parse(atob(token.split('.')[1]));
+
+            // payload에서 MNO 값을 추출하여 상태에 저장
+            setMno(decodedToken.mno);
+            console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
+
+            const mno = decodedToken.mno;
+            // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
+            axios.post("/taxrefund", {mno})
+                .then(response => {
+                    // 사용자 데이터를 성공적으로 가져온 경우
+                    const columnInfo = response.data;
+
+                    // 사용자 정보를 상태에 설정
+                    setColumInfo(columnInfo);
+                })
+                .catch(error => {
+                    // API 호출 중 에러 발생한 경우
+                    console.error(error);
+                });
+        }
+    }, [token]);
 
 
-  return (
-    <div className="tax-form__container">
-      <form onSubmit={handleSubmit}>
-        <div className="tax-form__grid">
-          {columnInfo.map(({ name, label }) => (
-            <label key={name}>
-              {label}:
-              <input type="text" name={name} required />
-            </label>
-          ))}
+    return (
+        <div>
+            <Nav/> {/* 사이드바 컴포넌트를 추가 */}
+
+            <div className={"info-box"}>
+                <h1>{sub}님의 연말정산 결과</h1>
+                {(
+                    <>
+                        <p className={"info-box2"}>회원번호 : {columnInfo.mno}</p>
+                        <p className={"info-box2"}>해당연도 : {columnInfo.year}</p>
+                        <p className={"info-box2"}>건강보험 : {columnInfo.lifeInsurance}</p>
+                        <p className={"info-box2"}>국민연금 : {columnInfo.npension}</p>
+                        <p className={"info-box2"}>보험료 : {columnInfo.insurance}</p>
+                        <p className={"info-box2"}>의료비 : {columnInfo.medi}</p>
+                        <p className={"info-box2"}>교육비 : {columnInfo.edu}</p>
+                        <p className={"info-box2"}>신용카드 : {columnInfo.card}</p>
+                        <p className={"info-box2"}>체크카드 : {columnInfo.dcard}</p>
+                        <p className={"info-box2"}>개인연금저축/연금계좌 : {columnInfo.pension}</p>
+                        <p className={"info-box2"}>현금영수증 : {columnInfo.cash}</p>
+                        <p className={"info-box2"}>주택마련저축 : {columnInfo.housesaving}</p>
+                        <p className={"info-box2"}>주택자금/월세액 : {columnInfo.housefunds}</p>
+                        <p className={"info-box2"}>장기집합투자장권저축/벤처기업투자신탁 : {columnInfo.invest}</p>
+                        <p className={"info-box2"}>소기업/소상고인 공제부금 : {columnInfo.sbo}</p>
+                        <p className={"info-box2"}>기부금 : {columnInfo.donation}</p>
+                        <button>나의 솔루션 보러가기</button>
+                        <button onClick={handleGoBack}>메인페이지</button>
+                    </>
+                )}
+            </div>
         </div>
-        <button type="submit">입력 내용 저장</button>
-      </form>
-      {deductionList.length ? (
-        <table>
-          <thead>
-            <tr>
-              {columnInfo.map(({ name, label }) => (
-                <th key={name}>{label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {deductionList.map((item, index) => (
-              <tr key={index}>
-                {columnInfo.map(({ name, label }) => (
-                  <td key={name}>{item[name]}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <div>저장된 내용이 없습니다.</div>
-      )}
-    </div>
-  );
+
+    );
 }
 
 export default TaxForm;

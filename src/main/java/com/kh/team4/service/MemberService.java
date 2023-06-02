@@ -134,7 +134,7 @@ public class MemberService {
         // 2. Access Token 에서 Member ID 가져오기
         Authentication authentication = tokenProvider.getAuthentication(token.getAccessToken());
     
-        // ... "RT"라고 써야지 소연아
+        // ... "RT"라고 써야지 소연아 : 넹
         String refreshToken = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
         if (!refreshToken.equals(token.getRefreshToken())) {
