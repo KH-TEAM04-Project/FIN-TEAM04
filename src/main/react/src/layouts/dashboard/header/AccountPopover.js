@@ -24,11 +24,7 @@ const MENU_OPTIONS = [
     icon: 'eva:person-fill',
     onClick: '/mypage' // 마이페이지 경로를 추가합니다.
   },
-  {
-    label: 'icon',
-    icon: 'eva:settings-2-fill',
-    onClick: <IconButton />,
-  },
+  
 ];
 
 function AccountPopover() {
