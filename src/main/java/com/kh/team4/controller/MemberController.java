@@ -15,27 +15,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @CrossOrigin(origins = "localhost:3000")
 @RestController
 @RequiredArgsConstructor    // 생성자 주입
-@RequestMapping()
+@RequestMapping("/member")
 @ToString
 public class MemberController {
     private final MemberService memberService;
     private final JavaMailSender javaMailSender;
     private final SendEmailService sendEmailService;
 
-    //회원가입 기능 구현
-    @PostMapping("/SignUp2")
-    public String memberregist(@RequestBody MemberReqDTO memberDTO) {
-        System.out.println(memberDTO.toString());
-        return memberService.regist(memberDTO);
-    }
-
-    @PostMapping("/intoMyPage") // 마이페이지 진입 전 확인 -- 이건 get 으로 변경해야 하지 않나(조회니까)
-    // 필터 적용 필요
-    // req로 전환 필요
+    @PostMapping("/intoMyPage")
     public boolean intoCheck(@RequestBody MemberReqDTO memberDTO) {
         System.out.println("마이페이지 진입 시 패스워드 확인");
         Long mno = memberDTO.getMno();
@@ -44,19 +34,12 @@ public class MemberController {
         return memberService.confirmpwd(mno, pwd);
     }
 
-    @PostMapping("/MyPageCont") // 마이페이지  -- 이것도 get 으로 바꾸는게 좋겠고
-    public ResponseEntity<MemberResDTO> memberDetail(@RequestBody MemberReqDTO memreqDTO) {
-        Long mno = memreqDTO.getMno();
-        System.out.println("회원정보 페이지 진입 및 받은 값 : " + mno);
-        return ResponseEntity.ok(memberService.detail(mno));
-    }
-
-    @PostMapping("/memberDelete")   // 회원 삭제  -- 이건 delete로 변경
-    public void memberDelete(@RequestBody MemberReqDTO memberDTO) {
-        // mid 가 아닌 mno를 기준으로 삼은 것은 delete메서드가 ID를 기본 골자로 삼고 있기 때문이다.
-        Long mno = memberDTO.getMno();
-        System.out.println("삭제할 회원의 No. : " + mno);
-        memberService.delete(mno);
+    @PostMapping("/MyPageCont")
+    public ResponseEntity<MemberResDTO> memberDetail(@RequestHeader("Authorization") String data) {
+        System.out.println("마이페이지 진입 + 받은 값 확인 : " + data);
+        String atk = data.substring(7);
+        System.out.println("토큰 값만 추출 : " + atk);
+        return ResponseEntity.ok(memberService.detail(atk));
     }
 
     @PostMapping("/memberUpdate")   // 회원 정보 갱신 이건.. put이나 patch로 변경하는게 맞을 것 같다.
@@ -71,36 +54,27 @@ public class MemberController {
         return memberService.changePwd(memberDTO);
     }
 
+    @DeleteMapping("/memberDelete")
+    public void memberDelete(@RequestHeader("Authorization") String data) {
+        System.out.println("회원 삭제 컨트롤러 입장 + 받은 값 확인 : " + data);
+        String atk = data.substring(7);
+        System.out.println("토큰 값만 추출 : " + atk);
+        memberService.delete(atk);
+    }
+
     @PostMapping("/reissue")
     public ResponseEntity<TokenDTO> reissue(@RequestBody TokenDTO reissue) {
         return ResponseEntity.ok(memberService.reissue(reissue));
     }
 
-/* 미리 생성
-    @PostMapping("/reissue")
-    public ResponseEntity<TokenDTO> reissue(@RequestHeader("Authorization") String AccessToken) {
-        return ResponseEntity.ok(memberService.reissue(AccessToken);
-    }*/
-    
-
-    @PostMapping("/sLogin")
-    public ResponseEntity<TokenDTO> login(MemberReqDTO requestDto) { // RequestBody사용시 에러뜸.
-        System.out.println("컨트롤러에 집입하였습니다. " + requestDto.toString());
-        return ResponseEntity.ok(memberService.login(requestDto));
-    }
-
-    //Email과 name의 일치여부를 check하는 컨트롤러
-    @PostMapping("/check/findID")
-    public String ID_find(@RequestBody MemberReqDTO memreq) {
-        String email = memreq.getEmail();
-        String mname = memreq.getMname();
-        System.out.println(mname + email);
-
-        return memberService.findID2(email, mname);
-
+    @PostMapping("/logout22")
+    public String logout(@RequestBody TokenDTO tokenDTO) {
+        System.out.println("로그아웃 컨트롤러 진입");
+        return memberService.logout(tokenDTO);
     }
 
 
+/*
     @GetMapping("/check/findPw")
     public @ResponseBody Map<String, Boolean> pw_find(String email, String mname) {
         Map<String, Boolean> json = new HashMap<>();
@@ -110,9 +84,32 @@ public class MemberController {
         json.put("check", pwFindCheck);
         return json;
     }
+*/
+
+/* 미리 생성
+    @PostMapping("/reissue")
+    public ResponseEntity<TokenDTO> reissue(@RequestHeader("Authorization") String AccessToken) {
+        return ResponseEntity.ok(memberService.reissue(AccessToken);
+    }*/
+    
+
+/*    @PostMapping("/sLogin")
+    public ResponseEntity<TokenDTO> login(MemberReqDTO requestDto) { // RequestBody사용시 에러뜸.
+        System.out.println("컨트롤러에 집입하였습니다. " + requestDto.toString());
+        return ResponseEntity.ok(memberService.login(requestDto));
+    }*/
+
+    //Email과 name의 일치여부를 check하는 컨트롤러
+/*    @PostMapping("/check/findID")
+    public String ID_find(@RequestBody MemberReqDTO memreq) {
+        String email = memreq.getEmail();
+        String mname = memreq.getMname();
+        System.out.println(mname + email);
+        return memberService.findID2(email, mname);
+    }*/
 
     //등록된 이메일로 임시비밀번호를 발송하고 발송된 임시비밀번호로 사용자의 pw를 변경하는 컨트롤러
-    @PostMapping("/check/findPw/sendEmail")
+/*    @PostMapping("/check/findPw/sendEmail")
     public @ResponseBody void sendEmail(MemberReqDTO requestDto) {
         String email = requestDto.getEmail();
         String mname = requestDto.getMname();
@@ -120,14 +117,13 @@ public class MemberController {
         MailDTO dto = sendEmailService.createMailAndChangePassword(email, mname);
         System.out.println(dto.toString());
         sendEmailService.mailSend(dto);
-    }
+    }*/
 
-    @PostMapping("/logout22")
-    public String logout(@RequestBody TokenDTO tokenDTO) {
-        System.out.println("로그아웃 컨트롤러 진입");
-
-        return memberService.logout(tokenDTO);
-    }
+/*    @PostMapping("/SignUp2")
+    public String memberregist(@RequestBody MemberReqDTO memberDTO) {
+        System.out.println(memberDTO.toString());
+        return memberService.regist(memberDTO);
+    }*/
 }
 
 

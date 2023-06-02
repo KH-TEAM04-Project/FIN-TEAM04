@@ -34,13 +34,7 @@ useEffect(() => {
     // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
     const decodedToken = JSON.parse(atob(token.split('.')[1]));
 
-    // payload에서 MNO 값을 추출하여 상태에 저장
-    setMno(decodedToken.mno);
-    console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
-
-    const mno = decodedToken.mno;
-    // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
-    axios.post("/MyPageCont", { mno }, {
+    axios.post("/MyPageCont", null, {
         headers: {
           // http 헤더의 auth 부분에 accessToken 값 설정
           'Authorization': `Bearer ${token}`
@@ -163,12 +157,6 @@ useEffect(() => {
     });
 };
 
-
-
-
-
-
-
   // Function to handle changes in the input fields
   const handleChange = (field, value) => {
     setUserData(prevState => ({
@@ -184,8 +172,12 @@ useEffect(() => {
   
     if (confirmDelete) {
       // Send the mno value to the backend
-      axios
-        .post("/memberDelete", { mno })
+      axios.delete("/memberDelete", {
+          headers: {
+            // http 헤더의 auth 부분에 accessToken 값 설정
+            'Authorization': `Bearer ${token}`
+          }
+        })
         .then((response) => {
           // Successful deletion
           setUserData({

@@ -48,17 +48,17 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/sLogin").permitAll()
-                .antMatchers("/re", "/CoardPage", "EoardPage","/BoardReadPage/**", "/EditPage/**").permitAll()
-                .antMatchers("/**").permitAll()
+                //.antMatchers("/re", "/CoardPage", "EoardPage","/BoardReadPage/**", "/EditPage/**").permitAll()
+                //.antMatchers("/**").permitAll()
 
                 // 권한테스트
-                .antMatchers("/mypage").hasRole("USER")
-                .anyRequest().authenticated()
+               // .antMatchers("/mypage").hasRole("USER")
+               // .anyRequest().authenticated()*/
                 
                 // 인증 , 인가 테스트
-                /*.and()
+               /* .and()
                 .authorizeRequests()
-                .antMatchers("/풀어버릴 놈들 지정 후 대입/").permitAll()
+                *//*.antMatchers("/main").permitAll()*//*
                 .anyRequest().authenticated()*/
 
                 .and()

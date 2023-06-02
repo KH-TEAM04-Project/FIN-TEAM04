@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = resolveToken(request);
-
+        System.out.println("토큰 뱉어봐 : " + accessToken);
         if (StringUtils.hasText(accessToken) && tokenProvider.validateToken(accessToken)) {
             // 레디스에 해당 accessToken 로그아웃 여부 확인
             String isLogout = (String) redisTemplate.opsForValue().get(accessToken);
@@ -51,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             } else { System.out.println("로그아웃 된녀석!"); }
         } else {
-            System.out.println("토큰이 없거나 인가되지 않은 토큰!");
+            //System.out.println("토큰이 없거나 인가되지 않은 토큰!");
         }
         filterChain.doFilter(request, response);
     }

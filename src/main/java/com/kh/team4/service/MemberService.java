@@ -40,17 +40,27 @@ public class MemberService {
         String aaa = "success";
         return aaa;
     }
-
-    public MemberResDTO detail(Long mno) {
+    public MemberResDTO detail(String atk) {
+        System.out.println("Detail Service 진입");
+        Authentication authentication = tokenProvider.getAuthentication(atk);
+        Long mno = memberRepository.findByMid2(authentication.getName());
         MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
         System.out.println("마이페이지로 보낼 값 (3가지만 선정) : " + member.toString());
         return member;
     }
 
-
-    public void delete(Long mno) {
+/*    public void delete(Long mno) {
+        System.out.println("삭제할 회원의 No. : " + mno);
         System.out.println("받은 값 : " + mno);
         memberRepository.deleteById(mno);
+    }*/
+
+    public void delete(String atk) {
+        String name = tokenProvider.getAuthentication(atk).getName();
+        Long mno = memberRepository.findByMid2(name);
+        System.out.println("삭제할 회원의 No. : " + mno);
+        memberRepository.deleteById(mno);
+        System.out.println(name + "은 임포스터 였습니다.");
     }
 
 
