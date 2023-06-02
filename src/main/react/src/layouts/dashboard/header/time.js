@@ -17,6 +17,8 @@ const TokenInfo = (props) => {
     }
   }, [loggedIn]);
 
+ 
+
   useEffect(() => {
     if (!loggedIn) return () => {};
 
@@ -54,10 +56,14 @@ const TokenInfo = (props) => {
     setLoggedIn(false);
     setTokenExpiry(null);
     setTime(null);
-
+  
     if (props.onLogout) {
       props.onLogout();
     }
+  
+    setTimeout(() => {
+      window.location.reload(); // 로그아웃 후 자동으로 새로고침
+    }, 1000); // 1초 후 자동으로 새로고침
   };
 
   return (
