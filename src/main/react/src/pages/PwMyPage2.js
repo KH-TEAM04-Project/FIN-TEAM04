@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import Swal from 'sweetalert2';
+import '../sections/auth/MyPage/MyPage.css'
+import Nav from '../layouts/dashboard';
 
 function PwMyPage2() {
     const [password, setPassword] = useState('');
@@ -63,18 +65,20 @@ function PwMyPage2() {
     };
 
     return (
-        <div>
-            <h2>연말정산 페이지</h2>
-            <p>연말정산 페이지를 들어가시려면 비밀번호를 입력하셔야 합니다.</p>
-            <p>회원님의 개인정보보호를 위한 본인 확인 절차이오니, 로그인 시 사용하시는 비밀번호를 입력해주세요.</p>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    비밀번호:
-                    <input type="password" value={password} onChange={handlePasswordChange} />
-                </label>
-                <button type="submit">확인</button>
-                <button type="button" onClick={handleGoBack}>뒤로 가기</button>
-            </form>
+        <div className={"center-container2"}>
+            <div>
+                <h2>연말정산 페이지</h2>
+                <p>연말정산 페이지를 들어가시려면 비밀번호를 입력하셔야 합니다.</p>
+                <p>회원님의 개인정보보호를 위한 본인 확인 절차이오니, 로그인 시 사용하시는 비밀번호를 입력해주세요.</p>
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        비밀번호:
+                        <input type="password" value={password} onChange={handlePasswordChange}/>
+                    </label>
+                    <button type="submit">확인</button>
+                    <button type="button" onClick={handleGoBack}>뒤로 가기</button>
+                </form>
+            </div>
         </div>
     );
 }
