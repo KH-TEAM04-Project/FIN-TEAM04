@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -23,7 +22,7 @@ import javax.persistence.*;
         , initialValue = 1  //시작값
         , allocationSize = 1  //메모리를 통해 할당할 범위 사이즈
 )
-public class Taxrefund {
+public class Taxrefund extends Base{
     @Id
     @GeneratedValue(  // 기본키를 자동으로 생성해주는 어노테이션
             strategy = GenerationType.SEQUENCE  //사용할 전략을 시퀀스로 선택
