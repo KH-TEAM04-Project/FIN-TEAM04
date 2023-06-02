@@ -50,7 +50,7 @@ export default function Router() {
                 {path: '/blog', element: <BlogPage/>},
                 {path: '/qna/list', element: <QnaListPage/>},
                 {path: '/board/list', element: <BoardListPage/>},
-                {path: '/tax', element: <PwMyPage2/>},
+                {path: '/tax', element: !isLoggedIn ? <Navigate to="/Main"/> : <PwMyPage2/>},
             ],
         },
         {
@@ -59,15 +59,15 @@ export default function Router() {
         },
         {
             path: '/MyPage',
-            element: <PwMyPage/>,
+            element: !isLoggedIn ? <Navigate to="/Main"/> : <PwMyPage/>,
         },
         {
             path: '/MyPage/main',
-            element: <MyPage/>,
+            element: !isLoggedIn ? <Navigate to="/Main"/> : <MyPage/>,
         },
         {
-            path: '/tax/main',
-            element:<TaxForm/>,
+            path: '/tax/main', // 로그인 되지 않았으면 접근할 수 없어. 메인페이지로 이동
+            element: !isLoggedIn ? <Navigate to="/Main"/> : <TaxForm/>,
         },
         {
             path: '/SignUp',

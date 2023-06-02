@@ -1,20 +1,21 @@
 /* TaxForm.css */
 .info-box {
-    background-color: lightskyblue;
-    padding: 10px;
-    border: 1px solid black;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    margin-left: 350px;
+    display: flex;
     justify-content: center;
+    align-items: center;
+    height: 85vh;
+    margin-left: 300px;
 }
 
 .info-box2 {
-    background-color: #f0f0f0;
-    padding: 5px;
-    border: 1px solid black;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    text-align: center;
+}
+
+.center-container2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 350px;
 }
   /* 간단한 스타일링을 적용한 테이블 */
   table {
