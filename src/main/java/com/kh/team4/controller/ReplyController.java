@@ -57,6 +57,14 @@ public class ReplyController {
         return ResponseEntity.ok(replyDTOList);
     }
 
+    // 댓글 삭제 기능
+    @DeleteMapping("qna/replys/delete/{qno}/{rno}")
+    public String delete(@PathVariable("rno") Long rno) {
+        System.out.println("삭제 컨트롤러 진입");
+        qnaService.delete(rno);
+        System.out.println("서비스에서 delete 함수 호출");
+        return "/qna/list";
+    }
 
 
 }

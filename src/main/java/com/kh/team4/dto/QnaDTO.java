@@ -16,7 +16,7 @@ public class QnaDTO {
     private Long qno;
     private String title;
     private String content;
-    private Member writer;
+    private String writerID;
     private Integer secret; // Boolean 타입으로 수정 확인해야됨
     private Integer hits;
     private String regDate;
@@ -30,10 +30,11 @@ public class QnaDTO {
         qnaDTO.setQno(qna.getQno());
         qnaDTO.setTitle(qna.getTitle());
         qnaDTO.setContent(qna.getContent());
+        qnaDTO.setWriterID(qna.getMember().getMid());
         qnaDTO.setSecret(qna.getSecret());
         qnaDTO.setHits(qna.getHits());
         qnaDTO.setRegDate(qna.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        qnaDTO.setMno(qnaDTO.getMno());
+        qnaDTO.setMno(qna.getMember().getMno());
 
         return qnaDTO;
     }

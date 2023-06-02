@@ -14,7 +14,7 @@ import java.util.Optional;
 public class TaxrefundDTO {
 
     private Long tno;
-    private Member mno;
+    private Long mno;
     private String year; //연도
     private Long lifeinsurance; //건강보험
     private Long npension; //국민연금
@@ -32,7 +32,7 @@ public class TaxrefundDTO {
     private Long donation; // 기부금
 
     public static TaxrefundDTO entityToDTO(Optional<Taxrefund> tax) {
-        TaxrefundDTO taxrefund = TaxrefundDTO.builder()
+        return TaxrefundDTO.builder()
                 .card(tax.get().getCard())
                 .donation(tax.get().getDonation())
                 .edu(tax.get().getEdu())
@@ -47,10 +47,9 @@ public class TaxrefundDTO {
                 .medi(tax.get().getMedi())
                 .npension(tax.get().getNpension())
                 .tno(tax.get().getTno())
-                .mno(tax.get().getMno())
+                .mno(tax.get().getMno().getMno())
                 .year(tax.get().getYear())
                 .tno(tax.get().getTno())
                 .build();
-        return taxrefund;
     }
 }

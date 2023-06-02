@@ -8,6 +8,7 @@ import com.kh.team4.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ReplyService {
     private final ReplyRepository replyRepository;  // replyRepository 를 주입받음
     private final QnaRepository qnaRepository;
 
+    @Transactional
     public Long save(ReplyDTO replyDTO) {
         log.info("reply 서비스 진입");
 
@@ -60,4 +62,11 @@ public class ReplyService {
         }
         return replyDTOList;
     }
+
+    // 댓글 삭제
+    public void delete(Long rno) {
+        System.out.println("댓글 삭제 서비스 진입");
+        qnaRepository.deleteById(rno);
+    }
+
 }

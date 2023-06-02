@@ -23,7 +23,7 @@ const IconButton = () => {
   const account = {
     displayName: '로그인해주세요',
     email: 'demo@minimals.cc',
-    photoURL: item.photoURL,
+    photoURL: photoURL,
   };
 
   return (

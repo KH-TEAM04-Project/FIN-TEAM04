@@ -6,26 +6,29 @@ import com.kh.team4.dto.TaxrefundDTO;
 import com.kh.team4.entity.Member;
 import com.kh.team4.service.MemberService;
 import com.kh.team4.service.TaxrefundService;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-
+@CrossOrigin(origins = "localhost:3000")
+@RestController
+@RequiredArgsConstructor    // 생성자 주입
+@RequestMapping()
+@ToString
 public class TaxrefundController {
 
-    TaxrefundService service;
-    MemberService memberService;
+    private final TaxrefundService service;
+    private final MemberService memberService;
 
-    @PostMapping({"/taxrefund/detail"})
+    @PostMapping({"/taxrefund"})
     public ResponseEntity<TaxrefundDTO> Taxrefund(@RequestBody TaxrefundDTO dto) {
-        Member mno = dto.getMno();
+        Long mno = dto.getMno();
         System.out.println("연말정산 페이지 진입 및 받은 값 : " + mno);
-        return ResponseEntity.ok(service.detail(mno.getMno()));
+        return ResponseEntity.ok(service.detail(mno));
     }
 
-    @PostMapping("/taxrefund/intoTaxrefund")
+    @PostMapping("/intoTaxrefund")
     public boolean intoCheck(@RequestBody MemberReqDTO memberDTO) {
         System.out.println("연말정산페이지 진입 시 패스워드 확인");
         Long mno = memberDTO.getMno();
