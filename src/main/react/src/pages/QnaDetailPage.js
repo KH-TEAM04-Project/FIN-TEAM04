@@ -23,10 +23,6 @@ import {
   TableRow,
   TableCell,
   Grid,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
@@ -475,7 +471,7 @@ const QnaDetailPage = () => {
                     <TableCell>{reply.content}</TableCell>
                     <TableCell>{reply.regDate}</TableCell>
                     <TableCell>
-                      <IconButton color="error" onClick={() => handleOpenDeleteDialog(reply.rno)}>
+                      <IconButton color="error" onClick={() => handleOpenDeleteDialog(reply.qno, reply.rno)}>
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -484,24 +480,6 @@ const QnaDetailPage = () => {
               </TableBody>
             </Table>
           </Stack>
-          <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-            <DialogTitle>댓글 삭제</DialogTitle>
-            <DialogContent>
-              <Typography variant="body1">댓글을 삭제하시겠습니까?</Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDeleteDialog}>취소</Button>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  handleCloseDeleteDialog();
-                }}
-              >
-                삭제
-              </Button>
-            </DialogActions>
-          </Dialog>
-
         </Container>
       </div>
     </div>

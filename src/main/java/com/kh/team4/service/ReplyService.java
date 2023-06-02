@@ -66,7 +66,7 @@ public class ReplyService {
     // 댓글 삭제
     public void delete(Long rno) {
         System.out.println("댓글 삭제 서비스 진입");
-        qnaRepository.deleteById(rno);
+        replyRepository.deleteById(rno);
     }
 
 }
