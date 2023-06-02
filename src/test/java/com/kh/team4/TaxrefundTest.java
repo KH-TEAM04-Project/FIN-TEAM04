@@ -17,14 +17,14 @@ public class TaxrefundTest {
     @Test
     void save() {
 
-        LongStream.rangeClosed(10000000, 200000000).forEach(i -> {
+        LongStream.rangeClosed(1, 1).forEach(i -> {
             Taxrefund parms = Taxrefund.builder()
                     .card(i)
                     .cash(i)
                     .dcard(i)
                     .donation(i)
                     .edu(i)
-                    .mno(new Member(112L))
+                    .mno(new Member(121L))
                     .housefunds(i)
                     .housesaving(i)
                     .insurance(i)

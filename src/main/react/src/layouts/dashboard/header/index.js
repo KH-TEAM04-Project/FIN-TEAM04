@@ -12,6 +12,7 @@ import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
 import NotificationsPopover from './NotificationsPopover';
 import TokenInfo from './time';
+import YourComponent from './time2';
 
 // ----------------------------------------------------------------------
 
@@ -70,6 +71,7 @@ export default function Header({ onOpenNav }) {
           }}
         >
           <TokenInfo />
+          <YourComponent/>
           <LanguagePopover />
           <NotificationsPopover />
           <AccountPopover />

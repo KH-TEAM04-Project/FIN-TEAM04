@@ -1,17 +1,21 @@
 /* TaxForm.css */
-.tax-form__container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .tax-form__grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
-  }
-  
+.info-box {
+    background-color: lightskyblue;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-left: 350px;
+    justify-content: center;
+}
+
+.info-box2 {
+    background-color: #f0f0f0;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
   /* 간단한 스타일링을 적용한 테이블 */
   table {
     border-collapse: collapse;
