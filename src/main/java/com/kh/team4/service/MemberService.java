@@ -133,19 +133,15 @@ public class MemberService {
     }
 
     @Transactional
-    public TokenDTO reissue(TokenDTO token) {
-// 미리만든 생성자
-// public TokenDTO reissue(String Token) {  아래쪽 쓰는것들도 다 바꿔야 함.
+    public TokenDTO reissue(TokenDTO token, String atk) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(token.getRefreshToken())) {
-            // 근데 RefreshToken 의 경우 백쪽에서만 저장하는거 아닌가요?
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
         }
 
         // 2. Access Token 에서 Member ID 가져오기
-        Authentication authentication = tokenProvider.getAuthentication(token.getAccessToken());
+        Authentication authentication = tokenProvider.getAuthentication(atk);
     
-        // ... "RT"라고 써야지 소연아 : 넹
         String refreshToken = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
         if (!refreshToken.equals(token.getRefreshToken())) {
@@ -155,8 +151,7 @@ public class MemberService {
         // 만료된 값을 사용하는 코드를 짜 보았다.
         // 블랙리스트 기능을 사용했다고.. 볼수있나?
         // Refresh Token 을 대체하는 Access 토큰 : logout 사용처가 발견되면 해당 코드는 삭제할 것.
-        String accessToken = token.getAccessToken();
-        String rediskey = redisTemplate.opsForValue().get(accessToken);
+        String rediskey = redisTemplate.opsForValue().get(atk);
 
         if(StringUtils.hasText(rediskey)) {
             // redisTemplate.delete(rediskey);
