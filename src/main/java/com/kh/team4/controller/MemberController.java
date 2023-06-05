@@ -84,8 +84,12 @@ public class MemberController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDTO> reissue(@RequestBody TokenDTO reissue) {
-        return ResponseEntity.ok(memberService.reissue(reissue));
+    public ResponseEntity<TokenDTO> reissue(@RequestHeader("Authorization") String data, @RequestBody TokenDTO token) {
+        System.out.println("[INFO ] Reissue 컨트롤러 입장 + 받은 값 확인 : " + data);
+        String atk = data.substring(7);
+        System.out.println("atk : " + atk);
+        System.out.println("rtk : " + token.getRefreshToken());
+        return ResponseEntity.ok(memberService.reissue(token, atk));
     }
 
     @PostMapping("/logout22")
