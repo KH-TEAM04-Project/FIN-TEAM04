@@ -19,12 +19,12 @@ public class TaxrefundTest {
 
         LongStream.rangeClosed(1, 1).forEach(i -> {
             Taxrefund parms = Taxrefund.builder()
-                    .card(i)
+                    .card(1001231311230L)
                     .cash(i)
                     .dcard(i)
                     .donation(i)
                     .edu(i)
-                    .mno(new Member(121L))
+                    .mno(new Member(77L))
                     .housefunds(i)
                     .housesaving(i)
                     .insurance(i)
