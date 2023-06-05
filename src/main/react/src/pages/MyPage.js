@@ -215,30 +215,7 @@ function MyPage() {
         }
     };
 
-    const handleImageUpload = async (file) => {
-        try {
-            const formData = new FormData();
-            formData.append('profilePhoto', file);
 
-            const token = localStorage.getItem('accessToken');
-            const headers = {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
-            };
-
-            const response = await axios.post('/member/profilePhoto', formData, {headers});
-            // 이미지 업로드 성공 후의 추가 로직 작성
-
-            console.log(response.data);
-            // 업로드된 이미지 URL을 상태에 업데이트
-            setAvatarSrc(response.data.imageUrl);
-
-            console.log(response.data); // 업로드된 이미지에 대한 응답 데이터 확인
-        } catch (error) {
-            console.error(error);
-            // 이미지 업로드 실패 처리 로직 작성
-        }
-    };
 
     const handleGoBack = () => {
         navigate(-1); // Go back one step in the browser history
@@ -250,7 +227,7 @@ function MyPage() {
         <div className={"center-container"}><Nav/> {/* 사이드바 컴포넌트를 추가 */}
             <div className={"content"}>
                 <h1>마이페이지</h1>
-                <ImageUpload avatarSrc={avatarSrc} setAvatarSrc={setAvatarSrc} handleImageUpload={handleImageUpload}/>
+                <ImageUpload avatarSrc={avatarSrc} setAvatarSrc={setAvatarSrc}/>
 
                 {userData.mname && !isEditing && !isChangingPassword && (
                     <>

@@ -55,12 +55,14 @@ public class MemberController {
     }
 
     @PostMapping("/profilePhoto")
-    public ResponseEntity<?> uploadProfilePhoto(@RequestHeader("Authorization") String data, @RequestBody MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<?> uploadProfilePhoto(@RequestHeader("Authorization") String data,  @RequestParam("multipartFile") MultipartFile multipartFile) throws IOException {
         System.out.println("받은 값 확인 : " + data);
         String atk = data.substring(7);
         System.out.println("토큰 값만 추출 : " + atk);
+
+        System.out.println("MultipartFile" + multipartFile);
         //S3 Bucket 내부에 "/profile"
-        FileUploadResDTO profile = s3Uploader.upload( multipartFile, "profile");
+        FileUploadResDTO profile = s3Uploader.upload( multipartFile, "profile", atk);
         return ResponseEntity.ok(profile);
     }
 
