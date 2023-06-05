@@ -26,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 public class MemberService {
     //final 붙여야지 생성자 만들어줌
     private final MemberRepository memberRepository;
-    private final RedisUtil redisUtil;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder managerBuilder;
     private final TokenProvider tokenProvider;

@@ -1,11 +1,9 @@
 package com.kh.team4.controller;
 
-import com.kh.team4.dto.MailDTO;
-import com.kh.team4.dto.MemberReqDTO;
-import com.kh.team4.dto.MemberResDTO;
-import com.kh.team4.dto.TokenDTO;
+import com.kh.team4.dto.*;
 import com.kh.team4.jwt.JwtFilter;
 import com.kh.team4.service.MemberService;
+import com.kh.team4.service.S3Uploader;
 import com.kh.team4.service.SendEmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -13,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +26,7 @@ public class MemberController {
     private final MemberService memberService;
     private final JavaMailSender javaMailSender;
     private final SendEmailService sendEmailService;
+    private final S3Uploader s3Uploader;
 
     @PostMapping("/intoMyPage")
     public boolean intoCheck(@RequestBody MemberReqDTO memberDTO) {
@@ -51,6 +52,16 @@ public class MemberController {
         String atk = data.substring(7);
         System.out.println("토큰 값만 추출 : " + atk);
         return ResponseEntity.ok(memberService.Update(memberReqDTO, atk));
+    }
+
+    @PostMapping("/profilePhoto")
+    public ResponseEntity<?> uploadProfilePhoto(@RequestHeader("Authorization") String data, @RequestBody MultipartFile multipartFile) throws IOException {
+        System.out.println("받은 값 확인 : " + data);
+        String atk = data.substring(7);
+        System.out.println("토큰 값만 추출 : " + atk);
+        //S3 Bucket 내부에 "/profile"
+        FileUploadResDTO profile = s3Uploader.upload( multipartFile, "profile");
+        return ResponseEntity.ok(profile);
     }
 
     @PostMapping("/changePassword")
