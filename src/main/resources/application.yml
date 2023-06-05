@@ -54,6 +54,17 @@ spring:
       mail.smtp.auth: true
       mail.smtp.ssl.enable: true
 
+  profiles:
+    include:
+      - aws
+      - credentials
+
+    servlet:
+      multipart:
+        enabled: true
+        max-file-size: 20MB
+        max-request-size: 20MB
+
  #첨부파일
   spring:
     servlet:
@@ -68,5 +79,4 @@ spring:
   # 이미지 파일 연동설정
   file:
     upload-dir: src/main/resources/static/images/profiles
-
 

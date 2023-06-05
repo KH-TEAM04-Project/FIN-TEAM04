@@ -820,3 +820,7 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/java,python,windows,eclipse,intellij+all,macos,visualstudio,react
+
+# yml
+application-aws.yml
+application-credentials.yml

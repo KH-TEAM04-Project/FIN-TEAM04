@@ -23,6 +23,7 @@ public class MemberResDTO {
     private String ph;
     private String address;
     private String detailAddress;
+    private String ProfilePhoto;
 
     public MemberResDTO(Member member){
         this.mno = member.getMno();
@@ -54,6 +55,7 @@ public class MemberResDTO {
                 .ph(member.getPh())
                 .address(member.getAddress().getAddress())
                 .detailAddress(member.getAddress().getDetailAddress())
+                .ProfilePhoto(member.getProfilePhoto())
                 .build();
     }
 
@@ -65,6 +67,7 @@ public class MemberResDTO {
                 .regno(member.get().getRegno())
                 .email(member.get().getEmail())
                 .ph(member.get().getPh())
+                .ProfilePhoto(member.get().getProfilePhoto())
                 .address(member.get().getAddress().getAddress())
                 .detailAddress(member.get().getAddress().getDetailAddress())
                 .build();

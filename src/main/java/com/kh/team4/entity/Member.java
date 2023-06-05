@@ -50,6 +50,9 @@ public class Member {
     @Column(columnDefinition = "varchar2(20)")
     private String ph;
 
+    @Column
+    private String ProfilePhoto;
+
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
@@ -62,6 +65,7 @@ public class Member {
     public Member(Long mno) {
         this.mno = mno;
     }
+
 
     public static Member dtoToEntity(MemberReqDTO memberReqDTO) {
 
@@ -121,4 +125,7 @@ public  static Member findMid(MemberResDTO memberResDTO){
         return "Mno : " + this.mno + ",  Email : " + this.email + ",  Ph : " + this.ph;
     }
 
+    public String setProfilePhoto(String uploadImageUrl) {
+        return uploadImageUrl;
+    }
 }
