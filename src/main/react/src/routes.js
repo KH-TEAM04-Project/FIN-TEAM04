@@ -55,7 +55,7 @@ export default function Router() {
                 {path: '/blog', element: <BlogPage/>},
                 {path: '/qna/list', element: <QnaListPage/>},
                 {path: '/board/list', element: <BoardListPage/>},
-                {path: '/tax', element: !token ? <Navigate to="/Main"/> : <PwMyPage2/>},
+                {path: '/tax', element: !token ? <Navigate to="/login"/> : <PwMyPage2/>},
             ],
         },
         {
@@ -72,7 +72,7 @@ export default function Router() {
         },
         {
             path: '/tax/main', // 로그인 되지 않았으면 접근할 수 없어. 메인페이지로 이동
-            element: !token ? <Navigate to="/Main"/> : <TaxForm/>,
+            element: !token ? <Navigate to="/login"/> : <TaxForm/>,
         },
         {
             path: '/SignUp',
