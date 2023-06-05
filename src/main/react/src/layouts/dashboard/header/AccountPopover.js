@@ -60,9 +60,9 @@ function AccountPopover() {
   const handleLogout = async () => {
     const accessToken = localStorage.getItem('accessToken');
     console.log(accessToken)
-
+  
     try {
-      await axios.post("/member/logout22", null,{
+      await axios.post("/member/logout22", null, {
         headers: {
           // http 헤더의 auth 부분에 accessToken 값 설정
           'Authorization': `Bearer ${accessToken}`
@@ -72,6 +72,7 @@ function AccountPopover() {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       navigate("/slogin"); // Adjust the path according to your routing configuration
+      window.location.reload(); // 페이지를 새로고침
     } catch (error) {
       console.error('Logout failed:', error);
     }

@@ -183,7 +183,7 @@ function MyPage() {
 
         if (confirmDelete) {
             // Send the mno value to the backend
-            axios.delete("/memberDelete", {
+            axios.delete("/member/memberDelete", {
                 headers: {
                     // http 헤더의 auth 부분에 accessToken 값 설정
                     'Authorization': `Bearer ${token}`
