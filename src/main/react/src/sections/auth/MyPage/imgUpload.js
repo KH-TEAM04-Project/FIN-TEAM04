@@ -25,18 +25,19 @@ const ImageUpload = ({ avatarSrc, setAvatarSrc }) => {
     fileInput.accept = 'image/*';
     fileInput.onchange = async (e) => {
       const file = e.target.files[0];
+      const formData = new FormData();
       const reader = new FileReader();
       reader.onloadend = async () => {
         try {
-          const formData = new FormData();
-          formData.append('image', file);
+          formData.append('multipartFile', file);
+          const token = localStorage.getItem('accessToken');
+          const headers = {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          };
 
-          const response = await axios.post(UPLOAD_URL, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-        
+          const response = await axios.post('/member/profilePhoto', formData, {headers});
+
           if (response.status === 200) {
             // 백엔드 엔드포인트로부터 제공받은 이미지 URL 사용.
             setAvatarSrc(response.data.imageUrl);
