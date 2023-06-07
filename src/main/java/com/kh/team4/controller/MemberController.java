@@ -1,12 +1,18 @@
 package com.kh.team4.controller;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.util.IOUtils;
 import com.kh.team4.dto.*;
 import com.kh.team4.jwt.JwtFilter;
+import com.kh.team4.jwt.TokenProvider;
+import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.service.MemberService;
 import com.kh.team4.service.S3Uploader;
 import com.kh.team4.service.SendEmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,10 +33,11 @@ import java.util.Map;
 @RequestMapping("/member")
 @ToString
 public class MemberController {
-    private final MemberService memberService;
     private final JavaMailSender javaMailSender;
     private final SendEmailService sendEmailService;
     private final S3Uploader s3Uploader;
+    private final MemberService memberService;
+
 
     @PostMapping("/intoMyPage")
     public boolean intoCheck(@RequestBody MemberReqDTO memberDTO) {
@@ -65,6 +76,7 @@ public class MemberController {
         FileUploadResDTO profile = s3Uploader.upload( multipartFile, "profile", atk);
         return ResponseEntity.ok(profile);
     }
+
 
     @PostMapping("/changePassword")
     public boolean changePwd(@RequestBody MemberReqDTO memberDTO, @RequestHeader("Authorization") String data) {
