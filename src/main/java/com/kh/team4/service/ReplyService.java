@@ -22,6 +22,7 @@ public class ReplyService {
     private final ReplyRepository replyRepository;  // replyRepository 를 주입받음
     private final QnaRepository qnaRepository;
 
+    // 댓글 작성
     @Transactional
     public Long save(ReplyDTO replyDTO) {
         log.info("reply 서비스 진입");
@@ -32,7 +33,6 @@ public class ReplyService {
             throw new IllegalArgumentException("게시글 ID(qno)는 null일 수 없습니다.");
             // 또는 적절한 에러 처리를 수행할 수 있습니다.
         }
-
         Optional<Qna> optionalQna = qnaRepository.findById(qno);
         if (optionalQna.isPresent()) {
             Qna qna = optionalQna.get();
@@ -62,7 +62,6 @@ public class ReplyService {
         }
         return replyDTOList;
     }
-
     // 댓글 삭제
     public void delete(Long rno) {
         System.out.println("댓글 삭제 서비스 진입");

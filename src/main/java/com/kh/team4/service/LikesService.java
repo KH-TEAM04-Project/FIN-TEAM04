@@ -23,7 +23,7 @@ public class LikesService {
     public LikesService(LikesRepository likesRepository) {
         this.likesRepository = likesRepository;
     }
-
+    // 좋아요 기능
     public void likes(LikesDTO likesDTO) {
         log.info("좋아요 서비스 진입 DTO : " + likesDTO);
         Likes likes = Likes.builder()
@@ -32,7 +32,7 @@ public class LikesService {
                 .build();
         likesRepository.save(likes);
     }
-
+    // 좋아요 취소 기능
     public void unLikes(LikesDTO likesDTO) {
         log.info("좋아요 취소 서비스 진입 DTO: " + likesDTO);
         List<Likes> likesList = likesRepository.findAllByQnoAndMno(likesDTO.getQno(), likesDTO.getMno());
