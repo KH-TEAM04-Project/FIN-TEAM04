@@ -19,13 +19,13 @@ public class LikesController {
     public LikesController(LikesService likesService) {
         this.likesService = likesService;
     }
-
+    // 좋아요 컨트롤러
     @PostMapping("/likes/{qno}")
     public void addLike(@RequestBody LikesDTO likesDTO) {
         log.info("좋아요 컨트롤러 진입");
         likesService.likes(likesDTO);
     }
-
+    // 좋아요 취소 컨트롤러
     @PostMapping("/unLikes/{qno}")
     public void removeLike(@RequestBody LikesDTO likesDTO) {
         log.info("좋아요 취소 컨트롤러 진입");

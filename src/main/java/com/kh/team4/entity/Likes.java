@@ -23,7 +23,6 @@ public class Likes {
     private Long lno;
     private Long qno; // 게시글 ID
     private Long mno; // 사용자 ID
-    // 생성자
     protected Likes() {
     }
 
@@ -31,7 +30,6 @@ public class Likes {
         this.qno = qno;
         this.mno = mno;
     }
-    // 빌더 패턴을 사용한 생성자
     public static LikesBuilder builder() {
         return new LikesBuilder();
     }

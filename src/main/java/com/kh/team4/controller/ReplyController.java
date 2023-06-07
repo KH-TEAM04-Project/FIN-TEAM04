@@ -21,7 +21,6 @@ import java.util.Map;
 @Log4j2
 public class ReplyController {
     private final ReplyService replyService; // ReplyService 를 주입 받음
-
     private final QnaService qnaService;
 
     // 댓글 작성
@@ -34,7 +33,6 @@ public class ReplyController {
         if (!qnaService.existsQna(qno)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 게시글이 존재하지 않습니다.");
         }
-
         // replyDTO에 qno 설정
         replyDTO.setQno(qno);
 
@@ -49,7 +47,6 @@ public class ReplyController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 작성에 실패하였습니다.");
         }
     }
-
     // 댓글 리스트 페이지
     @GetMapping("/qna/replys/{qno}")
     public ResponseEntity<?> getReplys(@PathVariable Long qno) {
@@ -57,7 +54,6 @@ public class ReplyController {
         log.info("댓글 목록 가져오기");
         return ResponseEntity.ok(replyDTOList);
     }
-
     // 댓글 삭제 기능
     @DeleteMapping("/qna/replys/delete/{qno}/{rno}")
     public String deleteReply(@PathVariable("qno") Long qno, @PathVariable("rno") Long rno) {
@@ -66,8 +62,6 @@ public class ReplyController {
         System.out.println("서비스에서 delete 함수 호출");
         return "redirect:/qna/list";
     }
-
-
 }
 
 
