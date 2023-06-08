@@ -77,8 +77,11 @@ public class ReplyService {
         return replyDTOList;
     }
     // 댓글 삭제
-    public void delete(Long rno) {
+    public void delete(Long rno, String atk) {
         System.out.println("댓글 삭제 서비스 진입");
+        Authentication authentication = tokenProvider.getAuthentication(atk);
+        Long mno = memberRepository.findByMid2(authentication.getName());
+        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
         replyRepository.deleteById(rno);
     }
 

@@ -91,7 +91,12 @@ export default function Ya() {
 
   const getPosts = () => {
     axios
-      .get(`/qna/update/${qno}`)
+      .get(`/qna/update/${qno}`, {
+         headers: {
+             // http 헤더의 auth 부분에 accessToken 값 설정
+             'Authorization': `Bearer ${token}`
+         }
+      })
       .then((response) => {
         setPosts([response.data]);
         console.log(response.data);
@@ -127,7 +132,12 @@ export default function Ya() {
         mno,
       };
       axios
-        .put(`/qna/update/${qno}`, userData)
+        .put(`/qna/update/${qno}`, userData, {
+             headers: {
+                 // http 헤더의 auth 부분에 accessToken 값 설정
+                 'Authorization': `Bearer ${token}`
+             }
+        })
         .then((response) => {
           console.log(response.status, response.data);
           console.log(response.data);

@@ -59,9 +59,11 @@ public class ReplyController {
     }
     // 댓글 삭제 기능
     @DeleteMapping("/qna/replys/delete/{qno}/{rno}")
-    public String deleteReply(@PathVariable("qno") Long qno, @PathVariable("rno") Long rno) {
+    public String deleteReply(@RequestHeader("Authorization") String data, @PathVariable("qno") Long qno, @PathVariable("rno") Long rno) {
         System.out.println("댓글 삭제 컨트롤러 진입");
-        replyService.delete(rno);
+        String atk = data.substring(7);
+        System.out.println("atk : " + atk);
+        replyService.delete(rno, atk);
         System.out.println("서비스에서 delete 함수 호출");
         return "redirect:/qna/list";
     }
