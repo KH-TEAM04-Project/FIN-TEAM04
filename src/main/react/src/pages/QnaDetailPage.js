@@ -91,7 +91,12 @@ const QnaDetailPage = () => {
 
   const getPost = () => {
     axios
-      .get(`/qna/detail/${qno}`)
+      .get(`/qna/detail/${qno}`, {
+         headers: {
+             // http 헤더의 auth 부분에 accessToken 값 설정
+             'Authorization': `Bearer ${token}`
+         }
+      })
       .then((response) => {
         setPost(response.data); // 게시글 업데이트
         console.log(response.data);
@@ -110,7 +115,12 @@ const QnaDetailPage = () => {
 
   const getReplys = () => {
     axios
-      .get(`/qna/replys/${qno}`)
+      .get(`/qna/replys/${qno}`, {
+         headers: {
+             // http 헤더의 auth 부분에 accessToken 값 설정
+             'Authorization': `Bearer ${token}`
+         }
+      })
       .then((response) => {
         setReplys(response.data); // 댓글 목록 업데이트
         console.log(response.data);
@@ -159,7 +169,12 @@ const QnaDetailPage = () => {
 
   const handleEdit = () => {
     // 게시글 수정 기능 구현
-      axios.put(`/qna/update/${qno}`, data)
+      axios.put(`/qna/update/${qno}`, data, {
+        headers: {
+            // http 헤더의 auth 부분에 accessToken 값 설정
+            'Authorization': `Bearer ${token}`
+        }
+      })
         .then((response) => {
           console.log("게시글이 성공적으로 수정되었습니다.");
           alert("수정이 완료되었습니다.");
@@ -173,7 +188,12 @@ const QnaDetailPage = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`/qna/delete/${qno}`)
+      .delete(`/qna/delete/${qno}`, {
+        headers: {
+            // http 헤더의 auth 부분에 accessToken 값 설정
+            'Authorization': `Bearer ${token}`
+        }
+      })
       .then((response) => {
         console.log("게시글이 성공적으로 삭제되었습니다.");
         alert("게시글이 삭제되었습니다.");
@@ -194,7 +214,12 @@ const QnaDetailPage = () => {
     };
 
     axios
-      .post(`/qna/likes/{qno}`, requestData) // 요청 본문을 requestData로 전달
+      .post(`/qna/likes/{qno}`, requestData, {
+         headers: {
+           // http 헤더의 auth 부분에 accessToken 값 설정
+           'Authorization': `Bearer ${token}`
+         }
+      }) // 요청 본문을 requestData로 전달
       .then((response) => {
         console.log('좋아요 요청 성공:', response.data);
         // 좋아요 요청 성공 시 추가 동작 구현
@@ -214,7 +239,12 @@ const QnaDetailPage = () => {
     };
 
     axios
-      .post(`/qna/unLikes/{qno}`, requestData) // 요청 본문을 requestData로 전달
+      .post(`/qna/unLikes/{qno}`, requestData, {
+         headers: {
+           // http 헤더의 auth 부분에 accessToken 값 설정
+           'Authorization': `Bearer ${token}`
+         }
+      }) // 요청 본문을 requestData로 전달
       .then((response) => {
         console.log('좋아요 취소 요청 성공:', response.data);
         // 좋아요 취소 요청 성공 시 추가 동작 구현
@@ -237,7 +267,12 @@ const QnaDetailPage = () => {
   // 댓글 삭제 함수
   const handleDeleteReply = (rno) => {
     axios
-      .delete(`/qna/replys/${qno}/${rno}`)
+      .delete(`/qna/replys/${qno}/${rno}`, {
+        headers: {
+          // http 헤더의 auth 부분에 accessToken 값 설정
+          'Authorization': `Bearer ${token}`
+        }
+      })
       .then((response) => {
         console.log('댓글이 성공적으로 삭제되었습니다.');
         alert('댓글이 삭제되었습니다.');
@@ -257,7 +292,12 @@ const QnaDetailPage = () => {
     };
 
     axios
-      .post(`/qna/replys/${qno}`, replyData)
+      .post(`/qna/replys/${qno}`, replyData, {
+          headers: {
+              // http 헤더의 auth 부분에 accessToken 값 설정
+              'Authorization': `Bearer ${token}`
+          }
+      })
       .then((response) => {
         console.log('댓글 작성 성공:', response.data);
         alert("댓글이 작성되었습니다.");
@@ -325,11 +365,8 @@ const QnaDetailPage = () => {
               <MenuItem component={Link} to="/qna/list">
                 Q&A 목록
               </MenuItem>
-              <MenuItem component={Link} to="/qna/write">
+              <MenuItem component={Link} to="/qna/regist">
                 새로 작성하기
-              </MenuItem>
-              <MenuItem onClick={handleEdit}>
-                수정하기
               </MenuItem>
               <MenuItem onClick={handleDelete}>
                 삭제하기

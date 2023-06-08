@@ -87,6 +87,9 @@ SELECT * FROM all_sequences
 WHERE sequence_owner = 'TEAM4'
 
   1. 테이블 삭제
+     drop table likes;
+     drop table taxrefund;
+     drop table profileimg;
      drop table files;
      drop table board;
      drop table reply;
