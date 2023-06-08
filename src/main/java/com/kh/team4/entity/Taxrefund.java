@@ -30,7 +30,7 @@ public class Taxrefund extends Base{
     )
     private Long tno;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_mno")
     private Member mno; // 회원번호
 

@@ -91,7 +91,12 @@ const QnaDetailPage = () => {
 
   const getPost = () => {
     axios
-      .get(`/qna/detail/${qno}`)
+      .get(`/qna/detail/${qno}`, {
+         headers: {
+             // http 헤더의 auth 부분에 accessToken 값 설정
+             'Authorization': `Bearer ${token}`
+         }
+      })
       .then((response) => {
         setPost(response.data); // 게시글 업데이트
         console.log(response.data);
@@ -110,7 +115,12 @@ const QnaDetailPage = () => {
 
   const getReplys = () => {
     axios
-      .get(`/qna/replys/${qno}`)
+      .get(`/qna/replys/${qno}`, {
+         headers: {
+             // http 헤더의 auth 부분에 accessToken 값 설정
+             'Authorization': `Bearer ${token}`
+         }
+      })
       .then((response) => {
         setReplys(response.data); // 댓글 목록 업데이트
         console.log(response.data);
@@ -257,7 +267,12 @@ const QnaDetailPage = () => {
     };
 
     axios
-      .post(`/qna/replys/${qno}`, replyData)
+      .post(`/qna/replys/${qno}`, replyData, {
+          headers: {
+              // http 헤더의 auth 부분에 accessToken 값 설정
+              'Authorization': `Bearer ${token}`
+          }
+      })
       .then((response) => {
         console.log('댓글 작성 성공:', response.data);
         alert("댓글이 작성되었습니다.");

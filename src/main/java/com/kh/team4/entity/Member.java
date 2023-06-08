@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -56,6 +58,22 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    // qna 관계매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Qna> qnaList = new ArrayList<>();
+
+    // reply 관계매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reply> replyList = new ArrayList<>();
+
+    // taxrefund 관계매핑
+    @OneToMany(mappedBy = "mno", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Taxrefund> taxrefundList = new ArrayList<>();
+
+    // board 관계매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Board> boardList = new ArrayList<>();
 
     @Embedded
     private Address address;

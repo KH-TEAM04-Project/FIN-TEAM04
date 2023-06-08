@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -25,8 +26,10 @@ public class ReplyController {
 
     // 댓글 작성
     @PostMapping("qna/replys/{qno}")
-    public ResponseEntity<?> createReply(@PathVariable Long qno, @RequestBody ReplyDTO replyDTO) {
+    public ResponseEntity<?> createReply(@RequestHeader("Authorization") String data, @PathVariable Long qno, @RequestBody ReplyDTO replyDTO) {
         log.info("댓글컨트롤러 진입");
+        String atk = data.substring(7);
+        System.out.println("atk : " + atk);
         System.out.println("replyDTO = " + replyDTO);
 
         // qno에 해당하는 Qna가 존재하는지 확인
@@ -36,7 +39,7 @@ public class ReplyController {
         // replyDTO에 qno 설정
         replyDTO.setQno(qno);
 
-        Long saveResult = replyService.save(replyDTO);
+        Long saveResult = replyService.save(replyDTO, atk);
         if (saveResult != null) {
             // 작성 성공하면 댓글목록을 가져와서 리턴
             // 댓글목록: 해당 게시글의 댓글 전체 - 해당게시글 아이디를 기준으로 가져와야 됨.
