@@ -30,7 +30,7 @@ public class Taxrefund extends Base{
     )
     private Long tno;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "member_mno")
     private Member mno; // 회원번호
 
@@ -38,7 +38,7 @@ public class Taxrefund extends Base{
     @Column
     private String year; //연도
 
-    @Column
+    @Column(columnDefinition = "long default 0")
     private Long lifeinsurance; //건강보험
     private Long npension; //국민연금
     private Long insurance; //보험료
