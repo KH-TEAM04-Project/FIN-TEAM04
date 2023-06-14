@@ -1,12 +1,17 @@
 package com.kh.team4.service;
 
+import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.ReplyDTO;
 import com.kh.team4.entity.Qna;
 import com.kh.team4.entity.Reply;
+import com.kh.team4.jwt.TokenProvider;
+import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.repository.QnaRepository;
 import com.kh.team4.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +27,19 @@ public class ReplyService {
     private final ReplyRepository replyRepository;  // replyRepository 를 주입받음
     private final QnaRepository qnaRepository;
 
+    private final TokenProvider tokenProvider;
+
+    private final AuthenticationManagerBuilder managerBuilder;
+    private final MemberRepository memberRepository;
+
+
+    // 댓글 작성
     @Transactional
-    public Long save(ReplyDTO replyDTO) {
+    public Long save(ReplyDTO replyDTO, String atk) {
         log.info("reply 서비스 진입");
+        Authentication authentication = tokenProvider.getAuthentication(atk);
+        Long mno = memberRepository.findByMid2(authentication.getName());
+        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
 
         Long qno = replyDTO.getQno();
         if (qno == null) {
@@ -32,7 +47,6 @@ public class ReplyService {
             throw new IllegalArgumentException("게시글 ID(qno)는 null일 수 없습니다.");
             // 또는 적절한 에러 처리를 수행할 수 있습니다.
         }
-
         Optional<Qna> optionalQna = qnaRepository.findById(qno);
         if (optionalQna.isPresent()) {
             Qna qna = optionalQna.get();
@@ -62,11 +76,13 @@ public class ReplyService {
         }
         return replyDTOList;
     }
-
     // 댓글 삭제
-    public void delete(Long rno) {
+    public void delete(Long rno, String atk) {
         System.out.println("댓글 삭제 서비스 진입");
-        qnaRepository.deleteById(rno);
+        Authentication authentication = tokenProvider.getAuthentication(atk);
+        Long mno = memberRepository.findByMid2(authentication.getName());
+        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
+        replyRepository.deleteById(rno);
     }
 
 }

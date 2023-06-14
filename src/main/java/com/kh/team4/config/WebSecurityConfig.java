@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,19 +46,12 @@ public class WebSecurityConfig {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/sLogin").permitAll()
-                .antMatchers("/re", "/CoardPage", "EoardPage","/BoardReadPage/**", "/EditPage/**").permitAll()
-                .antMatchers("/**").permitAll()
-
-                // 권한테스트
-                .antMatchers("/mypage").hasRole("USER")
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/qna/**").permitAll()
+                .antMatchers("/tax/**").hasAnyRole("USER")
+                //.antMatchers("/re", "/CoardPage", "EoardPage","/BoardReadPage/**", "/EditPage/**").permitAll()
+                //.antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
-                
-                // 인증 , 인가 테스트
-                /*.and()
-                .authorizeRequests()
-                .antMatchers("/풀어버릴 놈들 지정 후 대입/").permitAll()
-                .anyRequest().authenticated()*/
 
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider, redisTemplate));

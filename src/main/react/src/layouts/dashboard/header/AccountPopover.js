@@ -24,11 +24,7 @@ const MENU_OPTIONS = [
     icon: 'eva:person-fill',
     onClick: '/mypage' // 마이페이지 경로를 추가합니다.
   },
-  {
-    label: 'icon',
-    icon: 'eva:settings-2-fill',
-    onClick: <IconButton />,
-  },
+  
 ];
 
 function AccountPopover() {
@@ -64,13 +60,19 @@ function AccountPopover() {
   const handleLogout = async () => {
     const accessToken = localStorage.getItem('accessToken');
     console.log(accessToken)
-
+  
     try {
-      await axios.post("/logout22", { accessToken }, { withCredentials: true })
+      await axios.post("/member/logout22", null, {
+        headers: {
+          // http 헤더의 auth 부분에 accessToken 값 설정
+          'Authorization': `Bearer ${accessToken}`
+        }
+      })
       .then(response => console.log(response.data));
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       navigate("/slogin"); // Adjust the path according to your routing configuration
+      window.location.reload(); // 페이지를 새로고침
     } catch (error) {
       console.error('Logout failed:', error);
     }

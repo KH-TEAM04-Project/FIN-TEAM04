@@ -40,11 +40,7 @@ export default function Nav({ openNav, onCloseNav }) {
     );
 
     const initialNavConfig = [
-      {
-        title: 'dashboard',
-        path: '/Main',
-        icon: icon('ic_analytics'),
-      },
+      
       {
         title: '게 시 판',
         path: '/board/list',
@@ -55,16 +51,8 @@ export default function Nav({ openNav, onCloseNav }) {
         path: '/qna/list',
         icon: icon('ic_cart'),
       },
-      {
-        title: 'product',
-        path: '/products',
-        icon: icon('ic_cart'),
-      },
-      {
-        title: 'blog',
-        path: '/blog',
-        icon: icon('ic_blog'),
-      },
+      
+      
       {
         title: 'login',
         path: '/login',
@@ -74,7 +62,7 @@ export default function Nav({ openNav, onCloseNav }) {
       {
         title: 'tax',
         path: '/tax',
-        icon: icon('ic_tax'),
+        icon: icon('ic_analytics'),
       },
     ].filter((item) => !(item.title === 'login' && !item.isLogin));
 

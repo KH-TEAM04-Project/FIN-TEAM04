@@ -26,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 public class MemberService {
     //final 붙여야지 생성자 만들어줌
     private final MemberRepository memberRepository;
-    private final RedisUtil redisUtil;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder managerBuilder;
     private final TokenProvider tokenProvider;
@@ -40,26 +39,36 @@ public class MemberService {
         String aaa = "success";
         return aaa;
     }
-
-    public MemberResDTO detail(Long mno) {
+    public MemberResDTO detail(String atk) {
+        System.out.println("Detail Service 진입");
+        Authentication authentication = tokenProvider.getAuthentication(atk);
+        Long mno = memberRepository.findByMid2(authentication.getName());
         MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
         System.out.println("마이페이지로 보낼 값 (3가지만 선정) : " + member.toString());
         return member;
     }
 
-
-    public void delete(Long mno) {
+/*    public void delete(Long mno) {
+        System.out.println("삭제할 회원의 No. : " + mno);
         System.out.println("받은 값 : " + mno);
         memberRepository.deleteById(mno);
+    }*/
+
+    public void delete(String atk) {
+        String name = tokenProvider.getAuthentication(atk).getName();
+        Long mno = memberRepository.findByMid2(name);
+        System.out.println("삭제할 회원의 No. : " + mno);
+        memberRepository.deleteById(mno);
+        System.out.println(name + "은 임포스터 였습니다.");
     }
 
 
-    public MemberResDTO Update(MemberReqDTO memberDTO) throws Exception {
+    public MemberResDTO Update(MemberReqDTO memberDTO, String atk) throws Exception {
         // 05.12 시점에 수정할만한 컬럼 목록 3가지만 설정
         String email = memberDTO.getEmail();
         String ph = memberDTO.getPh();
         // 찾는 용도의 Mno를 써야하는군..
-        Long mno = memberDTO.getMno();
+        Long mno = memberRepository.findByMid2(tokenProvider.getAuthentication(atk).getName());
         String address = memberDTO.getAddress();
         String detailAddress = memberDTO.getDetailAddress();
 
@@ -84,9 +93,10 @@ public class MemberService {
 
     }
 
-    public boolean changePwd(MemberReqDTO memberDTO) {
-        String resistedPwd = memberRepository.findById(memberDTO.getMno()).get().getPwd();
-        Member member = memberRepository.findById(memberDTO.getMno()).get();
+    public boolean changePwd(MemberReqDTO memberDTO, String atk) {
+        Long mno = memberRepository.findByMid2(tokenProvider.getAuthentication(atk).getName());
+        String resistedPwd = memberRepository.findById(mno).get().getPwd();
+        Member member = memberRepository.findById(mno).get();
 
         if (passwordEncoder.matches(memberDTO.getPwd(), resistedPwd)) {
             String decodedPwd = passwordEncoder.encode(memberDTO.getChangePwd());
@@ -122,19 +132,15 @@ public class MemberService {
     }
 
     @Transactional
-    public TokenDTO reissue(TokenDTO token) {
-// 미리만든 생성자
-// public TokenDTO reissue(String Token) {  아래쪽 쓰는것들도 다 바꿔야 함.
+    public TokenDTO reissue(TokenDTO token, String atk) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(token.getRefreshToken())) {
-            // 근데 RefreshToken 의 경우 백쪽에서만 저장하는거 아닌가요?
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
         }
 
         // 2. Access Token 에서 Member ID 가져오기
-        Authentication authentication = tokenProvider.getAuthentication(token.getAccessToken());
+        Authentication authentication = tokenProvider.getAuthentication(atk);
     
-        // ... "RT"라고 써야지 소연아 : 넹
         String refreshToken = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
         if (!refreshToken.equals(token.getRefreshToken())) {
@@ -144,8 +150,7 @@ public class MemberService {
         // 만료된 값을 사용하는 코드를 짜 보았다.
         // 블랙리스트 기능을 사용했다고.. 볼수있나?
         // Refresh Token 을 대체하는 Access 토큰 : logout 사용처가 발견되면 해당 코드는 삭제할 것.
-        String accessToken = token.getAccessToken();
-        String rediskey = redisTemplate.opsForValue().get(accessToken);
+        String rediskey = redisTemplate.opsForValue().get(atk);
 
         if(StringUtils.hasText(rediskey)) {
             // redisTemplate.delete(rediskey);
@@ -167,15 +172,15 @@ public class MemberService {
     }
 
     @Transactional
-    public String logout(TokenDTO token){
+    public String logout(String token){
         // 로그아웃 하고 싶은 토큰이 유효한 지 먼저 검증하기
-        System.out.println("받은 값 확인 : " + token.getAccessToken());
+        //System.out.println("받은 값 확인 : " + token.getAccessToken());
 
-        if (!tokenProvider.validateToken(token.getAccessToken())){
+        if (!tokenProvider.validateToken(token)){
             throw new IllegalArgumentException("로그아웃 : 유효하지 않은 토큰입니다.");
         }
 
-        Authentication authentication = tokenProvider.getAuthentication(token.getAccessToken());
+        Authentication authentication = tokenProvider.getAuthentication(token);
 
         System.out.println("삭제할 '그'녀석 : " + authentication.getName());
 
@@ -188,9 +193,9 @@ public class MemberService {
         // 해당 Access Token 유효시간을 가지고 와서 BlackList에 저장하기
         // 블랙 리스트에 mno 값을 추가하면 로그인 했을 때 기존의 logout 값을 레디스에서 삭제할 수 있을거같은데...
         // 굳이 안하더라도 새벽 4시쯤 매일 서버업뎃한답시고 레디스서버를 조져버리면 해결될 일이기도 하다.
-        Long expiration = tokenProvider.getExpiration(token.getAccessToken()); //(tokenRequestDto.getAccessToken());
+        Long expiration = tokenProvider.getExpiration(token); //(tokenRequestDto.getAccessToken());
         System.out.println("유효시간 값 확인 :" + expiration);
-        redisTemplate.opsForValue().set(token.getAccessToken(),"logout",expiration,TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(token,"logout",expiration,TimeUnit.MILLISECONDS);
         return "로그아웃 완료";
     }
 

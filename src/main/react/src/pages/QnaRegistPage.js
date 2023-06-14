@@ -112,7 +112,12 @@ const handleSubmit = (e) => {
     mno // 축약 구문으로 변경
   };
   axios
-    .post("/qna/regist", userData)
+    .post("/qna/regist", userData, {
+       headers: {
+           // http 헤더의 auth 부분에 accessToken 값 설정
+           'Authorization': `Bearer ${token}`
+       }
+    })
     .then((response) => {
       console.log(response.status, response.data);
     })

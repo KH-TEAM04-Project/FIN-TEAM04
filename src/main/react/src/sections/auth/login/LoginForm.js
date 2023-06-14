@@ -33,7 +33,7 @@ export default function LoginForm() {
     const accessToken = localStorage.getItem('accessToken');
 
     try {
-      const response = await axios.post('/sLogin', null, {
+      const response = await axios.post('/auth/sLogin', null, {
         params: {
           mid: id,
           pwd: pw,
