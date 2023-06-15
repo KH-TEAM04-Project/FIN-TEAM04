@@ -47,6 +47,7 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers("/tospring/**").permitAll()
                 .antMatchers("/qna/**").permitAll()
                 .antMatchers("/tax/**").hasAnyRole("USER")
                 //.antMatchers("/re", "/CoardPage", "EoardPage","/BoardReadPage/**", "/EditPage/**").permitAll()
