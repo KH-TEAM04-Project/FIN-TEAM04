@@ -33,7 +33,7 @@ public class Reply extends Base {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "qna_qno")
+    @JoinColumn(name = "qno")
     private Qna qna;
 
     @ManyToOne(fetch = FetchType.EAGER)

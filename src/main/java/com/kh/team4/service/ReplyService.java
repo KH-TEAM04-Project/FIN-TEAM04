@@ -58,10 +58,10 @@ public class ReplyService {
         }
     }
 
-    public List<ReplyDTO> findAll(Long qnaQno) {
+    public List<ReplyDTO> findAll(Long qno) {
             log.info("reply findAll 진입");
         // select * from comment_table where board_id=? order by id desc ;
-        Qna qna = qnaRepository.findById(qnaQno).get();  // 부모 엔티티를 조회
+        Qna qna = qnaRepository.findById(qno).get();  // 부모 엔티티를 조회
         List<Reply> replyList = replyRepository.findAllByQnaOrderByRnoDesc(qna);
         log.info("findAllByQnaOrderByRnoDesc" + replyList);
         // 조건에 board_id=? 가 있어서,부모엔티티가 매개변수로 넘어가야됨
