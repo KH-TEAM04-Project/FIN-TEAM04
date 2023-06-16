@@ -36,4 +36,14 @@ public class TaxrefundService {
         System.out.println("연말정산 페이지 들어가여: " + dto.toString());
         return dto;
     }
+
+    public TaxrefundDTO checkDetail(String atk){ // 저기 dto안에 카드 상세 컬럼별로 dto만든 dto 넣어줘야함, 아직 미생성이라 대체해서 넣음
+        System.out.println("체크카드 항목 한번 보자");
+        Authentication authentication = tokenProvider.getAuthentication(atk);
+        Long mno = memberRepository.findByMid2(authentication.getName());
+        System.out.println("전달받은 값1 " + mno.toString());
+        Member mno2 = new Member(mno);
+        // mno값 확인후 해당 체크카드 디테일 항목 금액 가져오기(여기서 top6(3)개 가져올꺼임.
+        return null;
+    }
 }
