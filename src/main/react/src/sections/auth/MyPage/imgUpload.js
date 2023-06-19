@@ -1,15 +1,15 @@
-// ImageUpload.js
-import React from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import {Avatar, IconButton, Box, Stack, MenuItem, Menu} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-// 사용하려는 백엔드 엔드포인트를 변경하세요.
-const UPLOAD_URL = '/profileUpload';
-const DELETE_URL = '/profileDelete';
-
-const ImageUpload = ({avatarSrc, setAvatarSrc}) => {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+function ImageUpload() {
+    const DELETE_URL = '/profileDelete';
+    const [userData, setUserData] = useState({
+        mname: "",
+        profilephoto: ""
+    });
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -28,57 +28,46 @@ const ImageUpload = ({avatarSrc, setAvatarSrc}) => {
             const formData = new FormData();
             const reader = new FileReader();
             reader.onloadend = async () => {
-                try {
+                const token = localStorage.getItem('accessToken');
+
+                if (token) {
+                    // Decode the token and parse the payload
+                    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+
                     formData.append('multipartFile', file);
-                    const token = localStorage.getItem('accessToken');
-                    const headers = {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data',
-                    };
 
-                    const response = await axios.post('/member/profilePhoto', formData, {headers});
-
-                    if (response.status === 200) {
-                        const imageUrl = URL.createObjectURL(file);
-                        setAvatarSrc(imageUrl);
-                    } else {
-                        console.error('Image upload failed:', response);
-                    }
-
-                } catch (error) {
-                    console.error('Image upload failed:', error);
+                    axios
+                        .post('/member/Profilephoto', formData, {
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        })
+                        .then((response) => {
+                            const userData = response.data;
+                            setUserData(userData);
+                            window.location.reload();
+                        })
+                        .catch((error) => {
+                            console.error('Image upload failed:', error);
+                        });
                 }
             };
+
             reader.readAsDataURL(file);
         };
 
         fileInput.click();
     };
 
-    const handleDeleteClick = async () => {
-        try {
-            const response = await axios.delete(DELETE_URL, {
-                // 백엔드에 전달할 데이터를 함께 전송.
-                data: {imageUrl: avatarSrc},
-            });
-
-            if (response.status === 200) {
-                // 이미지 삭제에 성공하면 빈 이미지로 설정.
-                setAvatarSrc(null);
-            } else {
-                console.error('Image deletion failed:', response);
-            }
-
-        } catch (error) {
-            console.error('Image deletion failed:', error);
-        }
-    };
+    console.log(userData.profilephoto);
 
     return (
         <div>
-            <img src={avatarSrc} alt="프로필"/>
-            <button onClick={handleUploadClick}>이미지 업로드</button>
-        </div>);
-};
+                <>
+                    <button onClick={handleUploadClick}>이미지 업로드</button>
+                </>
+        </div>
+    );
+}
 
 export default ImageUpload;
