@@ -355,15 +355,6 @@ export default function Ya() {
               >{data.content}
               </TextField>
 
-              <Stack direction="row" alignItems="center" spacing={4} sx={{ my: { xs: 1, mr: 12 } }}>
-                <Button variant="contained" component="label">
-                  재업로드  <ThumbUpOffAltRoundedIcon sx={{ display: { xs: 2, md: '1', mr: 6 } }} />
-                  <input hidden accept="image/*" multiple type="file" />
-
-                </Button>
-              </Stack>
-
-
               <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>수정하기</Button>
               <Modal
                 open={open}
