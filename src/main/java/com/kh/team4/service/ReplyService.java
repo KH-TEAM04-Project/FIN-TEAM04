@@ -85,4 +85,5 @@ public class ReplyService {
         replyRepository.deleteById(rno);
     }
 
+
 }

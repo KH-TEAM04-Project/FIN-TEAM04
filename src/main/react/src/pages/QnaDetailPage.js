@@ -268,12 +268,18 @@ const QnaDetailPage = () => {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
+
   // 댓글 삭제 함수
-  const handleDeleteReply = (qno, rno) => {
+  const handleDeleteReply = (reply) => {
+    console.log('reply:', reply); // 추가: reply 객체 확인
+    if (!reply || typeof reply.qno === 'undefined' || typeof reply.rno === 'undefined') {
+      console.error('유효하지 않은 댓글입니다.');
+      return;
+    }
+    const { qno, rno } = reply;
     axios
       .delete(`/qna/replys/delete/${qno}/${rno}`, {
         headers: {
-          // http 헤더의 auth 부분에 accessToken 값 설정
           'Authorization': `Bearer ${token}`
         }
       })
@@ -284,8 +290,19 @@ const QnaDetailPage = () => {
       })
       .catch((error) => {
         console.error('댓글 삭제 실패:', error);
+        alert('댓글 삭제에 실패했습니다.'); // 추가: 삭제 실패 알림 메시지
       });
-    };
+  };
+
+  // 삭제 버튼 클릭 이벤트 핸들러
+  const handleDeleteButtonClick = (reply) => {
+    if (!reply || typeof reply.qno === 'undefined' || typeof reply.rno === 'undefined') {
+      console.error('유효하지 않은 댓글입니다.');
+      return;
+    }
+    handleDeleteReply(reply);
+    handleCloseDeleteDialog(); // 다이얼로그를 닫는 함수 호출
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -542,7 +559,10 @@ const QnaDetailPage = () => {
                     <TableCell>{reply.content}</TableCell>
                     <TableCell>{reply.regDate}</TableCell>
                     <TableCell>
-                      <IconButton color="error" onClick={() => handleOpenDeleteDialog(reply.qno, reply.rno)}>
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDeleteButtonClick(reply)}
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -560,10 +580,7 @@ const QnaDetailPage = () => {
                 <Button onClick={handleCloseDeleteDialog}>취소</Button>
                 <Button
                   variant="contained"
-                  onClick={() => {
-                    handleDeleteReply(reply.rno); // 컨트롤러를 호출하는 함수로 수정
-                    handleCloseDeleteDialog(); // 다이얼로그를 닫는 함수 호출
-                  }}
+                  onClick={() => handleDeleteButtonClick(reply.qno, reply.rno)}
                 >
                   삭제
                 </Button>
