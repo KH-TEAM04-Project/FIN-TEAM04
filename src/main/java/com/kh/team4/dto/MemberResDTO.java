@@ -23,7 +23,7 @@ public class MemberResDTO {
     private String ph;
     private String address;
     private String detailAddress;
-    private String ProfilePhoto;
+    private String Profilephoto;
 
     public MemberResDTO(Member member){
         this.mno = member.getMno();
@@ -35,6 +35,7 @@ public class MemberResDTO {
         this.ph = member.getPh();
         this.address = member.getAddress().getAddress();
         this.detailAddress = member.getAddress().getDetailAddress();
+        this.Profilephoto = member.getProfilephoto();
     }
 
     // 로그인 하려고 만든거임
@@ -55,7 +56,7 @@ public class MemberResDTO {
                 .ph(member.getPh())
                 .address(member.getAddress().getAddress())
                 .detailAddress(member.getAddress().getDetailAddress())
-                .ProfilePhoto(member.getProfilePhoto())
+                .Profilephoto(member.getProfilephoto())
                 .build();
     }
 
@@ -66,8 +67,8 @@ public class MemberResDTO {
                 .mname(member.get().getMname())
                 .regno(member.get().getRegno())
                 .email(member.get().getEmail())
+                .Profilephoto(member.get().getProfilephoto())
                 .ph(member.get().getPh())
-                .ProfilePhoto(member.get().getProfilePhoto())
                 .address(member.get().getAddress().getAddress())
                 .detailAddress(member.get().getAddress().getDetailAddress())
                 .build();

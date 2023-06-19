@@ -1,10 +1,20 @@
 import datetime
 from bs4 import BeautifulSoup
+from openpyxl import Workbook
 import selenium 
 from selenium import webdriver 
 from selenium.webdriver.common.keys import Keys 
 import numpy as np
 import json
+import schedule
+import time
+import re
+
+def clean_sheet_name(name):
+    # Remove invalid characters from the sheet name
+    cleaned_name = re.sub(r'[<>:"/\\|?*]', '', name)
+    return cleaned_name[:31]
+
 
 def scraping():
 
@@ -38,7 +48,6 @@ def scraping():
     detail = "https://www.card-gorilla.com/card/detail/"
 
     cardInfoList =[]
-    cardInfoList2 =[]
 
     for a in cardNumList:
         detailurl = detail + str(a)
@@ -83,33 +92,62 @@ def scraping():
         cardInfoList.append({"카드사" : cardinfo[0], "카드명" : cardinfo[1], "카드이미지" : cardinfo[2], "혜택1" : cardinfo[3], "혜택1내용" : cardinfo[4], "혜택2" : cardinfo[5], "혜택2내용" : cardinfo[6], "혜택3" : cardinfo[7], "혜택3내용" : cardinfo[8]})
 
 
-    # Convert the cardInfoList2 to JSON
-    json_data = json.dumps(cardInfoList)
-    print(cardInfoList)
+    while True:
+
+        # Convert the cardInfoList2 to JSON
+        json_data = json.dumps(cardInfoList)
+        print(cardInfoList)
+        
+        json_file_path = r'C:\dev2\fin\src\main\python\json\card_info'
+        json_file_path2 = r'C:\dev2\fin\src\main\python\excel\card_info'
+
+        # 날짜 지정(파일명 설정을 위해)
+        now = datetime.datetime.now()
+        nowDate = now.strftime('%Y_%m_%d')
+        nds = str(nowDate)
+        
+        with open(json_file_path + str(nds), 'w') as file:
+            file.write(json_data)
+            print(json_data)
+
+            print(cardInfoList)
     
-    json_file_path = r'C:\dev2\fin\src\main\python\json\card_info'
+        # 엑셀 저장용
+        wb = Workbook()
+        ws2 = wb.active
 
-    # 날짜 지정(파일명 설정을 위해)
-    now = datetime.datetime.now()
-    nowDate = now.strftime('%Y_%m_%d')
-    nds = str(nowDate)
-    
-    with open(json_file_path + str(nds), 'w') as file:
-        file.write(json_data)
-        print(json_data)
+        sheet_name = clean_sheet_name(json_file_path2 + str(nowDate))
+        ws2.title = sheet_name
 
-    # print(cardInfoList)
-   
+        headers = ["카드사", "카드명", "카드이미지", "혜택1", "혜택1내용", "혜택2", "혜택2내용", "혜택3", "혜택3내용"]
+        ws2.append(headers)
 
-    for item in cardInfoList:
-        print(item)
+        for card in cardInfoList:
+            row = [
+                card["카드사"], card["카드명"], card["카드이미지"],
+                card["혜택1"], card["혜택1내용"], card["혜택2"],
+                card["혜택2내용"], card["혜택3"], card["혜택3내용"]
+            ]
+            ws2.append(row)
 
-    """ json_data2 = json.dumps(item)
+        excel_file_path = json_file_path2 + "_" + str(nowDate) + ".xlsx"
+        wb.save(filename=excel_file_path)
 
-    # Write the JSON data to a file
-    with open(json_file_path, 'w') as file:
-        file.write(json_data2)    
-    print(json_data2) """
+        for item in cardInfoList:
+            print(item)
 
 
-    return json_data
+        """ json_data2 = json.dumps(item) """
+        # Write the JSON data to a file
+        """ with open(json_file_path, 'w') as file:
+            file.write(json_data2)    
+        print(json_data2) """
+
+        time.sleep(schedule_interval)
+
+# schedule_interval = 4 * 7 * 24 * 60 * 60 
+schedule_interval = 5
+
+
+scraping()
+
