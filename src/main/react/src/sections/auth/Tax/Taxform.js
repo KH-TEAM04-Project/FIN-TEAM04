@@ -13,8 +13,23 @@ function TaxForm() {
     const navigate = useNavigate();
 
     const handleGoToCardPage = () => {
-      navigate('/card');
-    };
+        if (token) {
+          axios.post('/tax/CheckDetail', null, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+            .then(response => {
+              // 성공적인 응답 처리
+              console.log(response.data);
+            })
+            .catch(error => {
+              // 에러 처리
+              console.error(error);
+            });
+        }
+        navigate('/card');
+      };
 
     const handleGoBack = () => {
         navigate(-2); // Go back one step in the browser history
