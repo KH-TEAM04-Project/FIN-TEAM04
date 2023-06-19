@@ -29,7 +29,7 @@ public class TaxrefundService {
         System.out.println("Detail Service 진입");
         Authentication authentication = tokenProvider.getAuthentication(atk);
         Long mno = memberRepository.findByMid2(authentication.getName());
-        System.out.println("전달받은 값1 " + mno.toString());
+        System.out.println("전달받은 값1 " + mno);
         Member mno2 = new Member(mno);
         System.out.println("전달받은 값2 " + mno2);
         TaxrefundDTO dto = TaxrefundDTO.entityToDTO(repository.findByMno(mno2));
@@ -43,7 +43,11 @@ public class TaxrefundService {
         Long mno = memberRepository.findByMid2(authentication.getName());
         System.out.println("전달받은 값1 " + mno.toString());
         Member mno2 = new Member(mno);
+        System.out.println("전달받은 값2 " + mno2);
+
         // mno값 확인후 해당 체크카드 디테일 항목 금액 가져오기(여기서 top6(3)개 가져올꺼임.
+        // 해당 카테고리 dto = 해당 카테고리 dto.생성자 만든거(repository.해당 회원 mno, top3추출)
+        System.out.println(mno2 + "님의 체크카드 top3 항목은? ");
         return null;
     }
 }

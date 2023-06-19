@@ -21,6 +21,7 @@ public class TaxrefundController {
     private final TaxrefundService service;
     private final MemberService memberService;
 
+    // 특정회원의 연말정산페이지
     @PostMapping({"/taxrefund"})
     public ResponseEntity<TaxrefundDTO> Taxrefund(@RequestHeader("Authorization") String data) {
         System.out.println("연말정산페이지 진입 + 받은 값 확인 : " + data);
@@ -29,6 +30,7 @@ public class TaxrefundController {
         return ResponseEntity.ok(service.detail(atk));
     }
 
+    // 연말정산페이지 본인확인
     @PostMapping("/intotax")
     public boolean intoCheck(@RequestBody MemberReqDTO memberDTO) {
         System.out.println("연말정산페이지 진입 시 패스워드 확인");
@@ -38,6 +40,7 @@ public class TaxrefundController {
         return memberService.confirmpwd(mno, pwd);
     }
 
+    // 특정 회원의 체크카드 카테고리 top3추출
     @PostMapping("/CheckDetail")
     public ResponseEntity<?> CheckDetail(@RequestHeader("Authorization") String data) {
         System.out.println("CheckDetail 페이지 진입 + 받은값 R려주실? : " + data);
