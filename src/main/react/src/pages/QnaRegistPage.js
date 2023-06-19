@@ -321,7 +321,7 @@ const handleSubmit = (e) => {
     <form onSubmit={handleSubmit}>
       <Container width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
-          <Typography variant="h5" paragraph  defaultValue="Normal">
+          <Typography variant="h3" paragraph  defaultValue="Normal">
             게시글을 작성해주세요.
           </Typography>
       
@@ -349,7 +349,6 @@ const handleSubmit = (e) => {
           onChange={handleChange}
           defaultValue=" 글 작성"
          />
-         
       <div>
       <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
       <Modal
