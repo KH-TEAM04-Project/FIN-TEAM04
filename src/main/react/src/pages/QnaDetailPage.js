@@ -290,7 +290,7 @@ const QnaDetailPage = () => {
       })
       .catch((error) => {
         console.error('댓글 삭제 실패:', error);
-        alert('댓글 삭제에 실패했습니다.'); // 추가: 삭제 실패 알림 메시지
+        alert('댓글 삭제에 실패했습니다.');
       });
   };
 
@@ -394,40 +394,13 @@ const QnaDetailPage = () => {
               </MenuItem>
             </Menu>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Q&A 상세
+              Q&A 상세보기
             </Typography>
             <Tooltip title="Light / Dark" edge="end">
               <IconButton color="inherit" onClick={handleOpen}>
                 <WbSunnyIcon />
               </IconButton>
             </Tooltip>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: 400,
-                  bgcolor: 'background.paper',
-                  border: '2px solid #000',
-                  boxShadow: 24,
-                  p: 4,
-                }}
-              >
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  기능 준비 중
-                </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  이 기능은 준비 중에 있습니다.
-                </Typography>
-              </Box>
-            </Modal>
             <Avatar alt="User Avatar" src="/avatar.png" />
           </Toolbar>
         </AppBar>
@@ -435,7 +408,7 @@ const QnaDetailPage = () => {
 
           <Stack sx={{ marginTop: '80px' }}>
             <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
+              <Grid item xs={1}>
                 <Typography variant="h5">제목:</Typography>
               </Grid>
               <Grid item xs={10}>
@@ -445,7 +418,7 @@ const QnaDetailPage = () => {
                   disabled
                   sx={{
                     width: '100%',
-                    padding: '10px',
+                    padding: '1px',
                     borderRadius: '5px',
                     fontSize: '24px',
                     fontWeight: 'bold',
@@ -455,8 +428,8 @@ const QnaDetailPage = () => {
             </Grid>
 
             <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
-                <Typography variant="h6">작성자:</Typography>
+              <Grid item xs={1}>
+                <Typography variant="h5">작성자:</Typography>
               </Grid>
               <Grid item xs={10}>
                 <TextField
@@ -466,7 +439,7 @@ const QnaDetailPage = () => {
                   disabled
                   sx={{
                     width: '100%',
-                    padding: '10px',
+                    padding: '1px',
                     borderRadius: '5px',
                     fontSize: '20px',
                   }}
@@ -475,8 +448,8 @@ const QnaDetailPage = () => {
             </Grid>
 
             <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
-                <Typography variant="h6">작성일:</Typography>
+              <Grid item xs={1}>
+                <Typography variant="h5">작성일:</Typography>
               </Grid>
               <Grid item xs={10}>
                 <TextField
@@ -486,15 +459,13 @@ const QnaDetailPage = () => {
                   disabled
                   sx={{
                     width: '100%',
-                    padding: '10px',
+                    padding: '1px',
                     borderRadius: '5px',
                     fontSize: '20px',
                   }}
                 />
               </Grid>
             </Grid>
-
-            <Typography variant="h6">내용:</Typography>
             <TextField
               id="outlined-multiline-static"
               disabled
@@ -516,11 +487,10 @@ const QnaDetailPage = () => {
             )}
           </Stack>
             <Stack sx={{ marginTop: '32px' }}>
-            <Typography variant="h5">댓글 작성</Typography>
             <form onSubmit={handleSubmit}>
               <Stack direction="row" spacing={2}>
                 <TextField
-                  label="댓글 내용"
+                  label="댓글을 작성해주세요"
                   variant="outlined"
                   multiline
                   rows={4}
@@ -542,14 +512,15 @@ const QnaDetailPage = () => {
               </LoadingButton>
             </form>
           </Stack>
-          <Stack sx={{ marginTop: '32px' }}>
+          <Stack sx={{ marginTop: '60px' }}>
             <Typography variant="h5">댓글</Typography>
-            <Table sx={{ marginTop: '16px' }}>
+            <Table sx={{ marginTop: '20px' }}>
               <TableHead>
                 <TableRow>
                   <TableCell>작성자</TableCell>
                   <TableCell>내용</TableCell>
                   <TableCell>작성일시</TableCell>
+                  <TableCell>댓글 삭제</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -571,21 +542,6 @@ const QnaDetailPage = () => {
               </TableBody>
             </Table>
           </Stack>
-            <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-              <DialogTitle>댓글 삭제</DialogTitle>
-              <DialogContent>
-                <Typography variant="body1">댓글을 삭제하시겠습니까?</Typography>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleCloseDeleteDialog}>취소</Button>
-                <Button
-                  variant="contained"
-                  onClick={() => handleDeleteButtonClick(reply.qno, reply.rno)}
-                >
-                  삭제
-                </Button>
-              </DialogActions>
-            </Dialog>
         </Container>
       </div>
     </div>
