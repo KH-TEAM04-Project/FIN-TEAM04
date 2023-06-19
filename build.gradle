@@ -67,6 +67,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'   // log4j2
     implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.10.3'
     // log4j2
+
+    // logstash
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.10.1'
 }
 
 

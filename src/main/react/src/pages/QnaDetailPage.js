@@ -23,6 +23,10 @@ import {
   TableRow,
   TableCell,
   Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
@@ -85,7 +89,7 @@ const QnaDetailPage = () => {
 
   const { qno } = useParams();
   const [post, setPost] = useState(null); // 게시글 상태
-  const [replys, setReplys] = useState([]); // 댓글 목록 상태
+  const [reply, setReply] = useState([]); // 댓글 목록 상태
   const [replyContent, setReplyContent] = useState(''); // 댓글 내용 상태
   const [liked, setLiked] = useState(false);
 
@@ -113,7 +117,7 @@ const QnaDetailPage = () => {
       });
   };
 
-  const getReplys = () => {
+  const getReply = () => {
     axios
       .get(`/qna/replys/${qno}`, {
          headers: {
@@ -122,7 +126,7 @@ const QnaDetailPage = () => {
          }
       })
       .then((response) => {
-        setReplys(response.data); // 댓글 목록 업데이트
+        setReply(response.data); // 댓글 목록 업데이트
         console.log(response.data);
         console.log("yaya");
       })
@@ -139,7 +143,7 @@ const QnaDetailPage = () => {
 
   useEffect(() => {
     getPost();
-    getReplys();
+    getReply();
   }, []);
 
   const navigate = useNavigate();
@@ -264,24 +268,41 @@ const QnaDetailPage = () => {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
+
   // 댓글 삭제 함수
-  const handleDeleteReply = (rno) => {
+  const handleDeleteReply = (reply) => {
+    console.log('reply:', reply); // 추가: reply 객체 확인
+    if (!reply || typeof reply.qno === 'undefined' || typeof reply.rno === 'undefined') {
+      console.error('유효하지 않은 댓글입니다.');
+      return;
+    }
+    const { qno, rno } = reply;
     axios
-      .delete(`/qna/replys/${qno}/${rno}`, {
+      .delete(`/qna/replys/delete/${qno}/${rno}`, {
         headers: {
-          // http 헤더의 auth 부분에 accessToken 값 설정
           'Authorization': `Bearer ${token}`
         }
       })
       .then((response) => {
         console.log('댓글이 성공적으로 삭제되었습니다.');
         alert('댓글이 삭제되었습니다.');
-        getReplys();
+        getReply();
       })
       .catch((error) => {
         console.error('댓글 삭제 실패:', error);
+        alert('댓글 삭제에 실패했습니다.'); // 추가: 삭제 실패 알림 메시지
       });
-    };
+  };
+
+  // 삭제 버튼 클릭 이벤트 핸들러
+  const handleDeleteButtonClick = (reply) => {
+    if (!reply || typeof reply.qno === 'undefined' || typeof reply.rno === 'undefined') {
+      console.error('유효하지 않은 댓글입니다.');
+      return;
+    }
+    handleDeleteReply(reply);
+    handleCloseDeleteDialog(); // 다이얼로그를 닫는 함수 호출
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -303,7 +324,7 @@ const QnaDetailPage = () => {
         alert("댓글이 작성되었습니다.");
         // 댓글 목록을 다시 불러옵니다.
         setReplyContent(''); // 작성한 댓글의 내용을 초기화
-        getReplys();
+        getReply();
       })
       .catch((error) => {
         console.error('댓글 작성 실패:', error);
@@ -532,13 +553,16 @@ const QnaDetailPage = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {replys?.map((reply) => (
+                {reply?.map((reply) => (
                   <TableRow key={reply.rno}>
                     <TableCell>{reply.writerID}</TableCell>
                     <TableCell>{reply.content}</TableCell>
                     <TableCell>{reply.regDate}</TableCell>
                     <TableCell>
-                      <IconButton color="error" onClick={() => handleOpenDeleteDialog(reply.qno, reply.rno)}>
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDeleteButtonClick(reply)}
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -547,6 +571,21 @@ const QnaDetailPage = () => {
               </TableBody>
             </Table>
           </Stack>
+            <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+              <DialogTitle>댓글 삭제</DialogTitle>
+              <DialogContent>
+                <Typography variant="body1">댓글을 삭제하시겠습니까?</Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDeleteDialog}>취소</Button>
+                <Button
+                  variant="contained"
+                  onClick={() => handleDeleteButtonClick(reply.qno, reply.rno)}
+                >
+                  삭제
+                </Button>
+              </DialogActions>
+            </Dialog>
         </Container>
       </div>
     </div>
