@@ -36,7 +36,6 @@ public class TaxrefundDTO {
                 .card(tax.get().getCard())
                 .donation(tax.get().getDonation())
                 .edu(tax.get().getEdu())
-                .year(tax.get().getYear())
                 .dcard(tax.get().getDcard())
                 .housefunds(tax.get().getHousefunds())
                 .insurance(tax.get().getInsurance())
@@ -49,7 +48,8 @@ public class TaxrefundDTO {
                 .tno(tax.get().getTno())
                 .mno(tax.get().getMno().getMno())
                 .year(tax.get().getYear())
-                .tno(tax.get().getTno())
+                .housesaving(tax.get().getHousesaving())
+                .cash(tax.get().getCash())
                 .build();
     }
 }

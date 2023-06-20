@@ -4,7 +4,7 @@ import { alpha, styled } from '@mui/material/styles';
 import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
-import { fShortenNumber } from '../../../utils/formatNumber';
+
 //
 import SvgColor from '../../../components/svg-color';
 import Iconify from '../../../components/iconify';
@@ -163,7 +163,7 @@ export default function BlogPostCard({ post, index }) {
                 }}
               >
                 <Iconify icon={info.icon} sx={{ width: 16, height: 16, mr: 0.5 }} />
-                <Typography variant="caption">{fShortenNumber(info.number)}</Typography>
+                <Typography variant="caption">{(info.number)}</Typography>
               </Box>
             ))}
           </StyledInfo>

@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -50,9 +52,28 @@ public class Member {
     @Column(columnDefinition = "varchar2(20)")
     private String ph;
 
+    @Column(columnDefinition = "varchar2(500)")
+    private String Profilephoto;
+
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    // qna 관계매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Qna> qnaList = new ArrayList<>();
+
+    // reply 관계매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reply> replyList = new ArrayList<>();
+
+    // taxrefund 관계매핑
+    @OneToMany(mappedBy = "mno", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Taxrefund> taxrefundList = new ArrayList<>();
+
+    // board 관계매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Board> boardList = new ArrayList<>();
 
     @Embedded
     private Address address;
@@ -62,6 +83,7 @@ public class Member {
     public Member(Long mno) {
         this.mno = mno;
     }
+
 
     public static Member dtoToEntity(MemberReqDTO memberReqDTO) {
 
@@ -121,4 +143,7 @@ public  static Member findMid(MemberResDTO memberResDTO){
         return "Mno : " + this.mno + ",  Email : " + this.email + ",  Ph : " + this.ph;
     }
 
+    public void setProfilephoto(String Profilephoto) {
+        this.Profilephoto = Profilephoto;
+    }
 }

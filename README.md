@@ -87,6 +87,9 @@ SELECT * FROM all_sequences
 WHERE sequence_owner = 'TEAM4'
 
   1. 테이블 삭제
+     drop table likes;
+     drop table taxrefund;
+     drop table profileimg;
      drop table files;
      drop table board;
      drop table reply;
@@ -112,3 +115,26 @@ INSERT INTO QNA (QNO, TITLE, content, regdate) VALUES (QNA_SEQ.NEXTVAL, '테스�
 1. Redis를 통하여 토큰을 관리하기 때문에 깔아줄 것.
 2. https://github.com/microsoftarchive/redis/releases
 
+## 2023.06.19 더미데이터 생성
+## sqldeveloper로 넣기
+
+BEGIN
+  FOR i IN 1..50 LOOP
+    INSERT INTO MEMBERS (MNO, ADDRESS, DETAIL_ADDRESS, AUTHORITY, EMAIL, MID, MNAME, PH, PWD, REGNO, PROFILE_PHOTO)
+    VALUES (
+      i,
+      'Address ' || i,
+      'Detail Address ' || i,
+      'ROLE USER',
+      'email' || i || '@example.com',
+      'id' || i,
+      'Mname ' || i,
+      '1234',
+      '1392514aA!',
+      TO_CHAR(i) || '123456-7890123',
+      NULL
+    );
+  END LOOP;
+  COMMIT;
+END;
+/

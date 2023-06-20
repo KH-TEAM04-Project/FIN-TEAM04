@@ -14,27 +14,39 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "localhost:3000")
 @RestController
 @RequiredArgsConstructor    // 생성자 주입
-@RequestMapping()
+@RequestMapping("/tax")
 @ToString
 public class TaxrefundController {
 
     private final TaxrefundService service;
     private final MemberService memberService;
 
+    // 특정회원의 연말정산페이지
     @PostMapping({"/taxrefund"})
-    public ResponseEntity<TaxrefundDTO> Taxrefund(@RequestBody TaxrefundDTO dto) {
-        Long mno = dto.getMno();
-        System.out.println("연말정산 페이지 진입 및 받은 값 : " + mno);
-        return ResponseEntity.ok(service.detail(mno));
+    public ResponseEntity<TaxrefundDTO> Taxrefund(@RequestHeader("Authorization") String data) {
+        System.out.println("연말정산페이지 진입 + 받은 값 확인 : " + data);
+        String atk = data.substring(7);
+        System.out.println("토큰 값만 추출 : " + atk);
+        return ResponseEntity.ok(service.detail(atk));
     }
 
-    @PostMapping("/intoTaxrefund")
+    // 연말정산페이지 본인확인
+    @PostMapping("/intotax")
     public boolean intoCheck(@RequestBody MemberReqDTO memberDTO) {
         System.out.println("연말정산페이지 진입 시 패스워드 확인");
         Long mno = memberDTO.getMno();
         String pwd = memberDTO.getPwd();
         System.out.println("받은 값 확인 : Mno - " + mno + ", Pwd - " + pwd);
         return memberService.confirmpwd(mno, pwd);
+    }
+
+    // 특정 회원의 체크카드 카테고리 top3추출
+    @PostMapping("/CheckDetail")
+    public ResponseEntity<?> CheckDetail(@RequestHeader("Authorization") String data) {
+        System.out.println("CheckDetail 페이지 진입 + 받은값 R려주실? : " + data);
+        String atk = data.substring(7);
+        System.out.println("토큰 값만 추출 : " + atk);
+        return ResponseEntity.ok(service.checkDetail(atk));
     }
 }
 

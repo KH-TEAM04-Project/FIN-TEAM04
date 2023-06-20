@@ -23,6 +23,10 @@ import {
   TableRow,
   TableCell,
   Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
@@ -85,13 +89,18 @@ const QnaDetailPage = () => {
 
   const { qno } = useParams();
   const [post, setPost] = useState(null); // 게시글 상태
-  const [replys, setReplys] = useState([]); // 댓글 목록 상태
+  const [reply, setReply] = useState([]); // 댓글 목록 상태
   const [replyContent, setReplyContent] = useState(''); // 댓글 내용 상태
   const [liked, setLiked] = useState(false);
 
   const getPost = () => {
     axios
-      .get(`/qna/detail/${qno}`)
+      .get(`/qna/detail/${qno}`, {
+         headers: {
+             // http 헤더의 auth 부분에 accessToken 값 설정
+             'Authorization': `Bearer ${token}`
+         }
+      })
       .then((response) => {
         setPost(response.data); // 게시글 업데이트
         console.log(response.data);
@@ -108,11 +117,16 @@ const QnaDetailPage = () => {
       });
   };
 
-  const getReplys = () => {
+  const getReply = () => {
     axios
-      .get(`/qna/replys/${qno}`)
+      .get(`/qna/replys/${qno}`, {
+         headers: {
+             // http 헤더의 auth 부분에 accessToken 값 설정
+             'Authorization': `Bearer ${token}`
+         }
+      })
       .then((response) => {
-        setReplys(response.data); // 댓글 목록 업데이트
+        setReply(response.data); // 댓글 목록 업데이트
         console.log(response.data);
         console.log("yaya");
       })
@@ -129,7 +143,7 @@ const QnaDetailPage = () => {
 
   useEffect(() => {
     getPost();
-    getReplys();
+    getReply();
   }, []);
 
   const navigate = useNavigate();
@@ -159,7 +173,12 @@ const QnaDetailPage = () => {
 
   const handleEdit = () => {
     // 게시글 수정 기능 구현
-      axios.put(`/qna/update/${qno}`, data)
+      axios.put(`/qna/update/${qno}`, data, {
+        headers: {
+            // http 헤더의 auth 부분에 accessToken 값 설정
+            'Authorization': `Bearer ${token}`
+        }
+      })
         .then((response) => {
           console.log("게시글이 성공적으로 수정되었습니다.");
           alert("수정이 완료되었습니다.");
@@ -173,7 +192,12 @@ const QnaDetailPage = () => {
 
   const handleDelete = () => {
     axios
-      .delete(`/qna/delete/${qno}`)
+      .delete(`/qna/delete/${qno}`, {
+        headers: {
+            // http 헤더의 auth 부분에 accessToken 값 설정
+            'Authorization': `Bearer ${token}`
+        }
+      })
       .then((response) => {
         console.log("게시글이 성공적으로 삭제되었습니다.");
         alert("게시글이 삭제되었습니다.");
@@ -194,7 +218,12 @@ const QnaDetailPage = () => {
     };
 
     axios
-      .post(`/qna/likes/{qno}`, requestData) // 요청 본문을 requestData로 전달
+      .post(`/qna/likes/{qno}`, requestData, {
+         headers: {
+           // http 헤더의 auth 부분에 accessToken 값 설정
+           'Authorization': `Bearer ${token}`
+         }
+      }) // 요청 본문을 requestData로 전달
       .then((response) => {
         console.log('좋아요 요청 성공:', response.data);
         // 좋아요 요청 성공 시 추가 동작 구현
@@ -214,7 +243,12 @@ const QnaDetailPage = () => {
     };
 
     axios
-      .post(`/qna/unLikes/{qno}`, requestData) // 요청 본문을 requestData로 전달
+      .post(`/qna/unLikes/{qno}`, requestData, {
+         headers: {
+           // http 헤더의 auth 부분에 accessToken 값 설정
+           'Authorization': `Bearer ${token}`
+         }
+      }) // 요청 본문을 requestData로 전달
       .then((response) => {
         console.log('좋아요 취소 요청 성공:', response.data);
         // 좋아요 취소 요청 성공 시 추가 동작 구현
@@ -234,19 +268,41 @@ const QnaDetailPage = () => {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
+
   // 댓글 삭제 함수
-  const handleDeleteReply = (rno) => {
+  const handleDeleteReply = (reply) => {
+    console.log('reply:', reply); // 추가: reply 객체 확인
+    if (!reply || typeof reply.qno === 'undefined' || typeof reply.rno === 'undefined') {
+      console.error('유효하지 않은 댓글입니다.');
+      return;
+    }
+    const { qno, rno } = reply;
     axios
-      .delete(`/qna/replys/${qno}/${rno}`)
+      .delete(`/qna/replys/delete/${qno}/${rno}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       .then((response) => {
         console.log('댓글이 성공적으로 삭제되었습니다.');
         alert('댓글이 삭제되었습니다.');
-        getReplys();
+        getReply();
       })
       .catch((error) => {
         console.error('댓글 삭제 실패:', error);
+        alert('댓글 삭제에 실패했습니다.');
       });
-    };
+  };
+
+  // 삭제 버튼 클릭 이벤트 핸들러
+  const handleDeleteButtonClick = (reply) => {
+    if (!reply || typeof reply.qno === 'undefined' || typeof reply.rno === 'undefined') {
+      console.error('유효하지 않은 댓글입니다.');
+      return;
+    }
+    handleDeleteReply(reply);
+    handleCloseDeleteDialog(); // 다이얼로그를 닫는 함수 호출
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -257,13 +313,18 @@ const QnaDetailPage = () => {
     };
 
     axios
-      .post(`/qna/replys/${qno}`, replyData)
+      .post(`/qna/replys/${qno}`, replyData, {
+          headers: {
+              // http 헤더의 auth 부분에 accessToken 값 설정
+              'Authorization': `Bearer ${token}`
+          }
+      })
       .then((response) => {
         console.log('댓글 작성 성공:', response.data);
         alert("댓글이 작성되었습니다.");
         // 댓글 목록을 다시 불러옵니다.
         setReplyContent(''); // 작성한 댓글의 내용을 초기화
-        getReplys();
+        getReply();
       })
       .catch((error) => {
         console.error('댓글 작성 실패:', error);
@@ -325,51 +386,21 @@ const QnaDetailPage = () => {
               <MenuItem component={Link} to="/qna/list">
                 Q&A 목록
               </MenuItem>
-              <MenuItem component={Link} to="/qna/write">
+              <MenuItem component={Link} to="/qna/regist">
                 새로 작성하기
-              </MenuItem>
-              <MenuItem onClick={handleEdit}>
-                수정하기
               </MenuItem>
               <MenuItem onClick={handleDelete}>
                 삭제하기
               </MenuItem>
             </Menu>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Q&A 상세
+              Q&A 상세보기
             </Typography>
             <Tooltip title="Light / Dark" edge="end">
               <IconButton color="inherit" onClick={handleOpen}>
                 <WbSunnyIcon />
               </IconButton>
             </Tooltip>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: 400,
-                  bgcolor: 'background.paper',
-                  border: '2px solid #000',
-                  boxShadow: 24,
-                  p: 4,
-                }}
-              >
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  기능 준비 중
-                </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  이 기능은 준비 중에 있습니다.
-                </Typography>
-              </Box>
-            </Modal>
             <Avatar alt="User Avatar" src="/avatar.png" />
           </Toolbar>
         </AppBar>
@@ -377,7 +408,7 @@ const QnaDetailPage = () => {
 
           <Stack sx={{ marginTop: '80px' }}>
             <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
+              <Grid item xs={1}>
                 <Typography variant="h5">제목:</Typography>
               </Grid>
               <Grid item xs={10}>
@@ -387,7 +418,7 @@ const QnaDetailPage = () => {
                   disabled
                   sx={{
                     width: '100%',
-                    padding: '10px',
+                    padding: '1px',
                     borderRadius: '5px',
                     fontSize: '24px',
                     fontWeight: 'bold',
@@ -397,8 +428,8 @@ const QnaDetailPage = () => {
             </Grid>
 
             <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
-                <Typography variant="h6">작성자:</Typography>
+              <Grid item xs={1}>
+                <Typography variant="h5">작성자:</Typography>
               </Grid>
               <Grid item xs={10}>
                 <TextField
@@ -408,7 +439,7 @@ const QnaDetailPage = () => {
                   disabled
                   sx={{
                     width: '100%',
-                    padding: '10px',
+                    padding: '1px',
                     borderRadius: '5px',
                     fontSize: '20px',
                   }}
@@ -417,8 +448,8 @@ const QnaDetailPage = () => {
             </Grid>
 
             <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
-                <Typography variant="h6">작성일:</Typography>
+              <Grid item xs={1}>
+                <Typography variant="h5">작성일:</Typography>
               </Grid>
               <Grid item xs={10}>
                 <TextField
@@ -428,15 +459,13 @@ const QnaDetailPage = () => {
                   disabled
                   sx={{
                     width: '100%',
-                    padding: '10px',
+                    padding: '1px',
                     borderRadius: '5px',
                     fontSize: '20px',
                   }}
                 />
               </Grid>
             </Grid>
-
-            <Typography variant="h6">내용:</Typography>
             <TextField
               id="outlined-multiline-static"
               disabled
@@ -458,11 +487,10 @@ const QnaDetailPage = () => {
             )}
           </Stack>
             <Stack sx={{ marginTop: '32px' }}>
-            <Typography variant="h5">댓글 작성</Typography>
             <form onSubmit={handleSubmit}>
               <Stack direction="row" spacing={2}>
                 <TextField
-                  label="댓글 내용"
+                  label="댓글을 작성해주세요"
                   variant="outlined"
                   multiline
                   rows={4}
@@ -484,24 +512,28 @@ const QnaDetailPage = () => {
               </LoadingButton>
             </form>
           </Stack>
-          <Stack sx={{ marginTop: '32px' }}>
+          <Stack sx={{ marginTop: '60px' }}>
             <Typography variant="h5">댓글</Typography>
-            <Table sx={{ marginTop: '16px' }}>
+            <Table sx={{ marginTop: '20px' }}>
               <TableHead>
                 <TableRow>
                   <TableCell>작성자</TableCell>
                   <TableCell>내용</TableCell>
                   <TableCell>작성일시</TableCell>
+                  <TableCell>댓글 삭제</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {replys?.map((reply) => (
+                {reply?.map((reply) => (
                   <TableRow key={reply.rno}>
                     <TableCell>{reply.writerID}</TableCell>
                     <TableCell>{reply.content}</TableCell>
                     <TableCell>{reply.regDate}</TableCell>
                     <TableCell>
-                      <IconButton color="error" onClick={() => handleOpenDeleteDialog(reply.qno, reply.rno)}>
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDeleteButtonClick(reply)}
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>

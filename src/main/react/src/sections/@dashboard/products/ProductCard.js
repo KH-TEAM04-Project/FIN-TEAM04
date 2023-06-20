@@ -1,78 +1,36 @@
-import PropTypes from 'prop-types';
-// @mui
-import { Box, Card, Link, Typography, Stack } from '@mui/material';
-import { styled } from '@mui/material/styles';
-// utils
-import { fCurrency } from '../../../utils/formatNumber';
-// components
-import Label from '../../../components/label';
-import { ColorPreview } from '../../../components/color-utils';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-// ----------------------------------------------------------------------
+const YourComponent = () => {
+  // 로그인 유효시간이 있는 경우의 초기값 설정
+  const initialTokenExpiry = new Date(); // 예시로 현재 시간을 사용
+  initialTokenExpiry.setHours(initialTokenExpiry.getHours() + 1); // 현재 시간으로부터 1시간 후로 설정
 
-const StyledProductImg = styled('img')({
-  top: 0,
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-  position: 'absolute',
-});
+  const [tokenExpiry, setTokenExpiry] = useState(initialTokenExpiry);
 
-// ----------------------------------------------------------------------
+  const handleButtonClick = async () => {
+    try {
+      const response = await axios.post('/reissue'); // POST 요청 보내기
+      console.log(response.data); // 응답 데이터 확인
+      // 여기에서 상태 업데이트 또는 다른 동작 수행
+    } catch (error) {
+      console.error(error); // 에러 처리
+    }
+  };
 
-ShopProductCard.propTypes = {
-  product: PropTypes.object,
-};
-
-export default function ShopProductCard({ product }) {
-  const { name, cover, price, colors, status, priceSale } = product;
+  const handleLogout = () => {
+    setTokenExpiry(null); // 로그아웃 시 tokenExpiry 값을 null로 업데이트
+    // 로그아웃 처리 또는 다른 동작 수행
+  };
 
   return (
-    <Card>
-      <Box sx={{ pt: '100%', position: 'relative' }}>
-        {status && (
-          <Label
-            variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
-            sx={{
-              zIndex: 9,
-              top: 16,
-              right: 16,
-              position: 'absolute',
-              textTransform: 'uppercase',
-            }}
-          >
-            {status}
-          </Label>
-        )}
-        <StyledProductImg alt={name} src={cover} />
-      </Box>
-
-      <Stack spacing={2} sx={{ p: 3 }}>
-        <Link color="inherit" underline="hover">
-          <Typography variant="subtitle2" noWrap>
-            {name}
-          </Typography>
-        </Link>
-
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
-          <Typography variant="subtitle1">
-            <Typography
-              component="span"
-              variant="body1"
-              sx={{
-                color: 'text.disabled',
-                textDecoration: 'line-through',
-              }}
-            >
-              {priceSale && fCurrency(priceSale)}
-            </Typography>
-            &nbsp;
-            {fCurrency(price)}
-          </Typography>
-        </Stack>
-      </Stack>
-    </Card>
+    <>
+      {tokenExpiry && new Date() < tokenExpiry && (
+        <button onClick={handleButtonClick}>연장하기</button>
+      )}
+      <button onClick={handleLogout}>로그아웃</button>
+    </>
   );
-}
+};
+
+export default YourComponent;

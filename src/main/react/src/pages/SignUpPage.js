@@ -19,7 +19,7 @@ export default function SignUpPage() {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     console.log('Submitted form:', formValues);
-    axios.post("/SignUp2", formValues)
+    axios.post("/auth/SignUp2", formValues)
       .then(response => {
         console.log(response.data);
         if (response.data === "success") {

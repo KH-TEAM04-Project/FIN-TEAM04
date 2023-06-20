@@ -1,19 +1,29 @@
 package com.kh.team4.controller;
 
-import com.kh.team4.dto.MailDTO;
-import com.kh.team4.dto.MemberReqDTO;
-import com.kh.team4.dto.MemberResDTO;
-import com.kh.team4.dto.TokenDTO;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.util.IOUtils;
+import com.kh.team4.dto.*;
 import com.kh.team4.jwt.JwtFilter;
+import com.kh.team4.jwt.TokenProvider;
+import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.service.MemberService;
+import com.kh.team4.service.S3Uploader;
 import com.kh.team4.service.SendEmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,9 +33,11 @@ import java.util.Map;
 @RequestMapping("/member")
 @ToString
 public class MemberController {
-    private final MemberService memberService;
     private final JavaMailSender javaMailSender;
     private final SendEmailService sendEmailService;
+    private final S3Uploader s3Uploader;
+    private final MemberService memberService;
+
 
     @PostMapping("/intoMyPage")
     public boolean intoCheck(@RequestBody MemberReqDTO memberDTO) {
@@ -53,6 +65,20 @@ public class MemberController {
         return ResponseEntity.ok(memberService.Update(memberReqDTO, atk));
     }
 
+    @PostMapping("/Profilephoto")
+    public ResponseEntity<?> uploadProfilePhoto(@RequestHeader("Authorization") String data,  @RequestParam("multipartFile") MultipartFile multipartFile) throws IOException {
+        System.out.println("받은 값 확인 : " + data);
+        String atk = data.substring(7);
+        System.out.println("토큰 값만 추출 : " + atk);
+
+        System.out.println("MultipartFile" + multipartFile);
+        //S3 Bucket 내부에 "/profile"
+        FileUploadResDTO profile = s3Uploader.upload( multipartFile, "profile", atk);
+        System.out.println("profile의 최종값은?" + profile.getProfilePhoto());
+        return ResponseEntity.ok(memberService.detail(atk));
+    }
+
+
     @PostMapping("/changePassword")
     public boolean changePwd(@RequestBody MemberReqDTO memberDTO, @RequestHeader("Authorization") String data) {
         System.out.println("마이페이지 진입 + 받은 값 확인 : " + data);
@@ -71,8 +97,12 @@ public class MemberController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDTO> reissue(@RequestBody TokenDTO reissue) {
-        return ResponseEntity.ok(memberService.reissue(reissue));
+    public ResponseEntity<TokenDTO> reissue(@RequestHeader("Authorization") String data, @RequestBody TokenDTO token) {
+        System.out.println("[INFO ] Reissue 컨트롤러 입장 + 받은 값 확인 : " + data);
+        String atk = data.substring(7);
+        System.out.println("atk : " + atk);
+        System.out.println("rtk : " + token.getRefreshToken());
+        return ResponseEntity.ok(memberService.reissue(token, atk));
     }
 
     @PostMapping("/logout22")

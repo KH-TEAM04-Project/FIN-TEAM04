@@ -23,10 +23,16 @@ import QnaRegistPage from './pages/QnaRegistPage';
 import QnaDetailPage from './pages/QnaDetailPage';
 import QnaUpdatePage from './pages/QnaUpdatePage';
 import TaxForm from "./sections/auth/Tax/Taxform";
+import CardPage from "./pages/CardPage";
 
 // ----------------------------------------------------------------------
 export default function Router() {
     const [isLoggedIn, setIsLoggedIn] = useState(Boolean(localStorage.getItem('accessToken')));
+
+
+    // 로컬 스토리지에서 토큰 값을 가져옴
+    const token = localStorage.getItem('accessToken');
+
 
     useEffect(() => {
         const handleStorageChange = (e) => {
@@ -50,7 +56,8 @@ export default function Router() {
                 {path: '/blog', element: <BlogPage/>},
                 {path: '/qna/list', element: <QnaListPage/>},
                 {path: '/board/list', element: <BoardListPage/>},
-                {path: '/tax', element: <PwMyPage2/>},
+                {path: '/card', element: <CardPage/>},
+                {path: '/tax', element: !token ? <Navigate to="/login"/> : <PwMyPage2/>},
             ],
         },
         {
@@ -59,15 +66,15 @@ export default function Router() {
         },
         {
             path: '/MyPage',
-            element: <PwMyPage/>,
+            element: !token ? <Navigate to="/Main"/> : <PwMyPage/>,
         },
         {
             path: '/MyPage/main',
-            element: <MyPage/>,
+            element: !token ? <Navigate to="/Main"/> : <MyPage/>,
         },
         {
-            path: '/tax/main',
-            element:<TaxForm/>,
+            path: '/tax/main', // 로그인 되지 않았으면 접근할 수 없어. 메인페이지로 이동
+            element: !token ? <Navigate to="/login"/> : <TaxForm/>,
         },
         {
             path: '/SignUp',
@@ -144,6 +151,10 @@ export default function Router() {
         {
             path: '/board/detail:bno',
             element: <BoardDetailPage/>,
+        },
+        {
+            path: '/card',
+            element: <CardPage/>,
         },
         {
             path: '*',
