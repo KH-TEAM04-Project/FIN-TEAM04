@@ -1,14 +1,19 @@
 package com.kh.team4.entity;
 
 import com.kh.team4.dto.ReplyDTO;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Builder
 @Table(name = "reply")  // 데이터베이스에 해당하는 테이블
+@NoArgsConstructor
+@AllArgsConstructor
 @SequenceGenerator(
         name = "REPLY_SEQ_GENERATOR"  //시퀀스 제너레이터 이름
         , sequenceName = "REPLY_SEQ"  //시퀀스 이름
@@ -28,14 +33,22 @@ public class Reply extends Base {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "qna_qno")
+    @JoinColumn(name = "qno")
     private Qna qna;
 
-    public static Reply toSaveEntity(ReplyDTO replyDTO, Qna writer) {
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "member_mno")
+    private Member member;
+
+    public static Reply toSaveEntity(ReplyDTO replyDTO, Qna qna) {
+        Member member = Member.builder().mno(replyDTO.getMno()).build();
 
         Reply reply = Reply.builder()
                 .content(replyDTO.getContent())
+                .qna(qna)
+                .member(member)
                 .build();
+
         return reply;
 
     }

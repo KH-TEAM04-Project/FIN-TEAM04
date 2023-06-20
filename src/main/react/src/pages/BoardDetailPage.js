@@ -304,9 +304,6 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
                     sx={{my: {  xs: 3, sm: 5 ,mr: 1
                     } }}> {data.regDate} </TextField>
 
-
-
-
           <TextField
           id="outlined-multiline-static"
           disabled

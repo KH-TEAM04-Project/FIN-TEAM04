@@ -1,18 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// @mui
+import jwtDecode from 'jwt-decode';
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
-// mocks_
-import account from '../../../_mock/account';
+import {
+  Box,
+  Divider,
+  Typography,
+  Stack,
+  MenuItem,
+  Avatar,
+  IconButton,
+  Popover,
+} from '@mui/material';
 
-// ----------------------------------------------------------------------
+const MENU_OPTIONS = [
+  {
+    label: 'Home',
+    icon: 'eva:home-fill',
+ },
+  {
+    label: 'Mypage',
+    icon: 'eva:person-fill',
+    onClick: '/mypage' // 마이페이지 경로를 추가합니다.
+  },
+  
+];
 
-export default function AccountPopover() {
+function AccountPopover() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
-  const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
+  const [account, setAccount] = useState({
+    displayName: '로그인해주세요',
+    onClick: '/login',
+    photoURL: '',
+  });
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -24,38 +46,48 @@ export default function AccountPopover() {
 
   const handleOptionClick = (option) => {
     if (option.onClick) {
-      navigate(option.onClick);
+      if (option.onClick === '/login') {
+        navigate(option.onClick);
+      } else if (option.onClick === '/mypage') { // 마이페이지로 이동하도록 추가합니다.
+        navigate(option.onClick);
+      } else {
+        // Handle other option clicks here
+      }
     }
     handleClose();
   };
 
   const handleLogout = async () => {
     const accessToken = localStorage.getItem('accessToken');
-
+    console.log(accessToken)
+  
     try {
-      await axios.post('http://localhost:8082/logout', { accessToken });
+      await axios.post("/member/logout22", null, {
+        headers: {
+          // http 헤더의 auth 부분에 accessToken 값 설정
+          'Authorization': `Bearer ${accessToken}`
+        }
+      })
+      .then(response => console.log(response.data));
       localStorage.removeItem('accessToken');
-      navigate('/login'); // Adjust the path according to your routing configuration
+      localStorage.removeItem('refreshToken');
+      navigate("/slogin"); // Adjust the path according to your routing configuration
+      window.location.reload(); // 페이지를 새로고침
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
 
-  const MENU_OPTIONS = [
-    {
-      label: 'Home',
-      icon: 'eva:home-fill',
-    },
-    {
-      label: 'Profile',
-      icon: 'eva:person-fill',
-      onClick: isLoggedIn ? '/MyPage' : '/login',
-    },
-    {
-      label: 'Settings',
-      icon: 'eva:settings-2-fill',
-    },
-  ];
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      const decodedToken = jwtDecode(accessToken);
+      setAccount((prevAccount) => ({
+        ...prevAccount,
+        displayName: decodedToken.sub,
+      }));
+    }
+  }, []);
 
   return (
     <>
@@ -126,3 +158,5 @@ export default function AccountPopover() {
     </>
   );
 }
+
+export default AccountPopover;

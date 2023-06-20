@@ -49,22 +49,15 @@ public class Qna extends Base {
     @Column(columnDefinition = "integer default 0", nullable = false)
     private Integer hits;
 
-    @Column(name = "member_id")
-    private String memberId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_mno")
-    private Member writer;
+    private Member member;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replyList = new ArrayList<>();
 
     public static Qna dtoToEntity(QnaDTO qnaDTO) {
-        Long mno = Long.parseLong(qnaDTO.getMemberId()); // String 값을 Long 타입으로 변환
-
-        Member writer = Member.builder()
-                .mno(mno) // mno 값을 사용하여 Member 객체 생성
-                .build();
+        Member member = Member.builder().mno(qnaDTO.getMno()).build();
 
         Qna qna = Qna.builder()
             .qno(qnaDTO.getQno())
@@ -72,7 +65,7 @@ public class Qna extends Base {
             .content(qnaDTO.getContent())
             .secret(qnaDTO.getSecret())
             .hits(qnaDTO.getHits())
-            .writer(writer)
+            .member(member)
             .build();
 
         return qna;

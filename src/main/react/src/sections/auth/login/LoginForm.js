@@ -1,15 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
-// @mui
 import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
-
-// component
 import Iconify from '../../../components/iconify';
-
-// ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -23,113 +18,95 @@ export default function LoginForm() {
 
   const handleId = (e) => {
     setId(e.target.value);
-    // eslint-disable-next-line
     const regex = /^[a-zA-Z0-9]*$/;
-    if (regex.test(e.target.value)) {
-      setIdValid(true);
-    } else {
-      setIdValid(false);
-    }
+    setIdValid(regex.test(e.target.value));
   };
 
   const handlePassword = (e) => {
     setPw(e.target.value);
-    // eslint-disable-next-line
     const regex = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
-    if (regex.test(e.target.value)) {
-      setPwValid(true);
-    } else {
-      setPwValid(false);
-    }
+    setPwValid(regex.test(e.target.value));
   };
 
-  const handleClick = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('click login');
-    console.log('ID: ', id);
-    console.log('PW: ', pw);
-    axios
-      .post('/sLogin', null, {
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const response = await axios.post('/auth/sLogin', null, {
         params: {
           mid: id,
           pwd: pw,
         },
-      })
-      .then((response) => {
-        console.log(response);
-        console.log('res.data.userId: ', response.data);
-        localStorage.setItem('accessToken', response.data.accessToken);
-        localStorage.setItem('refreshToken', response.data.refreshToken);
-  
-        console.log('accessToken', response.data.accessToken);
-        console.log('refreshToken', response.data.refreshToken);
-  
-        const decoded1 = jwtDecode(response.data.accessToken);
-        const decoded2 = jwtDecode(response.data.refreshToken);
-  
-        console.log(decoded1);
-        console.log(decoded2);
-  
-        if (response.data.accessToken) {
-          alert('환영합니다!');
-          navigate('/');
-          console.log('accessToken in localStorage:', localStorage.getItem('accessToken'));
-        } else {
-          alert('로그인에 실패하였습니다.');
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        alert('아이디 혹은 비밀번호를 확인해주세요.');
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
+
+      console.log(response);
+      console.log('res.data.userId: ', response.data);
+
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+
+      console.log('accessToken', response.data.accessToken);
+      console.log('refreshToken', response.data.refreshToken);
+
+      const decoded1 = jwtDecode(response.data.accessToken);
+      const decoded2 = jwtDecode(response.data.refreshToken);
+
+      console.log(decoded1);
+      console.log(decoded2);
+
+      if (response.data.accessToken) {
+        alert('환영합니다!');
+        navigate('/');
+        console.log('accessToken in localStorage:', localStorage.getItem('accessToken'));
+      } else {
+        alert('로그인에 실패하였습니다.');
+      }
+    } catch (error) {
+      console.log(error);
+      alert('아이디 혹은 비밀번호를 확인해주세요.');
+    }
   };
 
   useEffect(() => {
-    if (idValid && pwValid) {
-      setNotAllow(false);
-    } else {
-      setNotAllow(true);
-    }
+    setNotAllow(!(idValid && pwValid));
   }, [idValid, pwValid]);
-  
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault(); // 폼 제출 방지
-      
+      e.preventDefault();
+      handleSubmit(e);
     }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault(); // 폼 제출 방지
-    handleClick();
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <Stack spacing={3}>
         <TextField
-          name="id"
+          fullWidth
+          required
           label="아이디"
-          type="id"
+          name="id"
+          type="text"
           value={id}
           onChange={handleId}
-          error={!idValid && id.length > 0}
-          helperText={!idValid && id.length > 0 && '올바른 아이디를 입력해주세요.'}
-          required
-          fullWidth
+          error={id !== '' && !idValid}
+          helperText={id !== '' && !idValid ? '올바른 아이디를 입력해주세요.' : ''}
         />
 
         <TextField
-          name="password"
+          fullWidth
+          required
           label="비밀번호"
+          name="password"
           type={showPassword ? 'text' : 'password'}
           value={pw}
           onChange={handlePassword}
-          error={!pwValid && pw.length > 0}
-          helperText={!pwValid && pw.length > 0 && '영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.'}
-          required
-          fullWidth
+          error={pw !== '' && !pwValid}
+          helperText={pw !== '' && !pwValid ? '영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.' : ''}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -144,12 +121,14 @@ export default function LoginForm() {
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <Checkbox name="remember" label="Remember me">
-          아이디저장
+          아이디 저장
         </Checkbox>
-        <Link href="/IdPw" underline="hover">
-          아이디
+
+        <Link href="/IdPw" variant="subtitle2" underline="hover" color="text.secondary">
+          아이디 찾기
         </Link>
-        <Link href="/IdPw2" underline="hover">
+
+        <Link href="/IdPw2" variant="subtitle2" underline="hover" color="text.secondary">
           비밀번호 찾기
         </Link>
       </Stack>
@@ -160,8 +139,7 @@ export default function LoginForm() {
         type="submit"
         variant="contained"
         disabled={notAllow}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown} // Enter 키 이벤트 처리
+        onKeyDown={handleKeyDown}
       >
         로그인
       </LoadingButton>

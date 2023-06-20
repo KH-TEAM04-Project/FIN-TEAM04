@@ -1,18 +1,39 @@
-import { Helmet } from 'react-helmet-async';
 import React, { useEffect, useState } from 'react';
-import { Link,useParams ,useNavigate} from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import TableCell from '@mui/material/TableCell';
-// @mui
-import { styled } from '@mui/material/styles';
-import { TextField, Typography, Container,Stack,Button,Box,Modal,
-AppBar,Toolbar,IconButton,Menu,Avatar,Tooltip,MenuItem,Table,TableHead,TableBody,TableRow} from '@mui/material';
+import {
+  TextField,
+  Typography,
+  Container,
+  Stack,
+  Button,
+  Box,
+  Modal,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Menu,
+  Avatar,
+  Tooltip,
+  MenuItem,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import WbSunnyIcon  from '@mui/icons-material/WbSunny';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
-// import { number } from 'prop-types';
-// import Clock from 'react-live-clock'
+import styled from 'styled-components'; // styled-components 추가
+import DeleteIcon from '@mui/icons-material/Delete';
 // ----------------------------------------------------------------------
 
 const StyledContent2 = styled('div')(({ theme }) => ({
@@ -39,76 +60,100 @@ const style = {
   pb: 3
 };
 // ----------------------------------------------------------------------
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
+const QnaDetailPage = () => {
+  const token = localStorage.getItem('accessToken');
+  const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+  const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
 
-
-export default function Yaya() {
-    const token = localStorage.getItem('accessToken');
-const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
-const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
-
-console.log(mno);
- useEffect(() => {
+  console.log(mno);
+  useEffect(() => {
     if (token) {
-      // 토큰을 디코딩하여 payload 부분을 추출하고 JSON 파싱
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
-
-      // payload에서 MNO 값을 추출하여 상태에 저장
       setMno(decodedToken.mno);
-      console.log(decodedToken.mno); // 추출한 mno 값 콘솔에 출력
+      console.log(decodedToken.mno);
 
       const mno = decodedToken.mno;
-      // 백으로 MNO 값을 전송하여 사용자 정보를 가져옴
-      axios.post("/MyPageCont", {mno} )
-
-
-      .then(response => {
-        // 사용자 데이터를 성공적으로 가져온 경우
-        const userData = response.data;
- })
-      .catch(error => {
-        // API 호출 중 에러 발생한 경우
-        console.error(error);
-      });
+      axios
+        .post("/MyPageCont", { mno })
+        .then((response) => {
+          const userData = response.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }, [token]);
 
-const [data, setData] = useState({ mno });
+  const [data, setData] = useState({ mno });
 
+  const { qno } = useParams();
+  const [post, setPost] = useState(null); // 게시글 상태
+  const [reply, setReply] = useState([]); // 댓글 목록 상태
+  const [replyContent, setReplyContent] = useState(''); // 댓글 내용 상태
+  const [liked, setLiked] = useState(false);
 
+  const getPost = () => {
+    axios
+      .get(`/qna/detail/${qno}`, {
+         headers: {
+             // http 헤더의 auth 부분에 accessToken 값 설정
+             'Authorization': `Bearer ${token}`
+         }
+      })
+      .then((response) => {
+        setPost(response.data); // 게시글 업데이트
+        console.log(response.data);
+        console.log("yaya");
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log("이거 에러인걸?");
+        } else if (error.request) {
+          console.log("network error");
+        } else {
+          console.log(error);
+        }
+      });
+  };
 
+  const getReply = () => {
+    axios
+      .get(`/qna/replys/${qno}`, {
+         headers: {
+             // http 헤더의 auth 부분에 accessToken 값 설정
+             'Authorization': `Bearer ${token}`
+         }
+      })
+      .then((response) => {
+        setReply(response.data); // 댓글 목록 업데이트
+        console.log(response.data);
+        console.log("yaya");
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log("이거 에러인걸?");
+        } else if (error.request) {
+          console.log("network error");
+        } else {
+          console.log(error);
+        }
+      });
+  };
 
-   const { qno } = useParams();
-   const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    getPost();
+    getReply();
+  }, []);
 
-   const getPosts = () => {
-     axios.get(`/qna/detail/${qno}`).then((response) => {
-       setPosts([response.data]); // 배열 형태로 설정
-       console.log(response.data);
-       console.log("yaya");
-     })
-     .catch((error) => {
-       if (error.response) {
-         console.log("이거 에러인걸?");
-       } else if (error.request) {
-         console.log("network error");
-       } else {
-         console.log(error);
-       }
-     });
-   };
-
-   useEffect(() => {
-     getPosts();
-   }, []);
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate('/qna/list', { replace: true });
   };
+
   const [open, setOpen] = React.useState(false);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -116,313 +161,391 @@ const [data, setData] = useState({ mno });
     setOpen(false);
   };
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+  const handleEdit = () => {
+    // 게시글 수정 기능 구현
+      axios.put(`/qna/update/${qno}`, data, {
+        headers: {
+            // http 헤더의 auth 부분에 accessToken 값 설정
+            'Authorization': `Bearer ${token}`
+        }
+      })
+        .then((response) => {
+          console.log("게시글이 성공적으로 수정되었습니다.");
+          alert("수정이 완료되었습니다.");
+          // 수정된 게시글 정보로 상태 업데이트
+          setPost(response.data.qnaDTO);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
   };
 
-  const [replys, setReplys] = useState([]);
-  const [reply, setReply] = useState({
-    title: "",
-    RegDate: "",
-    writer: "",
-    content: ""
-  });
-
-  const handleChange = ({ target }) => {
-    const { value, name } = target;
-    setReply((prevReply) => ({
-      ...prevReply,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-  // reply 객체 확인 및 초기화
-    const reply = {
-        rno: null,
-        content: '',
-        qnaQno: qno
-    };
-
-    const userReply = {
-      rno: reply.rno,
-      content: reply.content,
-      qnaQno: reply.qnaQno
-    };
+  const handleDelete = () => {
     axios
-      .post(`/qna/detail/${qno}`, userReply)
+      .delete(`/qna/delete/${qno}`, {
+        headers: {
+            // http 헤더의 auth 부분에 accessToken 값 설정
+            'Authorization': `Bearer ${token}`
+        }
+      })
       .then((response) => {
-        console.log(response.status, response.replys);
-        addReply(response.replys.map(reply => ({
-          rno: reply.rno || '', // 'rno'가 존재하지 않을 경우 빈 문자열로 설정
-          content: reply.content,
-          qnaQno: reply.qnaQno || '' // 'qnaQno'가 존재하지 않을 경우 빈 문자열로 설정
-        })));
+        console.log("게시글이 성공적으로 삭제되었습니다.");
+        alert("게시글이 삭제되었습니다.");
+        // 게시글 삭제 후, 목록 페이지로 이동하도록 처리
+        navigate('/qna/list', { replace: true });
       })
       .catch((error) => {
-        if (error.response) {
-          console.log("댓글 에러 발생");
-          console.log(userReply);
-        } else if (error.request) {
-          console.log("네트워크 오류");
-        } else {
-          console.log(error);
-        }
-        });
-     };
+        console.error(error);
+      });
+  };
 
-  const addReply = (newReply) => {
-    setReplys((prevReplys) => [...prevReplys, newReply]);
+  const handleLike = () => {
+    setLiked(true);
+
+    const requestData = {
+      qno: data.qno, // 좋아요할 질문 번호
+      mno,
+    };
+
+    axios
+      .post(`/qna/likes/{qno}`, requestData, {
+         headers: {
+           // http 헤더의 auth 부분에 accessToken 값 설정
+           'Authorization': `Bearer ${token}`
+         }
+      }) // 요청 본문을 requestData로 전달
+      .then((response) => {
+        console.log('좋아요 요청 성공:', response.data);
+        // 좋아요 요청 성공 시 추가 동작 구현
+      })
+      .catch((error) => {
+        console.error('좋아요 요청 실패:', error);
+        // 좋아요 요청 실패 시 추가 동작 구현
+      });
+  };
+
+  const handleUnlike = () => {
+    setLiked(false);
+
+    const requestData = {
+      qno: data.qno, // 좋아요 취소할 질문 번호
+      mno,
+    };
+
+    axios
+      .post(`/qna/unLikes/{qno}`, requestData, {
+         headers: {
+           // http 헤더의 auth 부분에 accessToken 값 설정
+           'Authorization': `Bearer ${token}`
+         }
+      }) // 요청 본문을 requestData로 전달
+      .then((response) => {
+        console.log('좋아요 취소 요청 성공:', response.data);
+        // 좋아요 취소 요청 성공 시 추가 동작 구현
+      })
+      .catch((error) => {
+        console.error('좋아요 취소 요청 실패:', error);
+        // 좋아요 취소 요청 실패 시 추가 동작 구현
+      });
+  };
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // 삭제 다이얼로그 열림/닫힘 상태
+  // 삭제 다이얼로그 열기
+  const handleOpenDeleteDialog = () => {
+    setOpenDeleteDialog(true);
+  };
+  // 삭제 다이얼로그 닫기
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  // 댓글 삭제 함수
+  const handleDeleteReply = (reply) => {
+    console.log('reply:', reply); // 추가: reply 객체 확인
+    if (!reply || typeof reply.qno === 'undefined' || typeof reply.rno === 'undefined') {
+      console.error('유효하지 않은 댓글입니다.');
+      return;
+    }
+    const { qno, rno } = reply;
+    axios
+      .delete(`/qna/replys/delete/${qno}/${rno}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then((response) => {
+        console.log('댓글이 성공적으로 삭제되었습니다.');
+        alert('댓글이 삭제되었습니다.');
+        getReply();
+      })
+      .catch((error) => {
+        console.error('댓글 삭제 실패:', error);
+        alert('댓글 삭제에 실패했습니다.');
+      });
+  };
+
+  // 삭제 버튼 클릭 이벤트 핸들러
+  const handleDeleteButtonClick = (reply) => {
+    if (!reply || typeof reply.qno === 'undefined' || typeof reply.rno === 'undefined') {
+      console.error('유효하지 않은 댓글입니다.');
+      return;
+    }
+    handleDeleteReply(reply);
+    handleCloseDeleteDialog(); // 다이얼로그를 닫는 함수 호출
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // replyContent 값을 서버로 전송하고, 성공적으로 작성된 댓글을 화면에 추가하는 로직을 구현해야 합니다.
+    const replyData = {
+      content: replyContent,
+      mno,
+    };
+
+    axios
+      .post(`/qna/replys/${qno}`, replyData, {
+          headers: {
+              // http 헤더의 auth 부분에 accessToken 값 설정
+              'Authorization': `Bearer ${token}`
+          }
+      })
+      .then((response) => {
+        console.log('댓글 작성 성공:', response.data);
+        alert("댓글이 작성되었습니다.");
+        // 댓글 목록을 다시 불러옵니다.
+        setReplyContent(''); // 작성한 댓글의 내용을 초기화
+        getReply();
+      })
+      .catch((error) => {
+        console.error('댓글 작성 실패:', error);
+      });
   };
 
   return (
-    <>
+    <div>
       <Helmet>
-        <title> Q&A | 꽁머니 </title>
+        <title>게시글 상세 | Q&A</title>
       </Helmet>
-
-      <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <WbSunnyIcon  sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/Main"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            꽁 머 니
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+      <div className="qna-detail">
+        <AppBar position="fixed" sx={{ zIndex: 10 }}>
+          <Toolbar>
             <IconButton
               size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
+              edge="start"
               color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={handleClickMenu}
             >
               <MenuIcon />
             </IconButton>
             <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleCloseMenu}
+              onClick={handleCloseMenu}
+              PaperProps={{
+                elevation: 0,
+                sx: {
+                  overflow: 'visible',
+                  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                  mt: 1.5,
+                  '& .MuiAvatar-root': {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  '&:before': {
+                    content: '""',
+                    display: 'block',
+                    position: 'absolute',
+                    top: 0,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: 'background.paper',
+                    transform: 'translateY(-50%) rotate(45deg)',
+                    zIndex: 0,
+                  },
+                },
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem component={Link} to="/qna/list">
+                Q&A 목록
+              </MenuItem>
+              <MenuItem component={Link} to="/qna/regist">
+                새로 작성하기
+              </MenuItem>
+              <MenuItem onClick={handleDelete}>
+                삭제하기
+              </MenuItem>
             </Menu>
-          </Box>
-          <WbSunnyIcon  sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-           꽁 머 니
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Q&A 상세보기
+            </Typography>
+            <Tooltip title="Light / Dark" edge="end">
+              <IconButton color="inherit" onClick={handleOpen}>
+                <WbSunnyIcon />
               </IconButton>
             </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
-     {posts.map((data) => (
-      <Container key={data.qno} width="10000">
-        <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
-          <Typography variant="h5" paragraph  defaultValue="Normal">
-            QNA 보세유
-          </Typography>
+            <Avatar alt="User Avatar" src="/avatar.png" />
+          </Toolbar>
+        </AppBar>
+        <Container>
 
-          <Typography sx={{ color: 'text.secondary' }}>
-        무엇이든 보세유
-          </Typography>
-          <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
+          <Stack sx={{ marginTop: '80px' }}>
+            <Grid container alignItems="center" sx={{ mb: 2 }}>
+              <Grid item xs={1}>
+                <Typography variant="h5">제목:</Typography>
+              </Grid>
+              <Grid item xs={10}>
+                <TextField
+                  value={post && post.title}
+                  name="text"
+                  disabled
+                  sx={{
+                    width: '100%',
+                    padding: '1px',
+                    borderRadius: '5px',
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                  }}
+                />
+              </Grid>
+            </Grid>
 
-          <TextField defaultValue={data.title} name="text" label="제목" readOnly disabled
-           sx={{ my: { xs: 3, sm: 5, mr: 5 } }}>{data.title}</TextField>
+            <Grid container alignItems="center" sx={{ mb: 2 }}>
+              <Grid item xs={1}>
+                <Typography variant="h5">작성자:</Typography>
+              </Grid>
+              <Grid item xs={10}>
+                <TextField
+                  value={post && post.writerID}
+                  color="secondary"
+                  name="text"
+                  disabled
+                  sx={{
+                    width: '100%',
+                    padding: '1px',
+                    borderRadius: '5px',
+                    fontSize: '20px',
+                  }}
+                />
+              </Grid>
+            </Grid>
 
-          <TextField defaultValue={data.writer} color="secondary"   name="text" label="작성자" disabled
-          sx={{my: {  xs: 3, sm: 5 ,mr: 1
-          } }}> {data.writer} </TextField>
-
-          <TextField defaultValue={data.regDate} color="secondary"   name="text" label="작성일" disabled
-                    sx={{my: {  xs: 3, sm: 5 ,mr: 1
-                    } }}> {data.regDate} </TextField>
-
-
-
-
-          <TextField
-          id="outlined-multiline-static"
-            disabled
-          multiline
-          rows={10}
-          value={data.content}
-
-        ><TableCell >{data.content}</TableCell>}</TextField>
-
-         <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
-      <Button variant="contained" component="label">
-        재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
-        <input hidden accept="image/*" multiple type="file" />
-
-      </Button>
-      </Stack>
-
-        <form onSubmit={handleSubmit}>
-              <li className='comment-from'>
-                <span className='ps_box'>
-                  <TextField
-                    fullWidth
-                    type='text'
-                    name='content'
-                    className='int'
-                    value={replys.content}
-                    onChange={handleChange}
-                    placeholder='댓글을 입력해주세요~'
-                  />
-                </span>
-                <Stack direction='row-reverse' sx={{ my: { xs: 1, mr: 12 } }}>
-                  <Button variant='contained' type='submit' className='btn'>
-                    등록
-                  </Button>
-                </Stack>
-              </li>
+            <Grid container alignItems="center" sx={{ mb: 2 }}>
+              <Grid item xs={1}>
+                <Typography variant="h5">작성일:</Typography>
+              </Grid>
+              <Grid item xs={10}>
+                <TextField
+                  value={post && post.regDate}
+                  color="secondary"
+                  name="text"
+                  disabled
+                  sx={{
+                    width: '100%',
+                    padding: '1px',
+                    borderRadius: '5px',
+                    fontSize: '20px',
+                  }}
+                />
+              </Grid>
+            </Grid>
+            <TextField
+              id="outlined-multiline-static"
+              disabled
+              multiline
+              rows={10}
+              defaultValue={post && post.content}
+              sx={{ width: '100%', padding: '10px', borderRadius: '5px', marginTop: '20px' }}
+            />
+          </Stack>
+          <Stack direction="row" spacing={2} sx={{ marginTop: '32px' }}>
+            {!liked ? (
+              <Button variant="outlined" onClick={handleLike}>
+                <ThumbUpOffAltRoundedIcon sx={{ marginRight: '8px' }} /> 좋아요
+              </Button>
+            ) : (
+              <Button variant="outlined" onClick={handleUnlike}>
+                좋아요 취소
+              </Button>
+            )}
+          </Stack>
+            <Stack sx={{ marginTop: '32px' }}>
+            <form onSubmit={handleSubmit}>
+              <Stack direction="row" spacing={2}>
+                <TextField
+                  label="댓글을 작성해주세요"
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                  fullWidth
+                  required
+                  value={replyContent} // 댓글 내용 표시
+                  onChange={(event) => setReplyContent(event.target.value)} // 댓글 내용 업데이트
+                />
+              </Stack>
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                loading={false}
+                loadingPosition="start"
+                startIcon={<ThumbUpOffAltRoundedIcon />}
+                sx={{ marginTop: '16px' }}
+              >
+                작성하기
+              </LoadingButton>
             </form>
-
-         <Table sx={{ maxWidth: 2000, overflow: 'hidden' }} aria-label='simple table'>
+          </Stack>
+          <Stack sx={{ marginTop: '60px' }}>
+            <Typography variant="h5">댓글</Typography>
+            <Table sx={{ marginTop: '20px' }}>
               <TableHead>
-                <TableCell>번호</TableCell>
-                <TableCell>내용</TableCell>
-                <TableCell>작성자</TableCell>
-                <TableCell>수정/삭제</TableCell>
+                <TableRow>
+                  <TableCell>작성자</TableCell>
+                  <TableCell>내용</TableCell>
+                  <TableCell>작성일시</TableCell>
+                  <TableCell>댓글 삭제</TableCell>
+                </TableRow>
               </TableHead>
-
               <TableBody>
-                {replys.map((reply, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{reply.rno}</TableCell>
+                {reply?.map((reply) => (
+                  <TableRow key={reply.rno}>
+                    <TableCell>{reply.writerID}</TableCell>
                     <TableCell>{reply.content}</TableCell>
-                    <TableCell>작성자</TableCell>
-                    <TableCell>수정/삭제</TableCell>
+                    <TableCell>{reply.regDate}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDeleteButtonClick(reply)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-
-      <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>목록으로 돌아가기</Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-      >
-        <Box sx={{ ...style, width: 1500 }}>
-          <h2 id="parent-modal-title">꽁 머 니</h2>
-          <p id="parent-modal-description">
-            목록가즈아ㅏㅏㅏ
-          </p>
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
-       등록
-      </LoadingButton>
-        </Box>
-      </Modal>
-
-      </StyledContent2>
-      </Container>
- ))}
-    </>
+          </Stack>
+        </Container>
+      </div>
+    </div>
   );
-}
+};
+
+export default QnaDetailPage;

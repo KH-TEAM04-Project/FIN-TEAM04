@@ -12,14 +12,14 @@ export default function SignUpPage() {
     email: "",
     pwd: "",
     detailaddress: "",
-    address: "",
+    address: "", // Add address field to formValues
     ph: "",
   });
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
     console.log('Submitted form:', formValues);
-    axios.post("/SignUp2", formValues)
+    axios.post("/auth/SignUp2", formValues)
       .then(response => {
         console.log(response.data);
         if (response.data === "success") {
@@ -43,6 +43,13 @@ export default function SignUpPage() {
     }));
   };
 
+  const handleAddressChange = (address) => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      address,
+    }));
+  };
+
   return (
     <div>
       <h1>꽁 머 니</h1>
@@ -50,6 +57,7 @@ export default function SignUpPage() {
         formValues={formValues}
         onFormSubmit={handleFormSubmit}
         onFormChange={handleFormChange}
+        onAddressChange={handleAddressChange}
       />
     </div>
   );

@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -50,30 +52,38 @@ public class Member {
     @Column(columnDefinition = "varchar2(20)")
     private String ph;
 
+    @Column(columnDefinition = "varchar2(500)")
+    private String Profilephoto;
+
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    // qna 관계매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Qna> qnaList = new ArrayList<>();
+
+    // reply 관계매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reply> replyList = new ArrayList<>();
+
+    // taxrefund 관계매핑
+    @OneToMany(mappedBy = "mno", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Taxrefund> taxrefundList = new ArrayList<>();
+
+    // board 관계매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Board> boardList = new ArrayList<>();
 
     @Embedded
     private Address address;
 
     public void setPwd(String pwd) { this.pwd = pwd; }
 
-
     public Member(Long mno) {
         this.mno = mno;
     }
-/*   @Builder // 생성자 대신 이용하는 친구 (@NoArgsConstructor 이거 쓰면 @Builder 못쓰는데 @AllArgsConstructor 사용해서 사용가능.)
-    public Member(String mtype, String mname, String regno, String mid, String pwd, String email, String ph) {
-        this.mtype = mtype;  //
-        this.mname = mname; //이름
-        this.regno = regno;  //주민번호
-        this.mid = mid;  //아이디
-        this.pwd = pwd; //비번
-        this.email = email; //이메일
-        this.ph = ph; //전화번호
-        //this.address = address;
-    }*/
+
 
     public static Member dtoToEntity(MemberReqDTO memberReqDTO) {
 
@@ -105,7 +115,7 @@ public  static Member findMid(MemberResDTO memberResDTO){
                 .mname(memberReqDTO.getMname())
                 .pwd(passwordEncoder.encode(memberReqDTO.getPwd()))
                 .authority(Authority.ROLE_USER)
-                .address(new Address(memberReqDTO.getAddress(), memberReqDTO.getDetailaddress()))
+                .address(new Address(memberReqDTO.getAddress(), memberReqDTO.getDetailAddress()))
                 .build();
         return member;
     }
@@ -123,8 +133,7 @@ public  static Member findMid(MemberResDTO memberResDTO){
                 .build();
     }
 
-    public void toUpdate(String pwd, String email, String ph, String address, String detailAddress) {
-        this.pwd = pwd;
+    public void toUpdate(String email, String ph, String address, String detailAddress) {
         this.email = email;
         this.ph = ph;
         this.address = new Address(address, detailAddress);
@@ -134,4 +143,7 @@ public  static Member findMid(MemberResDTO memberResDTO){
         return "Mno : " + this.mno + ",  Email : " + this.email + ",  Ph : " + this.ph;
     }
 
+    public void setProfilephoto(String Profilephoto) {
+        this.Profilephoto = Profilephoto;
+    }
 }

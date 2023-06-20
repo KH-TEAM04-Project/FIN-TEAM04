@@ -11,6 +11,8 @@ import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
 import NotificationsPopover from './NotificationsPopover';
+import TokenInfo from './time';
+
 
 // ----------------------------------------------------------------------
 
@@ -68,6 +70,8 @@ export default function Header({ onOpenNav }) {
             sm: 1,
           }}
         >
+          <TokenInfo />
+          
           <LanguagePopover />
           <NotificationsPopover />
           <AccountPopover />

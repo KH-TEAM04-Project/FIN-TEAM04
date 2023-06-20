@@ -37,7 +37,8 @@ public class WebSecurityConfig {
         http
                 .httpBasic().disable()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
                 .exceptionHandling()
@@ -46,12 +47,11 @@ public class WebSecurityConfig {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/sLogin").permitAll()
-                .antMatchers("/re", "/CoardPage", "EoardPage","/BoardReadPage/**", "/EditPage/**").permitAll()
-                .antMatchers("/**").permitAll()
-
-                // 권한테스트
-                .antMatchers("/mypage").hasRole("USER")
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/board/**").permitAll()
+                .antMatchers("/qna/**").permitAll()
+                //.antMatchers("/re", "/CoardPage", "EoardPage","/BoardReadPage/**", "/EditPage/**").permitAll()
+                //.antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()

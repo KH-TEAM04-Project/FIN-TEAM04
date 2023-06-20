@@ -1,12 +1,16 @@
 package com.kh.team4.service;
 
 import com.kh.team4.dto.BoardDTO;
+import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.QnaDTO;
 import com.kh.team4.entity.Board;
 import com.kh.team4.entity.Qna;
+import com.kh.team4.jwt.TokenProvider;
+import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,25 +25,38 @@ import java.util.Optional;
 public class QnaService {
     private final QnaRepository qnaRepository;
 
-    public void register(QnaDTO qnaDTO) {
+    private final TokenProvider tokenProvider;
+
+    private final MemberRepository memberRepository;
+
+    public void register(QnaDTO qnaDTO, String atk) {
         log.info("리액트에서 받아온" + qnaDTO);
         Qna qna = Qna.dtoToEntity(qnaDTO);
+        Authentication authentication = tokenProvider.getAuthentication(atk);
+        Long mno = memberRepository.findByMid2(authentication.getName());
+        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
         log.info("entity 변환 완료" + qna);
         qnaRepository.save(qna);
         log.info("entity 저장 완료" + qna);
 
     }
 
-    public void delete(Long qno) {
-        System.out.println("서비스 진입");
+    public void delete(Long qno, String atk) {
+        System.out.println("게시글 삭제 서비스 진입");
+        Authentication authentication = tokenProvider.getAuthentication(atk);
+        Long mno = memberRepository.findByMid2(authentication.getName());
+        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
         qnaRepository.deleteById(qno);
     }
 
     @Transactional  // 부모 entity 에서 자식 entity 로 접근할때는 그 내용을 호출하는 메서드에서
     // findById 에서 toBoardDTO 를 호출하고 있음 toBoardDTO 안에서
     // boardEntity 가 boardFileEntity 를 접근하고 있기 떄문에 트렌젝션을 붙여줘야됨.
-    public QnaDTO findById(Long qno) {
+    public QnaDTO findById(Long qno, String atk) {
         System.out.println(" findById 서비스 진입 ");
+        Authentication authentication = tokenProvider.getAuthentication(atk);
+        Long mno = memberRepository.findByMid2(authentication.getName());
+        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
         Optional<Qna> optionalQna = qnaRepository.findById(qno);
         if ( optionalQna.isPresent()) {
             System.out.println("if문 진입");
@@ -75,9 +92,12 @@ public class QnaService {
     }
     // 수정 관련
     @Transactional
-    public Long modify(QnaDTO qnaDTO) {
+    public Long modify(QnaDTO qnaDTO, String atk) {
         // getOne() : 필요한 순간까지 로딩을 지연하는 방식
         Qna qna = qnaRepository.getOne(qnaDTO.getQno());
+        Authentication authentication = tokenProvider.getAuthentication(atk);
+        Long mno = memberRepository.findByMid2(authentication.getName());
+        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
 
         qna.updateTitle(qnaDTO.getTitle());
         qna.updateContent(qnaDTO.getContent());
@@ -92,4 +112,8 @@ public class QnaService {
 
     }
 
+    // 게시글 존재 여부 확인
+    public boolean existsQna(Long qno) {
+        return qnaRepository.existsById(qno);
+    }
 }

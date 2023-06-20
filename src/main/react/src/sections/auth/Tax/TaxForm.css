@@ -1,0 +1,27 @@
+/* TaxForm.css */
+.info-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 85vh;
+    margin-left: 300px;
+}
+
+.info-box2 {
+    text-align: center;
+}
+
+.center-container2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 350px;
+}
+  /* 간단한 스타일링을 적용한 테이블 */
+  table {
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 0.25rem 0.5rem;
+  }
+  
