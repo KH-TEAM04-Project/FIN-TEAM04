@@ -35,6 +35,28 @@ public class BoardService {
     private final BoardRepository repository; //자동주입 final
     private final MemberRepository memberRepository; //자동주입 final
 
+    /*    *//* 상세 보기 *//*
+    public BoardDTO oneBoard(BoardDTO boardDTO) {
+        Board board = repository.findById(boardDTO.getBno()).orElseThrow(() -> new RuntimeException("글이 없습니다."));
+        log.info("Board: " + board);
+        Member member = isMemberCurrent(boardDTO);
+        System.out.println("member" + member);
+        // SecurityUtil에서 SecurityContext에 유저정보가 저장
+        if (member == null) {
+            // 인증정보가 없을 경우, 익명유저 값 적용
+            return BoardDTO.of(board, false);
+            //Board 객체와 false 합쳐서 BoardDTO생성
+        } else { //인증정보가 존재할 경우, 인증정보에 있는 id를 추출해 내어 member객체를 찾아내고, Board의 Member객체와 일치 여부 boolean 값을 얻어옴
+            boolean result = board.getMember().equals(member);
+            log.info("result " + result);
+            return BoardDTO.of(board, result);
+
+        }
+    }*/
+    /*public Page<PageResponseDto> pageArticle(int pageNum) {
+       return articleRepository.searchAll(PageRequest.of(pageNum - 1, 20));
+   }*/
+
     //게시글 목록 작성자 없이
     public List<BoardDTO> findAll() {
         log.info("서비스 진입");
@@ -51,6 +73,23 @@ public class BoardService {
         return boardDTOList;
     }
 
+    /* 게시글 등록 */
+/*    @Transactional
+    public Long postBoard(BoardDTO dto) {
+        log.info("postBoard서비스");
+     *//*   Long mno2 = 1L;
+        Member member = new Member(mno2);*//*
+        Member member = isMemberCurrent();
+        log.info("member : " + member);
+
+        //Board board = Board.createBoard(title, content, member);
+        Board board = dtoToEntity(dto, member);
+        log.info("board : " + board);
+        repository.save(board);
+        return board.getBno();
+        //인증정보에서 Member의 id를 추출해, Member 객체를 생성해내어, Repository를 거쳐 DB로
+    }*/
+
     @Transactional
     public BoardDTO postBoard(BoardDTO boardDTO) {
         System.out.println(boardDTO);
@@ -59,6 +98,41 @@ public class BoardService {
         System.out.println("board : " + board);
         repository.save(board);
         return BoardDTO.of(board, true);
+    }
+
+    /* 게시글 수정 */
+/*    @Transactional
+    public BoardDTO changeBoard(Long bno, String title, String content) {
+        Board board = authorizationArticleWriter(bno, board);
+        return BoardDTO.of(repository.save(Board.changeBoard(board, title, content)), true);
+    }*/
+
+    /* 게시글 삭제 *//*
+    @Transactional
+    public void deleteBoard(Long bno) {
+        Board board = authorizationArticleWriter(bno);
+        repository.delete(board);
+    }*/
+
+    /* 토큰 확인 메서드 : 수정과 삭제에 사용 */
+    public Member isMemberCurrent(BoardDTO boardDTO) {
+        System.out.println("isMemberCurrent 진입");
+        Long mno = boardDTO.getMno();
+        System.out.println("mno : " + mno);
+        Optional<Member> members = memberRepository.findById(mno); //Optional<Member> : member null 포함
+        Member member = members.get();
+        System.out.println("현재 로그인한 멤버 확인" + member);
+        return member;
+    }
+
+    /* 토큰 Member객체와 일치하는지 확인 */
+    public Board authorizationArticleWriter(Long bno, BoardDTO boardDTO) {
+        Member member = isMemberCurrent(boardDTO); //현재 로그인한 멤버객체
+        Board board = repository.findById(bno).orElseThrow(() -> new RuntimeException("글이 없습니다.")); //bno로 board객체 가져옴
+        if (!board.getMember().equals(member)) { //board객체의 member와 현재 로그인한 멤버가 같은지 비교
+            throw new RuntimeException("로그인한 유저와 작성 유저가 같지 않습니다.");
+        }  //Board객체에서 Member객체 추출하여 토큰에서 추출한 Member객체와 일치하는지 확인
+        return board;
     }
 
     //조회수
@@ -109,13 +183,14 @@ public class BoardService {
         return board.getBno();
     }
 
-    @Transactional
     //인증정보 없이 게시글 삭제
     public void delete(Long bno) {
         System.out.println("삭제 서비스 진입");
         log.info(bno);
         repository.deleteById(bno);
-        log.info(bno + "삭제완료");
+        log.info(bno +"삭제완료");
+
+
     }
 /*    public void postBoard(BoardDTO boardDTO, Member member) throws IOException {
         // 파일 첨부 여부에 따라 로직 분리
