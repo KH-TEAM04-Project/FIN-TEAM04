@@ -125,7 +125,7 @@ BEGIN
       i,
       'Address ' || i,
       'Detail Address ' || i,
-      'ROLE USER',
+      'ROLE_USER',
       'email' || i || '@example.com',
       'id' || i,
       'Mname ' || i,
