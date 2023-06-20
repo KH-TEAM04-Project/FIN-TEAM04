@@ -1,9 +1,11 @@
 package com.kh.team4.service;
 
+import com.kh.team4.dto.DcardDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TaxrefundDTO;
 import com.kh.team4.entity.Member;
 import com.kh.team4.jwt.TokenProvider;
+import com.kh.team4.repository.DcardRepository;
 import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.repository.TaxrefundRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class TaxrefundService {
     private final TaxrefundRepository repository;
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
+    private final DcardRepository drepository;
 
 
     public TaxrefundDTO detail(String atk) {
@@ -37,13 +40,16 @@ public class TaxrefundService {
         return dto;
     }
 
-    public TaxrefundDTO checkDetail(String atk){ // 저기 dto안에 카드 상세 컬럼별로 dto만든 dto 넣어줘야함, 아직 미생성이라 대체해서 넣음
+    public DcardDTO checkDetail(String atk){ // 저기 dto안에 카드 상세 컬럼별로 dto만든 dto 넣어줘야함, 아직 미생성이라 대체해서 넣음
         System.out.println("체크카드 항목 한번 보자");
         Authentication authentication = tokenProvider.getAuthentication(atk);
         Long mno = memberRepository.findByMid2(authentication.getName());
         System.out.println("전달받은 값1 " + mno.toString());
         Member mno2 = new Member(mno);
         System.out.println("전달받은 값2 " + mno2);
+
+        // DcardDTO dto = DcardDTO.entityToDTO(repository.findByMno(mno2));
+        drepository.findTop3Columns();
 
         // mno값 확인후 해당 체크카드 디테일 항목 금액 가져오기(여기서 top6(3)개 가져올꺼임.
         // 해당 카테고리 dto = 해당 카테고리 dto.생성자 만든거(repository.해당 회원 mno, top3추출)

@@ -71,6 +71,10 @@ public class Member {
     @OneToMany(mappedBy = "mno", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Taxrefund> taxrefundList = new ArrayList<>();
 
+/*    // checkcard 관계매핑
+    @OneToMany(mappedBy = "dcard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Dcard> checkcardList = new ArrayList<>();*/
+
     // board 관계매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board> boardList = new ArrayList<>();

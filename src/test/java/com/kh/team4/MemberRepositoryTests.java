@@ -5,6 +5,8 @@ import com.kh.team4.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.IntStream;
 
@@ -17,57 +19,31 @@ public class MemberRepositoryTests {
     @Autowired
     MemberRepository MemberRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Test
+    @Transactional
     void save() {
-
         // 1. 회원 생성
-        Member params = Member.builder()
-                .mname("이소")
-                .ph("0101234568")
-                .mid("za")
-                .pwd("Cwsook97!")
-                .authority(ROLE_USER)
-                .email("lee690808@nave.com")
-                .regno("970882123412")
-                .build();
+        IntStream.rangeClosed(1, 50).forEach(i -> {
+            try {
+                Member member = Member.builder()
+                        .authority(ROLE_USER)
+                        .email(i + "@example.com")
+                        .mid("id" + i)
+                        .mname("Mname " + i)
+                        .ph("1234")
+                        .pwd(passwordEncoder.encode("1392514aA!")) // 비밀번호 인코딩
+                        .regno(Integer.toString(i) + "123456-7890123")
+                        .build();
 
-
-        // 2. 회원저장
-        MemberRepository.save(params);
-
-     /*   // 3. 1번 회원 조회
-        Member entity = MemberRepository.findById((long) 1).get();
-        assertThat(entity.getMname()).isEqualTo("쏘");*/
+                // 2. 회원 저장
+                MemberRepository.save(member);
+            } catch (Exception e) {
+                System.out.println("Exception occurred at index: " + i);
+                e.printStackTrace();
+            }
+        });
     }
-
-   /* @Test
-    void delete() {
-
-        // 1. 회원조회
-        Member entity = MemberRepository.findById((long) 1).get();
-
-        // 2. 회원삭제
-        MemberRepository.delete(entity);
-    }*/
-
-    /*@Test // Member 객체 100개  생성
-    public void insertMembers(){
-
-        IntStream.rangeClosed(1,100).forEach(i -> {
-
-            Member member = Member.builder()
-                    .address("경기")
-                    .mid("ID" + i)
-                    .ph("010-" + i)
-                    .mtype("u")
-                    .regno("999999-"+i)
-                    .email("user" + i + "@aaa.com")
-                    .pwd("1111")
-                    .mname("USER" + i)
-                    .build();
-
-            MemberRepository.save(member);
-        });*/
-
-
 }
