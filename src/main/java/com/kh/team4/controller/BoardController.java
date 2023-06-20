@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor    // 생성자 주입
 @CrossOrigin(origins = "http://localhost:3000") //CORS 문제 해결 위함
-@RequestMapping("/") //board로 변경
+@RequestMapping("/board") //board로 변경
 
 public class BoardController {
     private final BoardService service;
@@ -40,15 +41,31 @@ public class BoardController {
     }*/
 
 
-    @PostMapping("/board/regist")
-    public ResponseEntity<BoardDTO> createArticle(@ModelAttribute BoardDTO boardDTO) throws IOException {
+    @PostMapping("/regist")
+    public ResponseEntity<BoardDTO> createArticle(@ModelAttribute BoardDTO boardDTO, MultipartHttpServletRequest request) throws IOException {
         log.info("게시글 작성 컨트롤러 진입");
         log.info("boardDTO 값 : " + boardDTO);
+
+        List<MultipartFile> files = request.getFiles("boardfiles");
+        if (files != null && !files.isEmpty()) {
+            boardDTO.setBoardFiles(files);
+        }
         return ResponseEntity.ok(service.postBoard(boardDTO));
     }
 
+
+
+/*    @PostMapping("/Notice")
+    public void saveNotice(@ModelAttribute NoticeRequestDto noticeRequestDto, @RequestPart(name = "file", required = false) MultipartFile file) throws IOException {
+        if (file != null && !file.isEmpty()) {
+            noticeRequestDto.setAttach(file);
+        }
+        noticeService.saveNotice(noticeRequestDto);
+
+    }*/
+
     //게시글 목록
-    @GetMapping("/board/list")
+    @GetMapping("/list")
     public List<BoardDTO> boardList() {
         System.out.println("컨트롤러 진입");
         List<BoardDTO> boardDTOList = service.findAll();
@@ -58,7 +75,7 @@ public class BoardController {
     }
 
     //게시글 상세조회/수정 불러오기
-    @GetMapping({"/board/detail/{bno}", "/board/update/{bno}"})
+    @GetMapping({"/detail/{bno}", "/update/{bno}"})
     public ResponseEntity<BoardDTO> getOneBoard(@PathVariable("bno") Long bno) {
         log.info("상세페이지/수정 컨트롤러");
         // 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함
@@ -67,7 +84,7 @@ public class BoardController {
     }
 
     //게시글 수정 등록
-    @PostMapping("/board/update/{bno}")
+    @PostMapping("/update/{bno}")
     public ResponseEntity<Long> update(@PathVariable Long bno, @RequestBody BoardDTO dto) {
         log.info("업데이트 컨트롤러 진입");
         //새로 추가된 엔티티의 번호

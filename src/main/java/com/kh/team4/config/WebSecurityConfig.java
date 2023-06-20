@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,9 +48,8 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/tospring/**").permitAll()
+                .antMatchers("/board/**").permitAll()
                 .antMatchers("/qna/**").permitAll()
-                .antMatchers("/tax/**").hasAnyRole("USER")
                 //.antMatchers("/re", "/CoardPage", "EoardPage","/BoardReadPage/**", "/EditPage/**").permitAll()
                 //.antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
