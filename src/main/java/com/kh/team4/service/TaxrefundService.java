@@ -1,9 +1,11 @@
 package com.kh.team4.service;
 
+import com.kh.team4.dto.DcardDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TaxrefundDTO;
 import com.kh.team4.entity.Member;
 import com.kh.team4.jwt.TokenProvider;
+import com.kh.team4.repository.DcardRepository;
 import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.repository.TaxrefundRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
@@ -23,6 +27,7 @@ public class TaxrefundService {
     private final TaxrefundRepository repository;
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
+    private final DcardRepository drepository;
 
 
     public TaxrefundDTO detail(String atk) {
@@ -37,7 +42,7 @@ public class TaxrefundService {
         return dto;
     }
 
-    public TaxrefundDTO checkDetail(String atk){ // 저기 dto안에 카드 상세 컬럼별로 dto만든 dto 넣어줘야함, 아직 미생성이라 대체해서 넣음
+    public DcardDTO checkDetail(String atk){ // 저기 dto안에 카드 상세 컬럼별로 dto만든 dto 넣어줘야함, 아직 미생성이라 대체해서 넣음
         System.out.println("체크카드 항목 한번 보자");
         Authentication authentication = tokenProvider.getAuthentication(atk);
         Long mno = memberRepository.findByMid2(authentication.getName());
@@ -45,9 +50,22 @@ public class TaxrefundService {
         Member mno2 = new Member(mno);
         System.out.println("전달받은 값2 " + mno2);
 
+        // DcardDTO dto = DcardDTO.entityToDTO(repository.findByMno(mno2));
+        List<String> top3 = drepository.findTop3Columns(mno);
+        List<Double> top = new ArrayList<>();
+
+        /*for (String row : queryResult) {
+            String[] columns = row.split(",");
+            for (int i = 0; i < columns.length; i++) {
+                String value = columns[i].trim();
+                double parsedValue = Double.parseDouble(value);
+                values.add(parsedValue);
+            }
+        }*/
+
         // mno값 확인후 해당 체크카드 디테일 항목 금액 가져오기(여기서 top6(3)개 가져올꺼임.
         // 해당 카테고리 dto = 해당 카테고리 dto.생성자 만든거(repository.해당 회원 mno, top3추출)
-        System.out.println(mno2 + "님의 체크카드 top3 항목은? ");
+        System.out.println(mno + "님의 체크카드 top3 항목은? " + top3);
         return null;
     }
 }
