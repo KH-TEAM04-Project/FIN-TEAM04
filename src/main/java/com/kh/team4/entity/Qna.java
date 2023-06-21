@@ -56,6 +56,9 @@ public class Qna extends Base {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replyList = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Likes> likesList = new ArrayList<>();
+
     public static Qna dtoToEntity(QnaDTO qnaDTO) {
         Member member = Member.builder().mno(qnaDTO.getMno()).build();
 
