@@ -1,20 +1,15 @@
 package com.kh.team4.controller;
 
 import com.kh.team4.dto.BoardDTO;
-import com.kh.team4.dto.QnaDTO;
-import com.kh.team4.entity.Board;
 import com.kh.team4.service.BoardService;
+import com.kh.team4.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,44 +20,18 @@ import java.util.List;
 
 public class BoardController {
     private final BoardService service;
-/*    @GetMapping("/EoardPage") //list로 변경
-    public ResponseEntity<Page<PageResponseDto>> pageArticle(@RequestParam(name = "page") int page) {
-        return ResponseEntity.ok(service.pageArticle(page));
-    }*/
-
-/*    @PostMapping("/CoardPage") //register로 변경
-    public ResponseEntity<Long> createArticle(@RequestBody BoardDTO dto) {
-        log.info("등록 컨트롤러");
-        log.info("writer :" + dto.getWriterID());
-        Long bno = service.postBoard(dto);
-        log.info("BNO: " + bno);
-        return ResponseEntity.ok(bno);
-
-    }*/
-
+    private final S3Uploader s3Uploader;
 
     @PostMapping("/regist")
-    public ResponseEntity<BoardDTO> createArticle(@ModelAttribute BoardDTO boardDTO, MultipartHttpServletRequest request) throws IOException {
-        log.info("게시글 작성 컨트롤러 진입");
-        log.info("boardDTO 값 : " + boardDTO);
+    public ResponseEntity<String> register(@RequestHeader("Authorization") String data, @RequestBody BoardDTO boardDTO) throws IOException {
+        System.out.println("게시글 작성 컨트롤러 진입");
+        String atk = data.substring(7);
+        System.out.println("atk : " + atk);
 
-        List<MultipartFile> files = request.getFiles("boardfiles");
-        if (files != null && !files.isEmpty()) {
-            boardDTO.setBoardFiles(files);
-        }
-        return ResponseEntity.ok(service.postBoard(boardDTO));
+        service.register(boardDTO, atk);
+        System.out.println("boardDTO:" + boardDTO);
+        return new ResponseEntity<>("게시글이 작성되었습니다.", HttpStatus.OK);
     }
-
-
-
-/*    @PostMapping("/Notice")
-    public void saveNotice(@ModelAttribute NoticeRequestDto noticeRequestDto, @RequestPart(name = "file", required = false) MultipartFile file) throws IOException {
-        if (file != null && !file.isEmpty()) {
-            noticeRequestDto.setAttach(file);
-        }
-        noticeService.saveNotice(noticeRequestDto);
-
-    }*/
 
     //게시글 목록
     @GetMapping("/list")
@@ -70,36 +39,41 @@ public class BoardController {
         System.out.println("컨트롤러 진입");
         List<BoardDTO> boardDTOList = service.findAll();
         System.out.println("BoardDTOList" + boardDTOList);
-
         return boardDTOList;
     }
 
     //게시글 상세조회/수정 불러오기
     @GetMapping({"/detail/{bno}", "/update/{bno}"})
-    public ResponseEntity<BoardDTO> getOneBoard(@PathVariable("bno") Long bno) {
+    public ResponseEntity<BoardDTO> getOneBoard(@RequestHeader("Authorization") String data, @PathVariable("bno") Long bno) {
         log.info("상세페이지/수정 컨트롤러");
-        // 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함
+        String atk = data.substring(7);
+        System.out.println("atk : " + atk);
         service.updateHits(bno);
-        return ResponseEntity.ok(service.findById(bno));
+        return ResponseEntity.ok(service.findById(bno, atk));
     }
+
 
     //게시글 수정 등록
     @PostMapping("/update/{bno}")
-    public ResponseEntity<Long> update(@PathVariable Long bno, @RequestBody BoardDTO dto) {
+        public ResponseEntity<Long> update(@RequestHeader("Authorization") String data, @PathVariable Long bno, @RequestBody BoardDTO dto) {
         log.info("업데이트 컨트롤러 진입");
         //새로 추가된 엔티티의 번호
+        String atk = data.substring(7);
+        System.out.println("atk : " + atk);
         dto.setBno(bno);
         log.info("수정 dto: " + dto);
-        Long updateBno = service.modify(dto);
+        Long updateBno = service.modify(dto, atk);
         log.info("수정 완료 BNO: " + updateBno);
         return ResponseEntity.ok(updateBno);
     }
 
     //게시글 삭제
-    @GetMapping("/boardDelete/{bno}")
-    public String delete(@PathVariable("bno") Long bno) {
+    @DeleteMapping("/delete/{bno}")
+    public String delete(@RequestHeader("Authorization") String data,@PathVariable("bno") Long bno) {
         System.out.println("삭제 컨트롤러 진입");
-        service.delete(bno);
+        String atk = data.substring(7);
+        System.out.println("atk : " + atk);
+        service.delete(bno, atk);
         System.out.println("서비스에서 delete 함수 호출");
         return "/delete";
     }

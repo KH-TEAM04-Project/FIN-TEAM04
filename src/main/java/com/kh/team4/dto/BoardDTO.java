@@ -1,16 +1,10 @@
 package com.kh.team4.dto;
 
-import com.kh.team4.entity.Base;
 import com.kh.team4.entity.Board;
-import com.kh.team4.entity.Files;
-import com.kh.team4.entity.Member;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 // DTO(Data Transfer Object), VO, Bean,
@@ -45,11 +39,11 @@ public class BoardDTO {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .writerID(board.getMember().getMid())
-                //.regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .hits(board.getHits())
                 .mno(board.getMember().getMno())
                 .build();
-// 파일첨부
+/*// 파일첨부
         if(board.getFileAttached() == 0) {
             boardDTO.setFileAttached(board.getFileAttached());    // 0
         } else {
@@ -63,7 +57,7 @@ public class BoardDTO {
             }
             boardDTO.setOriginFile(originFileList);
             boardDTO.setStoredFile(storedFileList);
-        }
+        }*/
         return boardDTO;
 
     }
@@ -76,7 +70,7 @@ public class BoardDTO {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .hits(board.getHits())
-//                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
     }
 }
