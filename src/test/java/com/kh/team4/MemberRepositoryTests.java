@@ -1,49 +1,56 @@
 package com.kh.team4;
 
+import com.kh.team4.entity.Authority;
 import com.kh.team4.entity.Member;
 import com.kh.team4.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
-import java.util.stream.IntStream;
+import javax.transaction.Transactional;
+import java.util.stream.LongStream;
 
-import static com.kh.team4.entity.Authority.ROLE_USER;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+//@SpringBootTest
+@RequiredArgsConstructor
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 
-@SpringBootTest
 public class MemberRepositoryTests {
 
     @Autowired
-    MemberRepository MemberRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Test
-    @Transactional
     void save() {
-        // 1. 회원 생성
-        IntStream.rangeClosed(1, 50).forEach(i -> {
+
+                LongStream.rangeClosed(1, 50).forEach(i -> {
             try {
-                Member member = Member.builder()
-                        .authority(ROLE_USER)
-                        .email(i + "@example.com")
-                        .mid("id" + i)
-                        .mname("Mname " + i)
+                Member parms = Member.builder()
+                        .authority(Authority.ROLE_USER)
+                        .email(Long.toString(i) + "@example.com")
+                        .mid("id" + Long.toString(i))
+                        .mname("Mname " + Long.toString(i))
                         .ph("1234")
                         .pwd(passwordEncoder.encode("1392514aA!")) // 비밀번호 인코딩
-                        .regno(Integer.toString(i) + "123456-7890123")
+                        .regno(Long.toString(i) + "1234567890123")
                         .build();
 
                 // 2. 회원 저장
-                MemberRepository.save(member);
+                memberRepository.save(parms);
             } catch (Exception e) {
                 System.out.println("Exception occurred at index: " + i);
                 e.printStackTrace();
             }
         });
+
+        // 1. 회원 생성
     }
 }

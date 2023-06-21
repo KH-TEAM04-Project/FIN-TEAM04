@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -26,6 +27,7 @@ public class WebSecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final RedisTemplate redisTemplate;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -50,6 +52,7 @@ public class WebSecurityConfig {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/board/**").permitAll()
                 .antMatchers("/qna/**").permitAll()
+                .antMatchers("/member/**").hasRole("USER")
                 //.antMatchers("/re", "/CoardPage", "EoardPage","/BoardReadPage/**", "/EditPage/**").permitAll()
                 //.antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
@@ -58,5 +61,14 @@ public class WebSecurityConfig {
                 .apply(new JwtSecurityConfig(tokenProvider, redisTemplate));
 
         return http.build();
+    }
+
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // 인메모리 방식 또는 DB 기반 사용자 인증 구성 가능
+        auth
+                .inMemoryAuthentication()
+                .withUser("admin")
+                .password("{noop}admin123!")
+                .roles("USER");
     }
 }

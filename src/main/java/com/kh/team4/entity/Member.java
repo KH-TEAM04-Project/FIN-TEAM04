@@ -68,8 +68,8 @@ public class Member {
     private List<Reply> replyList = new ArrayList<>();
 
     // taxrefund 관계매핑
-    @OneToMany(mappedBy = "mno", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Taxrefund> taxrefundList = new ArrayList<>();
+/*    @OneToMany(mappedBy = "mno", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Taxrefund> taxrefundList = new ArrayList<>();*/
 
 /*    // checkcard 관계매핑
     @OneToMany(mappedBy = "dcard", cascade = CascadeType.ALL, orphanRemoval = true)
