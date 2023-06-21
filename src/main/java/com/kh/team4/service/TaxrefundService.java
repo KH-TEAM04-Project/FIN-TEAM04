@@ -3,6 +3,7 @@ package com.kh.team4.service;
 import com.kh.team4.dto.DcardDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TaxrefundDTO;
+import com.kh.team4.entity.Dcard;
 import com.kh.team4.entity.Member;
 import com.kh.team4.jwt.TokenProvider;
 import com.kh.team4.repository.DcardRepository;
@@ -16,9 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -49,23 +49,35 @@ public class TaxrefundService {
         System.out.println("전달받은 값1 " + mno.toString());
         Member mno2 = new Member(mno);
         System.out.println("전달받은 값2 " + mno2);
+        Optional<Dcard> dcard = drepository.findByMno(mno2);
+        DcardDTO dto = DcardDTO.entityToDTO(dcard);
+        System.out.println("top3 " + dto.toString());
 
-        // DcardDTO dto = DcardDTO.entityToDTO(repository.findByMno(mno2));
-        List<String> top3 = drepository.findTop3Columns(mno);
-        List<Double> top = new ArrayList<>();
+        Long maxvalue = dto.findMaxValue();
+        System.out.println("최대값: " + maxvalue);
+        String maxvalueColumnName = dto.findMaxValueColumnName();
+        System.out.println("최대값 컬럼명" + maxvalueColumnName);
 
-        /*for (String row : queryResult) {
-            String[] columns = row.split(",");
-            for (int i = 0; i < columns.length; i++) {
-                String value = columns[i].trim();
-                double parsedValue = Double.parseDouble(value);
-                values.add(parsedValue);
-            }
-        }*/
+        Long midvalue = dto.find2Value();
+        System.out.println("그다음: " + midvalue);
+        String midvalueColumnName = dto.find2ValueColumnName();
+        System.out.println("그다음 컬럼명" + midvalueColumnName);
 
-        // mno값 확인후 해당 체크카드 디테일 항목 금액 가져오기(여기서 top6(3)개 가져올꺼임.
-        // 해당 카테고리 dto = 해당 카테고리 dto.생성자 만든거(repository.해당 회원 mno, top3추출)
-        System.out.println(mno + "님의 체크카드 top3 항목은? " + top3);
-        return null;
+        Long thrdvalue = dto.find3Value();
+        System.out.println("마지막: " + thrdvalue);
+        String thrdvalueColumnName = dto.find3ValueColumnName();
+        System.out.println("마지막 컬럼명" + thrdvalueColumnName);
+
+        Map<String, Long> valueMap = new HashMap<>();
+        valueMap.put(maxvalueColumnName, maxvalue);
+        valueMap.put(midvalueColumnName, midvalue);
+        valueMap.put(thrdvalueColumnName, thrdvalue);
+
+        for (Map.Entry<String, Long> entry : valueMap.entrySet()) {
+            System.out.println("Column Name: " + entry.getKey() + ", Value: " + entry.getValue());
+        }
+
+        System.out.println(mno + "님의 체크카드 항목은? " + dto.toString());
+        return dto;
     }
 }

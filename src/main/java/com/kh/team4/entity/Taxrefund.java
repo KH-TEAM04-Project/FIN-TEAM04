@@ -29,9 +29,8 @@ public class Taxrefund extends Base{
             , generator = "TAXREFUND_SEQ_GENERATOR"
     )
     private Long tno;
-
-    // @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    //@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_mno")
     private Member mno; // 회원번호
 
