@@ -16,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
@@ -49,11 +51,21 @@ public class TaxrefundService {
         System.out.println("전달받은 값2 " + mno2);
 
         // DcardDTO dto = DcardDTO.entityToDTO(repository.findByMno(mno2));
-        drepository.findTop3Columns();
+        List<String> top3 = drepository.findTop3Columns(mno);
+        List<Double> top = new ArrayList<>();
+
+        /*for (String row : queryResult) {
+            String[] columns = row.split(",");
+            for (int i = 0; i < columns.length; i++) {
+                String value = columns[i].trim();
+                double parsedValue = Double.parseDouble(value);
+                values.add(parsedValue);
+            }
+        }*/
 
         // mno값 확인후 해당 체크카드 디테일 항목 금액 가져오기(여기서 top6(3)개 가져올꺼임.
         // 해당 카테고리 dto = 해당 카테고리 dto.생성자 만든거(repository.해당 회원 mno, top3추출)
-        System.out.println(mno2 + "님의 체크카드 top3 항목은? ");
+        System.out.println(mno + "님의 체크카드 top3 항목은? " + top3);
         return null;
     }
 }

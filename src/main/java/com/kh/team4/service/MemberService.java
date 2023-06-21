@@ -4,6 +4,7 @@ import com.kh.team4.config.RedisUtil;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TokenDTO;
+import com.kh.team4.entity.Authority;
 import com.kh.team4.entity.Member;
 import com.kh.team4.jwt.TokenProvider;
 import com.kh.team4.repository.MemberRepository;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.LongStream;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +45,9 @@ public class MemberService {
         System.out.println("Detail Service 진입");
         Authentication authentication = tokenProvider.getAuthentication(atk);
         Long mno = memberRepository.findByMid2(authentication.getName());
+        System.out.println("이 회원의 mno는? " + mno);
+        /*MemberResDTO member = MemberResDTO.of2(memberRepository.findByMid("id1"));
+        System.out.println(member);*/
         MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
         System.out.println("마이페이지로 보낼 값 (3가지만 선정) : " + member.toString());
         return member;
@@ -242,5 +247,34 @@ public class MemberService {
             return false;
         }
     }
+
+
+    // 회원 더미데이터 생성
+    public void saveMembers() {
+        LongStream.rangeClosed(1, 50).forEach(i -> {
+            try {
+                Member member = Member.builder()
+                        .authority(Authority.ROLE_USER)
+                        .email(i + "@naver.com")
+                        .mid("id" + i)
+                        .mname("Mname " + i)
+                        .ph("1234")
+                        .pwd(passwordEncoder.encode("Cwsook97!")) // 비밀번호 인코딩
+                        .regno(i + "1234567890123")
+                        .Profilephoto(null)
+                        .address(null)
+                        .build();
+
+                // 회원 저장
+                memberRepository.save(member);
+            } catch (Exception e) {
+                System.out.println("Exception occurred at index: " + i);
+                e.printStackTrace();
+            }
+        });
+    }
+
+
+
 }
 
