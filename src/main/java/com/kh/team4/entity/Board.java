@@ -1,14 +1,11 @@
 package com.kh.team4.entity;
 
 import com.kh.team4.dto.BoardDTO;
-import com.kh.team4.dto.QnaDTO;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -18,13 +15,6 @@ import java.util.List;
 @DynamicInsert //Insert시 Null인 필드를 제외하기위해 사용
 @DynamicUpdate
 @ToString(exclude = "member") //fetch 방식이 Lazy일 경우 사용
-//Eager Loading(즉시로딩):특정 엔티티를 조회할 때 연관관계를 가진 모든 엔티티를 같이 로딩 -> 성능 저하
-// LAZY : 지연로딩,즉시로딩과 반대, 필요할 때만 사용, LAZY 사용하면 @ToString(exclude) 무조건 사용
-// @ToString(): 해당 클래스의 모든 멤버 변수를 출력
-//Board 객체의 @ToString()을 하면 writer 변수로 선언된 Member 객체도 함께 출력해야 하며
-// Member 객체를 출력하기 위해서는 Member 객체의 @ToString()이 호출되어야 하고 이때 DB 연결이 필요
-// -> exclude 지정
-
 @Table(name = "board")  // 데이터베이스에 해당하는 테이블
 @SequenceGenerator(
         name = "BOARD_SEQ_GENERATOR"  //시퀀스 제너레이터 이름
@@ -50,16 +40,16 @@ public class Board extends Base {
     @Column(columnDefinition = "integer default 0", nullable = false)
     private Integer hits;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_mno")
     private Member member;
 
     @Column(columnDefinition = "integer default 0")
     private Integer fileAttached; //파일 첨부 여부 (첨부 1, 미첨부 0)
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+  /*  @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Files> FilesList = new ArrayList<>();
-    // 게시글 하나에 보드파일이 여러개가 올 수 있도록 참조 관계 설정
+    // 게시글 하나에 보드파일이 여러개가 올 수 있도록 참조 관계 설정*/
 
     public static Board dtoToEntity(BoardDTO dto) {
         Member member = Member.builder().mno(dto.getMno()).build();
@@ -74,35 +64,12 @@ public class Board extends Base {
         return board;
     }
 
-    /*    public static Board createBoard(Long bno, String title, String content, Member member) {
-            Board board = new Board();
-            board.bno = bno;
-            board.title = title;
-            board.content = content;
-            board.member = member;
-            board.hits = 0;
-
-            //board.fileAttached = 0; // 0 = 파일 없음
-            return board;
-        }*/
     /* 게시글 수정 */
     public void changeTitle(String title) {
         this.title = title;
     }
+
     public void changeContent(String content) {
         this.content = content;
-    }
-
-    public static Board toSaveFile(BoardDTO boardDTO) {
-        Member member = Member.builder().mno(boardDTO.getMno()).build();
-        Board board = Board.builder()
-                .bno(boardDTO.getBno())
-                .title(boardDTO.getTitle())
-                .content(boardDTO.getContent())
-                .hits(boardDTO.getHits())
-                .member(member)
-                .fileAttached(1) //파일 있음
-                .build();
-        return board;
     }
 }
