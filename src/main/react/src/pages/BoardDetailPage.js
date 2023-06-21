@@ -84,7 +84,13 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
    const [posts, setPosts] = useState([]);
 
    const getPosts = () => {
-     axios.get(`/board/detail/${bno}`).then((response) => {
+     axios.get(`/board/detail/${bno}`, {
+         headers: {
+             // http 헤더의 auth 부분에 accessToken 값 설정
+             'Authorization': `Bearer ${token}`
+         }
+     })
+         .then((response) => {
        setPosts([response.data]); // 배열 형태로 설정
        console.log(response.data);
        console.log("yaya");
@@ -115,7 +121,12 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
     };
 
     const handleDelete = (bno) => {
-        axios.get(`/boardDelete/${bno}`).then((response) => {
+        axios.delete(`/board/delete/${bno}`, {
+            headers: {
+                // http 헤더의 auth 부분에 accessToken 값 설정
+                'Authorization': `Bearer ${token}`
+            }
+        }).then((response) => {
             console.log('게시글이 삭제되었습니다.');
             // 삭제 후 게시글 리스트를 다시 불러옴
             navigate('/board/list', { replace: true });
@@ -314,10 +325,8 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
         ><TableCell >{data.content}</TableCell>}</TextField>
 
          <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
-      <Button variant="contained" component="label">
-        재업로드  <ThumbUpOffAltRoundedIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
-        <input hidden accept="image/*" multiple type="file" />
-      </Button>
+             <Typography variant="body1">{data.file}</Typography>
+
              <div className="edit-delete-button">
                  {/* 해당 글의 작성자가 로그인을 했을 때만 수정, 삭제 버튼이 보이도록 설정.
       토큰에서 사용자의 mno 값을 추출한 후, 게시글의 작성자의 mno 값과 비교하여 같으면 수정, 삭제 버튼이 보이도록 */}
@@ -346,7 +355,7 @@ const [data, setData] = useState({mno // 축약 구문으로 변경
                   <p id="parent-modal-description">
                       정말로 삭제하시겠습니까?
                   </p>
-                  <Button href="http://localhost:3000/board/list" onClick={() => handleDelete(data.bno)}>삭제</Button>
+                  <Button href="http://localhost:3000/board/list" onClick={() => handleDelete(bno)}>삭제</Button>
               </Box>
           </Modal>
       </div>

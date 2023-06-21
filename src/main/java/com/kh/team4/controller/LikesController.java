@@ -53,12 +53,10 @@ public class LikesController {
 
     // 좋아요 취소 컨트롤러
     @DeleteMapping("/removeLike/{qno}")
-    public void removeLike(@RequestHeader("Authorization") String data, @PathVariable Long qno, @RequestBody LikesDTO likesDTO) {
+    public void removeLike(@RequestHeader("Authorization") String data, @RequestBody LikesDTO likesDTO) {
         log.info("좋아요 취소 컨트롤러 진입");
         String atk = data.substring(7);
-
-        likesDTO.setQno(qno); // 좋아요 취소할 질문 번호 설정
-
+        System.out.println("atk: " + atk);
         likesService.removeLike(likesDTO, atk);
     }
 }

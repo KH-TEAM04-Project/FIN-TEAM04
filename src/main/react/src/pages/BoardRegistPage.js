@@ -92,7 +92,8 @@ export default function BoardRegist() {
 
     const [data, setData] = useState({
         title: "",
-        RegDate: "",
+        regDate: "",
+        file: "",
         writerID: sub,
         hits: 0,
         content: "",
@@ -119,28 +120,28 @@ export default function BoardRegist() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append("title", data.title);
-        formData.append("writerID", data.writerID);
-        formData.append("hits", data.hits);
-        formData.append("content", data.content);
-        formData.append("mno", data.mno);
-        formData.append('boardfiles', selectedFiles[0]); // Assuming you want to upload only one file
-
-// Make the POST request using axios
-        axios.post('/board/regist', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${token}`
-            }
-        })
+        const userData = {
+            title: data.title,
+            regDate: data.regDate,
+            writerID: data.writerID,
+            hits: data.hits,
+            content: data.content,
+            mno // 축약 구문으로 변경
+        };
+        axios
+            .post("/board/regist", userData, {
+                headers: {
+                    // http 헤더의 auth 부분에 accessToken 값 설정
+                    'Authorization': `Bearer ${token}`
+                }
+            })
             .then((response) => {
                 console.log(response.status, response.data);
             })
             .catch((error) => {
                 if (error.response) {
                     console.log("이거 에러인걸?");
-                    console.log(data);
+                    console.log(userData);
                 } else if (error.request) {
                     console.log("network error");
                 } else {
@@ -148,6 +149,7 @@ export default function BoardRegist() {
                 }
             });
     };
+
 
 // 여기까지 axios
 
@@ -329,11 +331,11 @@ export default function BoardRegist() {
                 <Container width="10000" >
                     <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
                         <Typography variant="h5" paragraph  defaultValue="Normal">
-                            게시글 작성하세유
+                            공지사항
                         </Typography>
 
                         <Typography sx={{ color: 'text.secondary' }}>
-                            무엇이든 물어보세유
+                            게시글을 입력해주세요.
                         </Typography>
                         <div>---------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
 
@@ -347,18 +349,10 @@ export default function BoardRegist() {
                                       onChange={handleChange}
                                       sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>
 
-
-
-
-
-
-
                         <TextField    name="writerID" label="작성자"
-
-                                      value={data.writerID}
+                                      value={sub}
                                       onChange={handleChange}
                                       sx={{my: {  xs: 3, sm: 5 ,mr: 1} }}/>
-
 
 
 
@@ -381,7 +375,7 @@ export default function BoardRegist() {
                                         id="icon-button-file"
                                         multiple  // Add this attribute
                                         type="file"
-                                        name="boardfiles"
+                                        name="file"
                                         onChange={changeFileHandler}
                                     />
                                 </Button>
@@ -399,11 +393,11 @@ export default function BoardRegist() {
                                 >
                                     <Box sx={style13}>
                                         <Typography id="modal-modal-title" variant="h6" component="h2">
-                                            &nbsp; &nbsp; &nbsp; 미리 보기 에유
+                                             미리보기
                                         </Typography>
                                         <Container
                                             style={{ width: '200%', height: '150px' }}
-                                            className="preview"> {imageSrc && <img src={imageSrc} alt="preview-img"
+                                            className="preview"> {imageSrc && <img src={data.file} alt="preview-img"
                                                                                    style={{ width: '400px', height: '150%' }}/>}
                                         </Container>
                                     </Box>

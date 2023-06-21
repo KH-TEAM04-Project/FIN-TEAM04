@@ -32,6 +32,7 @@ import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
+import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
 import styled from 'styled-components'; // styled-components 추가
 import DeleteIcon from '@mui/icons-material/Delete';
 // ----------------------------------------------------------------------
@@ -94,6 +95,9 @@ const QnaDetailPage = () => {
   const [likesCount, setLikesCount] = useState(0); // 좋아요 개수 표시
   const [likeData, setLikeData] = useState(0); // 초기값을 빈 객체로 설정
   const [isLiked, setIsLiked] = useState(false);
+  // 사용자 인증 상태
+  const isAuthenticated = !!token;
+  const loggedInUserId = sub; // 로그인한 사용자의 ID를 얻어오는 코드 또는 상태
 
   const getPost = () => {
     axios
@@ -106,11 +110,11 @@ const QnaDetailPage = () => {
       .then((response) => {
         setPost(response.data); // 게시글 업데이트
         console.log(response.data);
-        console.log("yaya");
+        console.log("성공");
       })
       .catch((error) => {
         if (error.response) {
-          console.log("이거 에러인걸?");
+          console.log("response 에러 발생");
         } else if (error.request) {
           console.log("network error");
         } else {
@@ -130,11 +134,11 @@ const QnaDetailPage = () => {
       .then((response) => {
         setReply(response.data); // 댓글 목록 업데이트
         console.log(response.data);
-        console.log("yaya");
+        console.log("댓글 목록");
       })
       .catch((error) => {
         if (error.response) {
-          console.log("이거 에러인걸?");
+          console.log("response 에러 발생");
         } else if (error.request) {
           console.log("network error");
         } else {
@@ -233,6 +237,8 @@ const QnaDetailPage = () => {
   console.log(likeData);
 
   const handleLike = () => {
+    if (liked) return; // 이미 좋아요한 상태라면 중복 클릭 방지
+
     const requestData = {
       qno, // 좋아요할 질문 번호
       mno,
@@ -253,9 +259,12 @@ const QnaDetailPage = () => {
         console.error('좋아요 요청 실패:', error);
         // 좋아요 요청 실패 시 추가 동작 구현
       });
+      setLiked(true); // 좋아요 상태 변경
   };
 
   const handleUnlike = () => {
+    if (!liked) return; // 좋아요하지 않은 상태라면 중복 클릭 방지
+
     setLiked(false);
     const requestData = {
       qno, // 좋아요 취소할 질문 번호
@@ -263,20 +272,22 @@ const QnaDetailPage = () => {
     };
 
     axios
-      .delete(`/qna/removeLike/${likeData.qno}`, requestData, {
+      .delete(`/qna/removeLike/${likeData.qno}`, {
         headers: {
           'Authorization': `Bearer ${token}`
-        }
-      }) // 요청 본문을 requestData로 전달
+        },
+        data: requestData // 요청 본문에 데이터 추가
+      })
       .then((response) => {
         console.log('좋아요 취소 요청 성공:', response.data);
         fetchLikesData(); // 좋아요 취소 요청 성공 시 좋아요 데이터를 다시 가져와서 상태를 업데이트
         // 좋아요 취소 요청 성공 시 추가 동작 구현
       })
-      .catch((error) => {
-        console.error('좋아요 취소 요청 실패:', error);
-        // 좋아요 취소 요청 실패 시 추가 동작 구현
+        .catch((error) => {
+          console.error('좋아요 취소 요청 실패:', error);
+          // 좋아요 취소 요청 실패 시 추가 동작 구현
       });
+    setLiked(false); // 좋아요 상태 변경
   };
 
   // 좋아요 개수 가져오기
@@ -425,9 +436,7 @@ const QnaDetailPage = () => {
               <MenuItem component={Link} to="/qna/regist">
                 새로 작성하기
               </MenuItem>
-              <MenuItem onClick={handleDelete}>
-                삭제하기
-              </MenuItem>
+
             </Menu>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Q&A 상세보기
@@ -511,18 +520,46 @@ const QnaDetailPage = () => {
               sx={{ width: '100%', padding: '10px', borderRadius: '5px', marginTop: '20px' }}
             />
           </Stack>
-          <Stack direction="row" spacing={2} sx={{ marginTop: '32px' }}>
-            {!liked ? (
-              <Button variant="outlined" onClick={handleLike}>
-                <ThumbUpOffAltRoundedIcon sx={{ marginRight: '8px' }} /> 좋아요
-              </Button>
-            ) : (
-              <Button variant="outlined" onClick={handleUnlike}>
-                좋아요 취소
+          <Stack direction="row" spacing={2} sx={{ marginTop: '32px', marginBottom: '16px', justifyContent: 'space-between' }}>
+            <Stack direction="row" spacing={2}>
+              {!liked ? (
+                <Button variant="outlined" onClick={handleLike}>
+                  <ThumbUpOffAltRoundedIcon sx={{ marginRight: '8px' }} />
+                  좋아요
+                </Button>
+              ) : (
+                <Button variant="outlined" onClick={handleUnlike}>
+                  <ThumbUpAltRoundedIcon sx={{ marginRight: '8px' }} />
+                  좋아요 취소
+                </Button>
+              )}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  backgroundColor: '#f5f5f5',
+                }}
+              >
+                <Typography variant="subtitle2" color="textSecondary">
+                  이 게시글을 좋아하는 사람: {likeData}명
+                </Typography>
+              </div>
+            </Stack>
+            {isAuthenticated && post && post.writerID === loggedInUserId && (
+              <Button
+                onClick={handleDelete}
+                variant="contained"
+                color="error"
+                size="small"
+                startIcon={<DeleteIcon />}
+              >
+                게시글 삭제하기
               </Button>
             )}
-            <span>좋아요 수: {likeData}</span>
           </Stack>
+
             <Stack sx={{ marginTop: '32px' }}>
             <form onSubmit={handleSubmit}>
               <Stack direction="row" spacing={2}>
@@ -567,12 +604,14 @@ const QnaDetailPage = () => {
                     <TableCell>{reply.content}</TableCell>
                     <TableCell>{reply.regDate}</TableCell>
                     <TableCell>
-                      <IconButton
-                        color="error"
-                        onClick={() => handleDeleteButtonClick(reply)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      {isAuthenticated && reply.writerID === loggedInUserId && (
+                        <IconButton
+                          color="error"
+                          onClick={() => handleDeleteButtonClick(reply)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
