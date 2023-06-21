@@ -5,6 +5,8 @@ import selenium
 from selenium import webdriver 
 from selenium.webdriver.common.keys import Keys 
 import numpy as np
+import datafilter
+import tooracle
 import json
 import schedule
 import time
@@ -15,10 +17,10 @@ def clean_sheet_name(name):
     cleaned_name = re.sub(r'[<>:"/\\|?*]', '', name)
     return cleaned_name[:31]
 
+driver = webdriver.Chrome()
 
-def scraping():
+# url = "https://www.card-gorilla.com/chart/check100?term=weekly"
 
-    driver = webdriver.Chrome()
 
     """ url = "https://www.card-gorilla.com/chart/check100?term=weekly"
 
@@ -55,12 +57,15 @@ def scraping():
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
 
-        # 이미지 담기
-        img = soup.select_one('div.card_img>img')['src']
 
-        # 카드이름 및 은행이름
-        name = soup.select_one('div.tit>strong.card').text
-        brand = soup.select_one('div.tit>p').text
+# for a in sele:
+#     href = a.attrs['href'][13:]
+#     # print(num, href)
+#     # num = num + 1
+#     cardNumList = np.append(cardNumList, href)
+
+# cardNumList = np.delete(cardNumList, 0)
+
 
         # 혜택 1
         if soup.select_one('div.bnf1>dl.bnf11>dt') == None:
@@ -87,10 +92,12 @@ def scraping():
             beval3 = soup.select_one('div.bnf1>dl.bnf13>dd>strong').text
         
 
-        cardinfo = [brand, name, img, bename1, beval1, bename2, beval2, bename3, beval3]
-
-        cardInfoList.append({"카드사" : cardinfo[0], "카드명" : cardinfo[1], "카드이미지" : cardinfo[2], "혜택1" : cardinfo[3], "혜택1내용" : cardinfo[4], "혜택2" : cardinfo[5], "혜택2내용" : cardinfo[6], "혜택3" : cardinfo[7], "혜택3내용" : cardinfo[8]})
-
+            cardinfo = [brand + ",", name + ",", bename1 + ",", beval1 + ",", bename2 + ",", beval2 + ",", bename3 + ",", beval3 + ",", img]
+            cardInfoList = np.append(cardInfoList, [cardinfo], axis=0)
+            cardInfoList = datafilter.customFilter(cardInfoList)
+            tooracle.insertDB(cardInfoList)
+    
+    print(cardInfoList)
 
     while True:
 
