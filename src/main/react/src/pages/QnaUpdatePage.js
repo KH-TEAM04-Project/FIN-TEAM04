@@ -43,9 +43,7 @@ const style = {
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-
-
-export default function Ya() {
+export default function QnaUpdatePage() {
   const token = localStorage.getItem('accessToken');
   const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
   const [mno, setMno] = useState('');
@@ -320,7 +318,6 @@ export default function Ya() {
         </Container>
       </AppBar>
 
-
       {posts.map((data) => (
         <form onSubmit={handleSubmit} key={data.writer}>
           <Container width="10000">
@@ -372,12 +369,10 @@ export default function Ya() {
                   </LoadingButton>
                 </Box>
               </Modal>
-
             </StyledContent2>
           </Container>
         </form>
       ))}
-
     </>
   );
 }

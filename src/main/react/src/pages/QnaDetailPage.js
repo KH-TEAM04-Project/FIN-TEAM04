@@ -66,7 +66,6 @@ const QnaDetailPage = () => {
   const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
   const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
 
-  console.log(mno);
   useEffect(() => {
     if (token) {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
@@ -92,6 +91,9 @@ const QnaDetailPage = () => {
   const [reply, setReply] = useState([]); // 댓글 목록 상태
   const [replyContent, setReplyContent] = useState(''); // 댓글 내용 상태
   const [liked, setLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0); // 좋아요 개수 표시
+  const [likeData, setLikeData] = useState(0); // 초기값을 빈 객체로 설정
+  const [isLiked, setIsLiked] = useState(false);
 
   const getPost = () => {
     axios
@@ -209,23 +211,42 @@ const QnaDetailPage = () => {
       });
   };
 
-  const handleLike = () => {
-    setLiked(true);
+  const fetchLikesData = async () => {
+    try {
+      const response = await axios.get(`/qna/likes/${qno}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = response.data;
+      setLikeData(data); // 좋아요 데이터를 가져와서 likeData에 설정
+      setIsLiked(true); // 좋아요 요청이 성공하면 좋아요 상태를 true로 설정
+    } catch (error) {
+      console.log('Error fetching likes data:', error);
+    }
+  };
 
+  useEffect(() => {
+    fetchLikesData();
+  }, []);
+
+  console.log(likeData);
+
+  const handleLike = () => {
     const requestData = {
-      qno: data.qno, // 좋아요할 질문 번호
+      qno, // 좋아요할 질문 번호
       mno,
     };
 
     axios
-      .post(`/qna/likes/{qno}`, requestData, {
-         headers: {
-           // http 헤더의 auth 부분에 accessToken 값 설정
-           'Authorization': `Bearer ${token}`
-         }
-      }) // 요청 본문을 requestData로 전달
+      .post(`/qna/addLike/${likeData.qno}`, requestData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       .then((response) => {
         console.log('좋아요 요청 성공:', response.data);
+        fetchLikesData(); // 좋아요 요청 성공 시 좋아요 데이터를 다시 가져와서 상태를 업데이트
         // 좋아요 요청 성공 시 추가 동작 구현
       })
       .catch((error) => {
@@ -236,21 +257,20 @@ const QnaDetailPage = () => {
 
   const handleUnlike = () => {
     setLiked(false);
-
     const requestData = {
-      qno: data.qno, // 좋아요 취소할 질문 번호
+      qno, // 좋아요 취소할 질문 번호
       mno,
     };
 
     axios
-      .post(`/qna/unLikes/{qno}`, requestData, {
-         headers: {
-           // http 헤더의 auth 부분에 accessToken 값 설정
-           'Authorization': `Bearer ${token}`
-         }
+      .delete(`/qna/removeLike/${likeData.qno}`, requestData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       }) // 요청 본문을 requestData로 전달
       .then((response) => {
         console.log('좋아요 취소 요청 성공:', response.data);
+        fetchLikesData(); // 좋아요 취소 요청 성공 시 좋아요 데이터를 다시 가져와서 상태를 업데이트
         // 좋아요 취소 요청 성공 시 추가 동작 구현
       })
       .catch((error) => {
@@ -258,6 +278,22 @@ const QnaDetailPage = () => {
         // 좋아요 취소 요청 실패 시 추가 동작 구현
       });
   };
+
+  // 좋아요 개수 가져오기
+  const fetchLikesCount = async () => {
+    try {
+      const response = await axios.get(`/qna/likes/${qno}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // 필요한 경우 헤더에 인증 토큰 추가
+        },
+      });
+      const data = response.data;
+      setLikesCount(data);
+    } catch (error) {
+      console.log('Error fetching likes count:', error);
+    }
+  };
+
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // 삭제 다이얼로그 열림/닫힘 상태
   // 삭제 다이얼로그 열기
@@ -485,6 +521,7 @@ const QnaDetailPage = () => {
                 좋아요 취소
               </Button>
             )}
+            <span>좋아요 수: {likeData}</span>
           </Stack>
             <Stack sx={{ marginTop: '32px' }}>
             <form onSubmit={handleSubmit}>
