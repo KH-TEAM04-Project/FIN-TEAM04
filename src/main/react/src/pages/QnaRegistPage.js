@@ -321,7 +321,7 @@ const handleSubmit = (e) => {
     <form onSubmit={handleSubmit}>
       <Container width="10000">
         <StyledContent2 sx={{ textAlign: 'center', alignItems: 'right' }}>
-          <Typography variant="h5" paragraph  defaultValue="Normal">
+          <Typography variant="h3" paragraph  defaultValue="Normal">
             게시글을 작성해주세요.
           </Typography>
       
@@ -349,39 +349,6 @@ const handleSubmit = (e) => {
           onChange={handleChange}
           defaultValue=" 글 작성"
          />
-<div>
-            <Stack direction="row" alignItems="center" spacing={4} sx={{my: { xs: 1, mr: 12 } }}>
-          <Button variant="contained" component="label">
-              Upload File &nbsp;<AddAPhotoIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}} />
-            <input hidden accept="image/*" multiple type="file"
-            onChange={(e) => {encodeFileToBase64(e.target.files[0]); }}
-            />
-          </Button>
-
-
-            <Button variant="contained"  component="label" onClick={handleOpen1}
-            type="file" >
-            이미지 미리보기 &nbsp; <CollectionsIcon  sx={{ display: { xs:2, md: '1' , mr: 6 }}}/></Button>
-                <Modal
-                  open={open1}
-                  onClose={handleClose1}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style13}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                  &nbsp; &nbsp; &nbsp; 미리 보기 에유
-                    </Typography>
-                   <Container
-                   style={{ width: '200%', height: '150px' }}
-                   className="preview"> {imageSrc && <img src={imageSrc} alt="preview-img"
-                   style={{ width: '400px', height: '150%' }}/>}
-                   </Container>
-                  </Box>
-                </Modal>
-                   </Stack>
-          </div>
-         
       <div>
       <Button fullWidth size="large" type="submit" variant="contained" onClick={handleOpen}>작성하기</Button>
       <Modal

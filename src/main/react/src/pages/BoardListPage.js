@@ -93,9 +93,30 @@ const StyledSearch = styled(OutlinedInput)(({theme}) => ({
 export default function BoardList() {
 
     const token = localStorage.getItem('accessToken');
+    const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
+    const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
+
     const auth = token ? JSON.parse(atob(token.split('.')[1])).auth : '';
     console.log(auth);
 
+    console.log(mno);
+    useEffect(() => {
+        if (token) {
+            const decodedToken = JSON.parse(atob(token.split('.')[1]));
+            setMno(decodedToken.mno);
+            console.log(decodedToken.mno);
+
+            const mno = decodedToken.mno;
+            axios
+                .post("/MyPageCont", { mno })
+                .then((response) => {
+                    const userData = response.data;
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+    }, [token]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -121,7 +142,6 @@ export default function BoardList() {
     const getPosts = () => {
         axios.get('/board/list').then((response) => {
             setPosts(response.data);
-
             console.log(response.data.length);
         })
             .catch((error) => {
@@ -143,7 +163,6 @@ export default function BoardList() {
         getPosts();
     }, []);
     const compareFunction = (a, b) => {
-
         return b.bno - a.bno;
     };
     posts.sort(compareFunction);
@@ -174,7 +193,7 @@ export default function BoardList() {
                 sx={{mr: 160, ml: 1}}
                 value={filterName}
                 onChange={handleFilterByName}
-                placeholder="내용을 검색하세요우"
+                placeholder="내용을 검색하세요"
                 startAdornment={
                     <InputAdornment position="start">
                         <Iconify icon="eva:search-fill" sx={{color: 'text.disabled', width: 20, height: 20}}/>

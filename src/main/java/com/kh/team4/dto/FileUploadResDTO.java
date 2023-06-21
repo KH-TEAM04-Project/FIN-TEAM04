@@ -8,11 +8,13 @@ import lombok.Setter;
 @Setter
 public class FileUploadResDTO {
 
-    String fileName;
-    String url;
+    private String fileName;
+    private String url;
+    private String ProfilePhoto;
 
-    public FileUploadResDTO(String fileName, String url) {
+    public FileUploadResDTO(String fileName, String url, String ProfilePhoto) {
         this.fileName = fileName;
         this.url = url;
+        this.ProfilePhoto = ProfilePhoto;
     }
 }

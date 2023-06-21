@@ -12,6 +12,25 @@ function TaxForm() {
 
     const navigate = useNavigate();
 
+    const handleGoToCardPage = () => {
+        if (token) {
+          axios.post('/tax/CheckDetail', null, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+            .then(response => {
+              // 성공적인 응답 처리
+              console.log(response.data);
+            })
+            .catch(error => {
+              // 에러 처리
+              console.error(error);
+            });
+        }
+        navigate('/card');
+      };
+
     const handleGoBack = () => {
         navigate(-2); // Go back one step in the browser history
     };
@@ -120,7 +139,7 @@ function TaxForm() {
                                     <AppWidgetSummary title="기부금" total={columnInfo.donation} color="info"/>
                                 </Grid>
                                 <div className={"center-container2"}>
-                                    <button>나의 솔루션 보러가기</button>
+                                    <button onClick={handleGoToCardPage}>나의 솔루션 보러가기</button>
                                     <button onClick={handleGoBack}>메인페이지</button>
                                 </div>
                             </Grid></Container>

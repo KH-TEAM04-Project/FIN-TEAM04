@@ -26,7 +26,7 @@ public class MemberReqDTO {
     private Authority authority;
     private String changePwd;
 
-    private String ProfilePhoto;
+    private String Profilephoto;
     @Override
     public String toString(){
         return "mno - " + mno + ", Email - " + email + ", Address - " + address + ", DetailAddress - " + detailAddress + ", ph - " + ph + ", 비번 - " + pwd;

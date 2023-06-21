@@ -60,11 +60,13 @@ public class S3Uploader {
 
         //사용자의 프로필을 등록하는 것이기때문에, Member 도메인에 setProfile을 해주는 코드.
         Member user = userRepository.findById(mno).get();
-        user.setProfilePhoto(uploadImageUrl);
-
+        System.out.println("해당 mno값? " + user.getMno());
+        user.setProfilephoto(uploadImageUrl);
+        userRepository.save(user);
+        System.out.println("해당 유저의 프로필이 들어가는지 확인" + user.getProfilephoto());
+        String ProfilePhoto = user.getProfilephoto();
         //FileUploadResponse DTO로 반환해준다.
-        return new FileUploadResDTO(fileName, uploadImageUrl);
-        //return uploadImageUrl;
+        return new FileUploadResDTO(fileName, uploadImageUrl, ProfilePhoto);
     }
 
 

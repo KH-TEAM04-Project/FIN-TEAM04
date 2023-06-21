@@ -90,7 +90,12 @@ console.log(mno);
 
    const getPosts = useCallback(() => {
      axios
-       .get(`/board/update/${bno}`)
+       .get(`/board/update/${bno}`, {
+           headers: {
+               // http 헤더의 auth 부분에 accessToken 값 설정
+               'Authorization': `Bearer ${token}`
+           }
+       })
        .then((response) => {
          setPosts([response.data]);
          console.log(response.data);
@@ -127,7 +132,12 @@ console.log(mno);
          mno
        };
        axios
-         .post(`/board/update/${bno}`, userData)
+         .post(`/board/update/${bno}`, userData,{
+             headers: {
+                 // http 헤더의 auth 부분에 accessToken 값 설정
+                 'Authorization': `Bearer ${token}`
+             }
+         } )
          .then((response) => {
            console.log(response.status, response.data);
            console.log(response.data);

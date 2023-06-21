@@ -52,8 +52,8 @@ public class Member {
     @Column(columnDefinition = "varchar2(20)")
     private String ph;
 
-    @Column
-    private String ProfilePhoto;
+    @Column(columnDefinition = "varchar2(500)")
+    private String Profilephoto;
 
 
     @Enumerated(EnumType.STRING)
@@ -71,8 +71,17 @@ public class Member {
     @OneToMany(mappedBy = "mno", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Taxrefund> taxrefundList = new ArrayList<>();
 
+    // checkcard 관계매핑
+    @OneToMany(mappedBy = "mno", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Dcard> checkcardList = new ArrayList<>();
+
     // board 관계매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+
+
+
+
+
     private List<Board> boardList = new ArrayList<>();
 
     @Embedded
@@ -143,7 +152,7 @@ public  static Member findMid(MemberResDTO memberResDTO){
         return "Mno : " + this.mno + ",  Email : " + this.email + ",  Ph : " + this.ph;
     }
 
-    public String setProfilePhoto(String uploadImageUrl) {
-        return uploadImageUrl;
+    public void setProfilephoto(String Profilephoto) {
+        this.Profilephoto = Profilephoto;
     }
 }

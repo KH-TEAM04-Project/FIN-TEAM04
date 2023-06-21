@@ -1,73 +1,56 @@
 package com.kh.team4;
 
+import com.kh.team4.entity.Authority;
 import com.kh.team4.entity.Member;
 import com.kh.team4.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import java.util.stream.IntStream;
+import javax.transaction.Transactional;
+import java.util.stream.LongStream;
 
-import static com.kh.team4.entity.Authority.ROLE_USER;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+//@SpringBootTest
+@RequiredArgsConstructor
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 
-@SpringBootTest
 public class MemberRepositoryTests {
 
     @Autowired
-    MemberRepository MemberRepository;
+    private final MemberRepository memberRepository;
+
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
 
     @Test
     void save() {
 
+                LongStream.rangeClosed(1, 50).forEach(i -> {
+            try {
+                Member parms = Member.builder()
+                        .authority(Authority.ROLE_USER)
+                        .email(Long.toString(i) + "@example.com")
+                        .mid("id" + Long.toString(i))
+                        .mname("Mname " + Long.toString(i))
+                        .ph("1234")
+                        .pwd(passwordEncoder.encode("1392514aA!")) // 비밀번호 인코딩
+                        .regno(Long.toString(i) + "1234567890123")
+                        .build();
+
+                // 2. 회원 저장
+                memberRepository.save(parms);
+            } catch (Exception e) {
+                System.out.println("Exception occurred at index: " + i);
+                e.printStackTrace();
+            }
+        });
+
         // 1. 회원 생성
-        Member params = Member.builder()
-                .mname("이소")
-                .ph("0101234568")
-                .mid("za")
-                .pwd("Cwsook97!")
-                .authority(ROLE_USER)
-                .email("lee690808@nave.com")
-                .regno("970882123412")
-                .build();
-
-
-        // 2. 회원저장
-        MemberRepository.save(params);
-
-     /*   // 3. 1번 회원 조회
-        Member entity = MemberRepository.findById((long) 1).get();
-        assertThat(entity.getMname()).isEqualTo("쏘");*/
     }
-
-   /* @Test
-    void delete() {
-
-        // 1. 회원조회
-        Member entity = MemberRepository.findById((long) 1).get();
-
-        // 2. 회원삭제
-        MemberRepository.delete(entity);
-    }*/
-
-    /*@Test // Member 객체 100개  생성
-    public void insertMembers(){
-
-        IntStream.rangeClosed(1,100).forEach(i -> {
-
-            Member member = Member.builder()
-                    .address("경기")
-                    .mid("ID" + i)
-                    .ph("010-" + i)
-                    .mtype("u")
-                    .regno("999999-"+i)
-                    .email("user" + i + "@aaa.com")
-                    .pwd("1111")
-                    .mname("USER" + i)
-                    .build();
-
-            MemberRepository.save(member);
-        });*/
-
-
 }
