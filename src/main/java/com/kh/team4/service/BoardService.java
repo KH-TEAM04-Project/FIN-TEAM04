@@ -29,17 +29,20 @@ public class BoardService {
     private final BoardRepository repository; //자동주입 final
     private final MemberRepository memberRepository; //자동주입 final
     private final TokenProvider tokenProvider;
-@Transactional //글 등록
+
+    @Transactional //글 등록
     public void register(BoardDTO boardDTO, String atk) {
         log.info("리액트에서 받아온" + boardDTO);
         Board board = Board.dtoToEntity(boardDTO);
         Authentication authentication = tokenProvider.getAuthentication(atk);
         Long mno = memberRepository.findByMid2(authentication.getName());
+        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
         log.info("entity 변환 완료" + board);
         repository.save(board);
         log.info("entity 저장 완료" + board);
 
     }
+
     //공지사항 목록
     @Transactional
     public List<BoardDTO> findAll() {
@@ -55,6 +58,7 @@ public class BoardService {
         log.info("컨트롤러로 리턴");
         return boardDTOList;
     }
+
     //조회수
     @Transactional //레파지토리에서 쿼리문 지정해줬을 경우 일관성,영속성을 위해 @트랜잭션 사용
     public void updateHits(Long bno) {
@@ -109,7 +113,7 @@ public class BoardService {
         MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
         log.info(bno);
         repository.deleteById(bno);
-        log.info(bno +"삭제완료");
+        log.info(bno + "삭제완료");
     }
 }
 
