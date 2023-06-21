@@ -32,12 +32,14 @@ public class Dcard {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "member_mno")
-    private Taxrefund mno; // 회원번호
+    private Member mno; // 회원번호
 
+/*
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "taxrefend_dard")
     private Taxrefund dcard; // 연말정산 체크카드 사용 금액
 
+*/
 
     @Column
     private Long airport;
