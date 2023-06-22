@@ -28,13 +28,13 @@ public class Cardinfo {
     )
     private Long cardno;
 
-    @Column(columnDefinition = "varchar2(20)", unique = true) // 카드이름
+    @Column(columnDefinition = "varchar2(200)") // 카드이름
     private String cname;
 
-    @Column(columnDefinition = "varchar2(20)") // 은행이름
+    @Column(columnDefinition = "varchar2(200)") // 은행이름
     private String bname;
 
-    @Column(columnDefinition = "varchar2(20)")
+    @Column(columnDefinition = "varchar2(200)")
     private String imgadd;
 
     @Embedded
