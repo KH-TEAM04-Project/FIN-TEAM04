@@ -54,6 +54,7 @@ public class AuthController {
 
     @GetMapping("/check/findPw")
     public @ResponseBody Map<String, Boolean> pw_find(String email, String mname) {
+        System.out.println(email + mname);
         Map<String, Boolean> json = new HashMap<>();
         boolean pwFindCheck = memberService.memberEmailCheck(email, mname);
 
@@ -73,7 +74,8 @@ public class AuthController {
     }
 
     @GetMapping("/saveMembers")
-    public void getAllMembers() {
-        memberService.saveMembers();
+    public String getAllMembers() {
+
+        return memberService.saveMembers();
     }
 }
