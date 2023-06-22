@@ -75,7 +75,7 @@ export default function SignUpForm({ formValues, onFormSubmit, onFormChange, onA
       <Address onAddressChange={onAddressChange} /> {/* Pass the onAddressChange handler */}
       <StyledInputWrapper>
         
-        <StyledInput type="text" id="detailaddress" name="detailaddress" value={formValues.detailaddress} onChange={onFormChange} required placeholder='상세주소'/>
+        <StyledInput type="text" id="detailAddress" name="detailAddress" value={formValues.detailAddress} onChange={onFormChange} required placeholder='상세주소'/>
       </StyledInputWrapper>
       <StyledInputWrapper>
         <StyledInput type="text" id="ph" name="ph" value={formValues.ph} onChange={onFormChange} required placeholder='핸드폰 번호'/>
@@ -100,7 +100,7 @@ SignUpForm.propTypes = {
     regno: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
     pwd: PropTypes.string.isRequired,
-    detailaddress: PropTypes.string.isRequired, // address 추가
+    detailAddress: PropTypes.string.isRequired, // address 추가
     ph: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired // hp 추가
   }).isRequired,

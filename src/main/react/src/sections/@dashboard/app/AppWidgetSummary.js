@@ -11,7 +11,7 @@ AppWidgetSummary.propTypes = {
 };
 
 export default function AppWidgetSummary({ title, total, color = 'primary', sx, ...other }) {
-  const formattedTotal = total.toLocaleString(); // 숫자를 콤마로 구분한 문자열로 변환
+  const formattedTotal = total !== null ? total.toLocaleString() : '';
 
   return (
     <Card
@@ -25,7 +25,9 @@ export default function AppWidgetSummary({ title, total, color = 'primary', sx, 
       }}
       {...other}
     >
-      <Typography variant="h3">{formattedTotal}</Typography>
+      <Typography variant="h3" sx={{ overflowWrap: 'break-word' }}>
+        {formattedTotal}
+      </Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         {title}
       </Typography>
