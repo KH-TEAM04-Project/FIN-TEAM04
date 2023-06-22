@@ -35,14 +35,14 @@ const PasswordResetModal = () => {
 
         console.log(requestData);
         axios
-            .get('/check/findPw', {params: requestData})
+            .get('/auth/check/findPw', {params: requestData})
             .then((response) => {
                 const res = response.data;
                 if (res.check) {
                     swal('발송 완료!', '입력하신 이메일로 임시비밀번호가 발송되었습니다.', 'success').then((OK) => {
                         if (OK) {
                             axios
-                                .post('/check/findPw/sendEmail', null, {params: requestData})
+                                .post('/auth/check/findPw/sendEmail', null, {params: requestData})
                                 .then(() => {
                                     window.location = '/login';
                                 })
