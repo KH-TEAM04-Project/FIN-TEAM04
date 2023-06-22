@@ -18,8 +18,8 @@ def insertDB(data):
         bankname = data[x][0]
         cardname = data[x][1]
         dataset[0] = str(x + 1)
-        dataset[1] = cardname
-        dataset[2] = bankname
+        dataset[1] = cardname.replace(",","")
+        dataset[2] = bankname.replace(",","")
 
         if data[x][8] != None:
             dataset[3] = data[x][8]
