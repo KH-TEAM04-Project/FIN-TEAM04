@@ -20,7 +20,7 @@ public class CardinfoDTO {
     private String bname;
     private String imgadd;
 
-    private Float allfor;
+    private String allfor;
     private Float airport;
     private Float edu;
     private Float tran;
@@ -50,7 +50,25 @@ public class CardinfoDTO {
                 .cname(cardinfo.get().getCname())
                 .bname(cardinfo.get().getBname())
                 .imgadd(cardinfo.get().getImgadd())
-                .allfor(Float.parseFloat(cardinfo.get().getCardbenefit().getAllfor()))
+                .allfor(cardinfo.get().getAllfor())
+                .airport(Float.parseFloat(cardinfo.get().getAirport()))
+                .cloth(Float.parseFloat(cardinfo.get().getCloth()))
+                .coffee(Float.parseFloat(cardinfo.get().getCoffee()))
+                .commi(Float.parseFloat(cardinfo.get().getCommi()))
+                .commu(Float.parseFloat(cardinfo.get().getCommu()))
+                .conveni(Float.parseFloat(cardinfo.get().getConveni()))
+                .cultural(Float.parseFloat(cardinfo.get().getCultural()))
+                .gas(Float.parseFloat(cardinfo.get().getGas()))
+                .delivery(Float.parseFloat(cardinfo.get().getDelivery()))
+                .edu(Float.parseFloat(cardinfo.get().getEdu()))
+                .foreign(Float.parseFloat(cardinfo.get().getForeign()))
+                .shop(Float.parseFloat(cardinfo.get().getShop()))
+                .tran(Float.parseFloat(cardinfo.get().getTran()))
+                .medi(Float.parseFloat(cardinfo.get().getMedi()))
+                .travel(Float.parseFloat(cardinfo.get().getTravel()))
+                .hotel(Float.parseFloat(cardinfo.get().getHotel()))
+                .stores(Float.parseFloat(cardinfo.get().getStores()))
+                /*.allfor(cardinfo.get().getCardbenefit().getAllfor())
                 .airport(Float.parseFloat(cardinfo.get().getCardbenefit().getAirport()))
                 .cloth(Float.parseFloat(cardinfo.get().getCardbenefit().getCloth()))
                 .coffee(Float.parseFloat(cardinfo.get().getCardbenefit().getCoffee()))
@@ -67,7 +85,7 @@ public class CardinfoDTO {
                 .medi(Float.parseFloat(cardinfo.get().getCardbenefit().getMedi()))
                 .travel(Float.parseFloat(cardinfo.get().getCardbenefit().getTravel()))
                 .hotel(Float.parseFloat(cardinfo.get().getCardbenefit().getHotel()))
-                .stores(Float.parseFloat(cardinfo.get().getCardbenefit().getStores()))
+                .stores(Float.parseFloat(cardinfo.get().getCardbenefit().getStores()))*/
                 .build();
     }
 }
