@@ -137,6 +137,25 @@ SS'));
 ## sqldeveloper로 넣기
 
 BEGIN
+<<<<<<< HEAD
+  FOR i IN 1..50 LOOP
+    INSERT INTO MEMBERS (MNO, ADDRESS, DETAIL_ADDRESS, AUTHORITY, EMAIL, MID, MNAME, PH, PWD, REGNO, PROFILE_PHOTO)
+    VALUES (
+      i,
+      'Address ' || i,
+      'Detail Address ' || i,
+      'ROLE_USER',
+      'email' || i || '@example.com',
+      'id' || i,
+      'Mname ' || i,
+      '1234',
+      '1392514aA!',
+      TO_CHAR(i) || '123456-7890123',
+      NULL
+    );
+  END LOOP;
+  COMMIT;
+=======
 FOR i IN 1..50 LOOP
 INSERT INTO MEMBERS (MNO, ADDRESS, DETAIL_ADDRESS, AUTHORITY, EMAIL, MID, MNAME, PH, PWD, REGNO, PROFILE_PHOTO)
 VALUES (
@@ -154,5 +173,6 @@ NULL
 );
 END LOOP;
 COMMIT;
+>>>>>>> 60c926cdba751936afa083ffaf793206a0865391
 END;
 /

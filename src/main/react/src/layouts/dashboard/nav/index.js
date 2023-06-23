@@ -94,19 +94,23 @@ export default function Nav({ openNav, onCloseNav }) {
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none">
-          <StyledAccount>
+          {/* <StyledAccount>
             <Avatar src={account.photoURL} alt="photoURL" />
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+<<<<<<< HEAD
                 {isLoggedIn ? `${userId}님 환영합니다 ` : '로그인 해주세용><'}
+=======
+                스타일어카운트.
+>>>>>>> feature/seokjun2
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {account.role}
               </Typography>
             </Box>
-          </StyledAccount>
+          </StyledAccount> */}
         </Link>
       </Box>
 
