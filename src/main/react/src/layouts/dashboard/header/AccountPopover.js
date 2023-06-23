@@ -3,28 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import { alpha } from '@mui/material/styles';
-import {
-  Box,
-  Divider,
-  Typography,
-  Stack,
-  MenuItem,
-  Avatar,
-  IconButton,
-  Popover,
-} from '@mui/material';
+import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 
 const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: 'eva:home-fill',
- },
+  },
   {
     label: 'Mypage',
     icon: 'eva:person-fill',
-    onClick: '/mypage' // 마이페이지 경로를 추가합니다.
+    onClick: '/mypage', // 마이페이지 경로를 추가합니다.
   },
-  
 ];
 
 function AccountPopover() {
@@ -48,7 +38,8 @@ function AccountPopover() {
     if (option.onClick) {
       if (option.onClick === '/login') {
         navigate(option.onClick);
-      } else if (option.onClick === '/mypage') { // 마이페이지로 이동하도록 추가합니다.
+      } else if (option.onClick === '/mypage') {
+        // 마이페이지로 이동하도록 추가합니다.
         navigate(option.onClick);
       } else {
         // Handle other option clicks here
@@ -59,19 +50,20 @@ function AccountPopover() {
 
   const handleLogout = async () => {
     const accessToken = localStorage.getItem('accessToken');
-    console.log(accessToken)
-  
+    console.log(accessToken);
+
     try {
-      await axios.post("/member/logout22", null, {
-        headers: {
-          // http 헤더의 auth 부분에 accessToken 값 설정
-          'Authorization': `Bearer ${accessToken}`
-        }
-      })
-      .then(response => console.log(response.data));
+      await axios
+        .post('/member/logout22', null, {
+          headers: {
+            // http 헤더의 auth 부분에 accessToken 값 설정
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((response) => console.log(response.data));
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      navigate("/slogin"); // Adjust the path according to your routing configuration
+      navigate('/slogin'); // Adjust the path according to your routing configuration
       window.location.reload(); // 페이지를 새로고침
     } catch (error) {
       console.error('Logout failed:', error);

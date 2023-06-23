@@ -18,8 +18,7 @@ import {
   AppConversionRates,
 } from '../sections/@dashboard/app';
 
-import backgroundImage from '../img/ggong.jpg';
-// ----------------------------------------------------------------------
+import ggongImage from '../img/ggong.png'; // Import the image
 
 export default function DashboardAppPage() {
   const theme = useTheme();
@@ -30,18 +29,17 @@ export default function DashboardAppPage() {
         <title> 13월의 월급 | 꽁머니 </title>
       </Helmet>
 
-      <Container
-  maxWidth="xl"
-  style={{
-    backgroundImage: `url(${backgroundImage})`,
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-  }}
->
-  수정중
-</Container>
-
+      <Container maxWidth="xl" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <img
+          src={ggongImage}
+          alt="Ggong"
+          style={{
+            width: '100%',
+            height: 'auto',
+            maxWidth: '100%',
+          }}
+        />
+      </Container>
     </>
   );
 }
