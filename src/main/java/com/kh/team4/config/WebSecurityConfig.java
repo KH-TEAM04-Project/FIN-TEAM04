@@ -62,13 +62,4 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // 인메모리 방식 또는 DB 기반 사용자 인증 구성 가능
-        auth
-                .inMemoryAuthentication()
-                .withUser("admin")
-                .password("{noop}admin123!")
-                .roles("USER");
-    }
 }

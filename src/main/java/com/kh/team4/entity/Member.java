@@ -77,13 +77,11 @@ public class Member {
 
     // board 관계매핑
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-
-
-
-
-
     private List<Board> boardList = new ArrayList<>();
 
+    // likes 관계매핑
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Likes> likeList = new ArrayList<>();
     @Embedded
     private Address address;
 

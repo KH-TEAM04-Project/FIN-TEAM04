@@ -1,11 +1,14 @@
 package com.kh.team4.service;
 
+import com.kh.team4.dto.CardinfoDTO;
 import com.kh.team4.dto.DcardDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TaxrefundDTO;
+import com.kh.team4.entity.Cardinfo;
 import com.kh.team4.entity.Dcard;
 import com.kh.team4.entity.Member;
 import com.kh.team4.jwt.TokenProvider;
+import com.kh.team4.repository.CardinfoRepository;
 import com.kh.team4.repository.DcardRepository;
 import com.kh.team4.repository.MemberRepository;
 import com.kh.team4.repository.TaxrefundRepository;
@@ -28,6 +31,7 @@ public class TaxrefundService {
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
     private final DcardRepository drepository;
+    private final CardinfoRepository crepository;
 
 
     public TaxrefundDTO detail(String atk) {
@@ -42,7 +46,7 @@ public class TaxrefundService {
         return dto;
     }
 
-    public DcardDTO checkDetail(String atk){ // 저기 dto안에 카드 상세 컬럼별로 dto만든 dto 넣어줘야함, 아직 미생성이라 대체해서 넣음
+    public DcardDTO checkDetail(String atk) { // 저기 dto안에 카드 상세 컬럼별로 dto만든 dto 넣어줘야함, 아직 미생성이라 대체해서 넣음
         System.out.println("체크카드 항목 한번 보자");
         Authentication authentication = tokenProvider.getAuthentication(atk);
         Long mno = memberRepository.findByMid2(authentication.getName());
@@ -76,6 +80,15 @@ public class TaxrefundService {
         for (Map.Entry<String, Long> entry : valueMap.entrySet()) {
             System.out.println("Column Name: " + entry.getKey() + ", Value: " + entry.getValue());
         }
+        List recommand3;
+        for (Long i = 1L; i < 2L; i++) {
+            List cardinfo = crepository.recommand2(maxvalueColumnName,midvalueColumnName,thrdvalueColumnName,i);
+            System.out.println("cardinfo: " + cardinfo);
+
+
+
+        }
+
 
         System.out.println(mno + "님의 체크카드 항목은? " + dto.toString());
         return dto;

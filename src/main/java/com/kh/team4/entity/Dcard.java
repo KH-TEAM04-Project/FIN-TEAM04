@@ -107,4 +107,7 @@ public class Dcard {
     @Column
     private Long publicfee;
 
+    @Column
+    private String allfor;
+
 }
