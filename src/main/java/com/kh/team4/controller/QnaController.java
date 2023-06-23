@@ -23,14 +23,11 @@ public class QnaController {
     @PostMapping("/regist")
     public ResponseEntity<String> register(@RequestHeader("Authorization") String data, @RequestBody QnaDTO qnaDTO) {
         System.out.println("게시글 작성 컨트롤러 진입");
-        // "/dashboard/write" 주소로 POST 요청이 들어오면 QnaDTO를 받아서 QnaService의 register() 메서드를 호출
         String atk = data.substring(7);
         System.out.println("atk : " + atk);
         qnaService.register(qnaDTO, atk);
         System.out.println("qnaDTO:" + qnaDTO);
-        // register() 메서드에서는 QnaDTO를 이용하여 게시글을 작성하고, Qna 객체를 데이터베이스에 저장.
         return new ResponseEntity<>("게시글이 작성되었습니다.", HttpStatus.OK);
-        // 성공적으로 수행되면 "게시글이 작성되었습니다" 메시지와 함께 HttpStatus.OK(200) 상태 코드를 반환.
     }
     // 게시글 리스트 불러오기
     @GetMapping("/list")
@@ -47,7 +44,6 @@ public class QnaController {
     @GetMapping({"/detail/{qno}", "/update/{qno}"}) // id 값을 받아온다.
     public ResponseEntity<QnaDTO> findById(@RequestHeader("Authorization") String data, @PathVariable("qno") Long qno) {
         log.info("상세페이지/수정 컨트롤러");
-        // 조회수 하나를 올리고 게시글 데이터 가져와서 나타내야 함
         String atk = data.substring(7);
         System.out.println("atk : " + atk);
         qnaService.updateHits(qno);
