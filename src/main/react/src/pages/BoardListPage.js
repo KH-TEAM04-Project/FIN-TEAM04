@@ -207,7 +207,7 @@ export default function BoardList() {
                 }
             />
 
-                {auth === "ROLE_USER" && (
+                {auth === "ROLE_ADMIN" && (
                     <Button href='http://localhost:3000/board/regist' variant="contained"
                             startIcon={<Iconify icon="eva:plus-fill"/>}>
                         게시글 작성하기
