@@ -3,8 +3,11 @@ package com.kh.team4.embeded;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.persistence.Embeddable;
 
+@ToString
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

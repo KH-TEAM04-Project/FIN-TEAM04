@@ -2,12 +2,11 @@ package com.kh.team4.entity;
 
 
 import com.kh.team4.embeded.Cardbene;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.persistence.*;
 
+@ToString
 @Entity
 @Getter
 @NoArgsConstructor
@@ -37,7 +36,76 @@ public class Cardinfo {
     @Column(columnDefinition = "varchar2(200)")
     private String imgadd;
 
-    @Embedded
-    private Cardbene cardbenefit;
+    @Column
+    private String airport;
+
+    @Column
+    private String edu;
+
+    @Column
+    private String tran;
+
+    @Column
+    private String cultural;
+
+    @Column
+    private String delivery;
+
+    @Column
+    private String stores;
+
+    @Column
+    private String giftcard;
+
+    @Column
+    private String food;
+
+    @Column
+    private String shop;
+
+    @Column
+    private String post;
+
+    @Column
+    private String medi;
+
+    @Column
+    private String cloth;
+
+    @Column
+    private String commi;
+
+    @Column
+    private String travel;
+
+    @Column
+    private String gas;
+
+    @Column
+    private String coffee;
+
+    @Column
+    private String commu;
+
+    @Column
+    private String conveni;
+
+    @Column
+    private String overseas;
+
+    @Column
+    private String foreign;
+
+    @Column
+    private String hotel;
+
+    @Column
+    private String publicfee;
+
+    @Column
+    private String allfor;
+
+/*    @Embedded
+    private Cardbene cardbenefit;*/
 
 }
