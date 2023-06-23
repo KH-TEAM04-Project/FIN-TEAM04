@@ -16,10 +16,8 @@ public class LikesDTO {
     private Long qno;
     private String mno;
     private String writerID;
-
-
-    private String regDate; // 추가: 문자열 형식의 작성일 필드
-    private LocalDateTime rawRegDate; // 변경: 기존 LocalDateTime 필드 이름 변경
+    private String regDate;
+    private LocalDateTime rawRegDate;
     public static LikesDTO entityToDto(Likes likes) {
         LikesDTO likesDTO = new LikesDTO();
         likesDTO.setLno(likes.getLno());

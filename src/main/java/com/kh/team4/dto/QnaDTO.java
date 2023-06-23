@@ -38,10 +38,4 @@ public class QnaDTO {
 
         return qnaDTO;
     }
-
-//    public String getWriter() {
-//        return writer; // 회원 객체를 반환하도록 수정
-//    }
-
-
 }

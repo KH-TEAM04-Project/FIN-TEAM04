@@ -24,9 +24,8 @@ import java.util.Optional;
 @Log4j2
 public class ReplyService {
 
-    private final ReplyRepository replyRepository;  // replyRepository 를 주입받음
+    private final ReplyRepository replyRepository; 
     private final QnaRepository qnaRepository;
-
     private final TokenProvider tokenProvider;
 
     private final AuthenticationManagerBuilder managerBuilder;
@@ -58,6 +57,7 @@ public class ReplyService {
         }
     }
 
+    // 댓글 불러오기
     public List<ReplyDTO> findAll(Long qno) {
             log.info("reply findAll 진입");
         // select * from comment_table where board_id=? order by id desc ;
@@ -67,7 +67,6 @@ public class ReplyService {
         // 조건에 board_id=? 가 있어서,부모엔티티가 매개변수로 넘어가야됨
         // 호출 결과를 엔티티 리스트로 받아옴
 
-        /* EntityList -> DTOList */
         List<ReplyDTO> replyDTOList = new ArrayList<>();
         for (Reply Reply: replyList) {
             ReplyDTO replyDTO = ReplyDTO.toReplyDTO(Reply);
