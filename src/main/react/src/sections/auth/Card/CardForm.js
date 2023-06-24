@@ -56,6 +56,11 @@ const ElasticsearchVisualization = () => {
         </Bar>
       </BarChart>
 
+        <div>
+            <h1>My Dashboard</h1>
+            <iframe src="http://localhost:5601/goto/4ecf777797d1ea6efdd18f93c76398c2" title="Kibana Dashboard" width="100%" height="600px" />
+        </div>
+
       <style>
         {`
         .cardContainer {
