@@ -12,7 +12,7 @@ function MyPage() {
         mname: "",
         profilephoto: "",
         mid: "",
-        regno: "", 
+        regno: "",
         email: "",
         address: "",
         detailAddress: "",
@@ -218,7 +218,6 @@ function MyPage() {
     };
 
 
-
     const handleGoBack = () => {
         navigate(-1); // Go back one step in the browser history
     };
@@ -234,7 +233,18 @@ function MyPage() {
 
                 {userData.mname && !isEditing && !isChangingPassword && (
                     <>
-                        <img src={userData.profilephoto} alt="프로필사진" style={{ width: '300px', height: '200px' }} />
+
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '100%',
+                            height: '100%'
+                        }}>
+                            <img src={userData.profilephoto} alt="프로필사진"
+                                 style={{width: '200px', height: '200px', borderRadius: '50%'}}/>
+                        </div>
+
 
                         <ImageUpload/>
                         <p>이름: {userData.mname}</p>

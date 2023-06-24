@@ -14,7 +14,7 @@ import re
 
 driver = webdriver.Chrome()
 
-""" url = "https://www.card-gorilla.com/chart/check100?term=weekly"
+url = "https://www.card-gorilla.com/chart/check100?term=weekly"
 
 driver.get(url)
 html = driver.page_source
@@ -32,11 +32,11 @@ for a in sele:
 
 cardNumList = np.delete(cardNumList, 0)
 
-print(cardNumList) """
+# print(cardNumList)
 # 카드 번호 추출 완료.
 
 # 테스트용
-cardNumList = [435, 618, 646, 2432, 2310, 765, 2303, 2001, 342, 2425]
+# cardNumList = [435, 618, 646, 2432]
 
 
 detail = "https://www.card-gorilla.com/card/detail/"
@@ -44,6 +44,8 @@ detail = "https://www.card-gorilla.com/card/detail/"
 cardInfoList = np.empty((0, 9), str)
 
 for a in cardNumList:
+    if a==2431:
+        a = 689
     detailurl = detail + str(a)
     driver.get(detailurl)
     html = driver.page_source
