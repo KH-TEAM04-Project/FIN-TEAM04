@@ -4,23 +4,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
-
 import com.kh.team4.dto.FileUploadResDTO;
 import com.kh.team4.entity.Member;
 import com.kh.team4.jwt.TokenProvider;
 import com.kh.team4.repository.MemberRepository;
-import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +26,6 @@ public class S3Uploader {
 
     private final AmazonS3Client amazonS3Client;
     private final MemberRepository userRepository;
-
     private final TokenProvider tokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -44,7 +38,7 @@ public class S3Uploader {
         System.out.println("atk" + atk);
         Long mno = userRepository.findByMid2(tokenProvider.getAuthentication(atk).getName());
         System.out.println("여기까지 실행, mno값은? " + mno);
-        File uploadFile = convert(multipartFile) // profile 넘어가는중
+        File uploadFile = convert(multipartFile)
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
 
         return upload(mno, uploadFile, atk);
@@ -58,24 +52,20 @@ public class S3Uploader {
         System.out.println("uploadImageUrl = " + uploadImageUrl);
         removeNewFile(uploadFile);
 
-        //사용자의 프로필을 등록하는 것이기때문에, Member 도메인에 setProfile을 해주는 코드.
-        Member user = userRepository.findById(mno).get();
+        Member user = userRepository.findById(mno).orElseThrow(() -> new IllegalArgumentException("해당하는 회원을 찾을 수 없습니다."));
         System.out.println("해당 mno값? " + user.getMno());
         user.setProfilephoto(uploadImageUrl);
         userRepository.save(user);
         System.out.println("해당 유저의 프로필이 들어가는지 확인" + user.getProfilephoto());
-        String ProfilePhoto = user.getProfilephoto();
-        //FileUploadResponse DTO로 반환해준다.
-        return new FileUploadResDTO(fileName, uploadImageUrl, ProfilePhoto);
+        String profilePhoto = user.getProfilephoto();
+
+        return new FileUploadResDTO(fileName, uploadImageUrl, profilePhoto);
     }
 
-
-    // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
         System.out.println("uploadFile: " + uploadFile);
         System.out.println("fileName: " + fileName);
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(
-                CannedAccessControlList.PublicRead));
+        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
@@ -89,17 +79,11 @@ public class S3Uploader {
 
     private Optional<File> convert(MultipartFile file) throws IOException {
         System.out.println("실행중입니다요" + file);
-        File convertFile = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
-        System.out.println("convertFile: " + convertFile);
-        if (convertFile.createNewFile()) {
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                System.out.println("fos: " + fos);
-                fos.write(file.getBytes());
-            }
-            return Optional.of(convertFile);
+        File convertFile = File.createTempFile("temp", null);
+        try (FileOutputStream fos = new FileOutputStream(convertFile)) {
+            System.out.println("fos: " + fos);
+            fos.write(file.getBytes());
         }
-        return Optional.empty();
+        return Optional.of(convertFile);
     }
-
-
 }
