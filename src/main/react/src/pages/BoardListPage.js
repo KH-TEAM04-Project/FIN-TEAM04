@@ -140,7 +140,13 @@ export default function BoardList() {
     const [posts, setPosts] = useState([]);
 
     const getPosts = () => {
-        axios.get('/board/list').then((response) => {
+        axios.get('/board/list', {
+            headers: {
+                // http 헤더의 auth 부분에 accessToken 값 설정
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then((response) => {
             setPosts(response.data);
             console.log(response.data.length);
         })
@@ -201,7 +207,7 @@ export default function BoardList() {
                 }
             />
 
-                {auth === "ROLE_USER" && (
+                {auth === "ROLE_ADMIN" && (
                     <Button href='http://localhost:3000/board/regist' variant="contained"
                             startIcon={<Iconify icon="eva:plus-fill"/>}>
                         게시글 작성하기

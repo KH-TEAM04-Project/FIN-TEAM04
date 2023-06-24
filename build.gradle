@@ -1,7 +1,15 @@
+// Query DSL 관련 스크립트 및 설정
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.10'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    // QueryDSL plugin
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.kh'
@@ -33,14 +41,9 @@ dependencies {
     implementation 'com.oracle.database.jdbc:ojdbc8:19.3.0.0'
 
 
-
     // spring mail
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
-    implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.1'
-    implementation 'org.springframework.boot:spring-boot-starter-javax-mail'
-    implementation 'junit:junit:4.13.1'
-    implementation 'junit:junit:4.13.1'
-    implementation 'junit:junit:4.13.1'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     testImplementation 'org.projectlombok:lombok:1.18.22'
 
     //spring-cloud-starter-aws
@@ -51,12 +54,16 @@ dependencies {
     implementation 'commons-io:commons-io:2.6'
 
 
-
     // redis 의존성
     implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.3.1.RELEASE'
 
 
     compileOnly 'org.projectlombok:lombok'
+
+    // QueryDSL
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
     runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
     runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
@@ -73,8 +80,6 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.10.3'
     // log4j2
 
-    // logstash
-    implementation 'net.logstash.logback:logstash-logback-encoder:7.10.1'
 }
 
 
@@ -122,4 +127,25 @@ task copyReactBuildFiles(type: Copy) {
     dependsOn "buildReact"
     from "$frontendDir/build"
     into "$projectDir/src/main/resources/static"
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }

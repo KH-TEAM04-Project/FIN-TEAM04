@@ -19,7 +19,7 @@ import java.util.Optional;
 public class DcardDTO {
     private Long cno;
     private Long mno; // 회원번호
-    private Taxrefund dcard; // 연말정산 체크카드 사용 금액
+    private String allfor;
     private Long airport;
     private Long edu;
     private Long tran;
@@ -61,7 +61,7 @@ public class DcardDTO {
                 .food(dcard.get().getFood())
                 .giftcard(dcard.get().getGiftcard())
                 .mno(dcard.get().getMno().getMno())
-                //.dcard(dcard.get().getDcard())
+                .allfor(dcard.get().getAllfor())
                 .overseas(dcard.get().getOverseas())
                 .post(dcard.get().getPost())
                 .shop(dcard.get().getShop())

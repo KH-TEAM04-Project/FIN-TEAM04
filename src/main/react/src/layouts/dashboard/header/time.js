@@ -78,7 +78,7 @@ const CombinedComponent = (props) => {
   };
 
   return (
-    <div>
+    <div style={{ width: '210px' }}> 
       <div style={{ backgroundColor: 'orange' }}>
         {displayTokenInfo()}
       </div>

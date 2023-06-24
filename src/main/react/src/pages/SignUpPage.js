@@ -11,8 +11,8 @@ export default function SignUpPage() {
     regno: "",
     email: "",
     pwd: "",
-    detailaddress: "",
-    address: "", // Add address field to formValues
+    detailAddress: "",
+    address: "", 
     ph: "",
   });
 

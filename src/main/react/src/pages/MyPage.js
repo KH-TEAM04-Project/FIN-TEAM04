@@ -234,7 +234,8 @@ function MyPage() {
 
                 {userData.mname && !isEditing && !isChangingPassword && (
                     <>
-                        <img src={userData.profilephoto} alt="프로필사진"/>
+                        <img src={userData.profilephoto} alt="프로필사진" style={{ width: '300px', height: '200px' }} />
+
                         <ImageUpload/>
                         <p>이름: {userData.mname}</p>
                         <p>아이디: {userData.mid}</p>

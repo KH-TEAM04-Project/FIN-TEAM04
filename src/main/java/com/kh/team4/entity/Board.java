@@ -40,12 +40,17 @@ public class Board extends Base {
     @Column(columnDefinition = "integer default 0", nullable = false)
     private Integer hits;
 
+    @Column(columnDefinition = "varchar2(500)")
+    private String files;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_mno")
     private Member member;
 
-    @Column(columnDefinition = "integer default 0")
-    private Integer fileAttached; //파일 첨부 여부 (첨부 1, 미첨부 0)
+
+
+    /*    @Column(columnDefinition = "integer default 0")
+        private Integer fileAttached; //파일 첨부 여부 (첨부 1, 미첨부 0)*/
 
   /*  @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Files> FilesList = new ArrayList<>();
@@ -59,7 +64,7 @@ public class Board extends Base {
                 .content(dto.getContent())
                 .hits(dto.getHits())
                 .member(member)
-                .fileAttached(0)
+                .files(dto.getFiles())
                 .build();
         return board;
     }
