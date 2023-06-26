@@ -75,6 +75,7 @@ const CombinedComponent = (props) => {
     setLoggedIn(false);
     setTokenExpiry(null);
     setTime(null);
+    
   };
 
   return (
