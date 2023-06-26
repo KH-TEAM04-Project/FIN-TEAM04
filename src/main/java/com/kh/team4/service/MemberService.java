@@ -216,11 +216,6 @@ public class MemberService {
         // 가입된 정보가 있다면 입력받은 name과 등록된 name이 일치한지 여부를 리턴하는 메소드
     }
 
-
-
-
-
-
     public String findID2(String email, String mname) {
         System.out.println("아이디 찾기 진행중");
         Optional<Member> findID2 = memberRepository.findByMidwithemailandmname(email, mname);

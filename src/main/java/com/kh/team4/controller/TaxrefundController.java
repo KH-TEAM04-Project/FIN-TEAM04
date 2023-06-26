@@ -40,10 +40,18 @@ public class TaxrefundController {
         return memberService.confirmpwd(mno, pwd);
     }
 
+    @PostMapping("/Check")
+    public ResponseEntity<?> Check(@RequestHeader("Authorization") String data) {
+        System.out.println("Check 페이지 진입 + 받은값 R려주실? : " + data);
+        String atk = data.substring(7);
+        System.out.println("토큰 값만 추출 : " + atk);
+        return ResponseEntity.ok(service.check(atk));
+    }
+
     // 특정 회원의 체크카드 카테고리 top3추출
     @PostMapping("/CheckDetail")
     public ResponseEntity<?> CheckDetail(@RequestHeader("Authorization") String data) {
-        System.out.println("CheckDetail 페이지 진입 + 받은값 R려주실? : " + data);
+        System.out.println("솔루션 페이지 진입 + 받은값 R려주실? : " + data);
         String atk = data.substring(7);
         System.out.println("토큰 값만 추출 : " + atk);
         return ResponseEntity.ok(service.checkDetail(atk));

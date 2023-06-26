@@ -23,6 +23,7 @@ import QnaRegistPage from './pages/QnaRegistPage';
 import QnaDetailPage from './pages/QnaDetailPage';
 import QnaUpdatePage from './pages/QnaUpdatePage';
 import TaxForm from "./sections/auth/Tax/Taxform";
+import Dcardform from "./sections/auth/Tax/Dcardform";
 import CardPage from "./pages/CardPage";
 
 // ----------------------------------------------------------------------
@@ -155,6 +156,10 @@ export default function Router() {
         {
             path: '/card',
             element: <CardPage/>,
+        },
+        {
+            path: '/dcard',
+            element: <Dcardform/>,
         },
         {
             path: '*',
