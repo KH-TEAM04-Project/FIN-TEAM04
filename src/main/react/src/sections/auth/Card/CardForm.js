@@ -25,9 +25,9 @@ const ElasticsearchVisualization = () => {
   };
 
   const cardFormData = [
-    { name: 'Food', value: columnInfo.data1, image: 'https://api.card-gorilla.com:8080/storage/card/2310/card_img/23676/2310card.png' },
-    { name: 'Clothes', value: columnInfo.data2, image: 'https://api.card-gorilla.com:8080/storage/card/762/card_img/26507/762card.png' },
-    { name: 'Leisure', value: columnInfo.data3, image: 'https://api.card-gorilla.com:8080/storage/card/2454/card_img/27870/2454card.png' },
+    { name: 'Food', name2 : '카카오뱅크 mini카드' , value: columnInfo.data1, image: 'https://api.card-gorilla.com:8080/storage/card/686/card_img/21451/686card.png' },
+    { name: 'Clothes', name2 : '케이뱅크X네이버페이 체크카드' , value: columnInfo.data2, image: 'https://api.card-gorilla.com:8080/storage/card/437/card_img/20940/437card.png' },
+    { name: 'Leisure', name2 : '트리플카드' , value: columnInfo.data3, image: 'https://api.card-gorilla.com:8080/storage/card/2454/card_img/27870/2454card.png' },
     // image에 받아온 데이터 기반으로 URL을 불러오면 됩니다.
   ];
 
@@ -37,9 +37,9 @@ const ElasticsearchVisualization = () => {
       <div className="cardContainer">
         {cardFormData.map(card => (
           <div className="cardItem" key={card.name}>
-            <p>카드 이름</p>
+            <p>{card.name2}</p>
             <img className="cardImage" src={card.image} alt={card.name} />
-            <p>{card.name}</p>
+            
           </div>
         ))}
       </div>
