@@ -4,6 +4,7 @@ import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import {alpha} from '@mui/material/styles';
 import {Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover} from '@mui/material';
+import { AccountCircle } from '@mui/icons-material';
 
 const MENU_OPTIONS = [
     {
@@ -133,8 +134,25 @@ function AccountPopover() {
                     }),
                 }}
             >
-                <img src={userData.profilephoto} alt="프로필사진" style={{width: '100px', height: '100px'}}/>
-            </IconButton>
+                 {userData.profilephoto ? (
+          <img
+            src={userData.profilephoto}
+            alt="프로필사진"
+            style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '50%',
+            }}
+          />
+        ) : (
+          <AccountCircle
+            sx={{
+              width: '60px',
+              height: '60px',
+            }}
+          />
+        )}
+      </IconButton>
 
             <Popover
                 open={Boolean(open)}
