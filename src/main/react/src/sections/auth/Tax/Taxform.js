@@ -13,7 +13,7 @@ function TaxForm() {
 
   const handleGoToCardPage = () => {
     if (token) {
-      axios.post('/tax/CheckDetail', null, {
+      axios.post('/tax/Check', null, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -25,7 +25,7 @@ function TaxForm() {
           console.error(error);
         });
     }
-    navigate('/card');
+    navigate('/dcard');
   };
 
   const handleGoBack = () => {
@@ -128,7 +128,7 @@ function TaxForm() {
                 </Grid>
               </Grid>
               <div className={"center-container2"}>
-                <button onClick={handleGoToCardPage}>나의 솔루션 보러가기</button>
+                <button onClick={handleGoToCardPage}>나의 체크카드 사용액 보러가기</button>
                 <button onClick={handleGoBack}>메인페이지</button>
               </div>
             </Container>

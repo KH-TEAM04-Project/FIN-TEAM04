@@ -32,11 +32,11 @@ for a in sele:
 
 cardNumList = np.delete(cardNumList, 0)
 
-# print(cardNumList)
+print(cardNumList)
 # 카드 번호 추출 완료.
 
 # 테스트용
-# cardNumList = [435, 618, 646, 2432]
+# cardNumList = [435, 618, 646, 2431]
 
 
 detail = "https://www.card-gorilla.com/card/detail/"
@@ -44,7 +44,7 @@ detail = "https://www.card-gorilla.com/card/detail/"
 cardInfoList = np.empty((0, 9), str)
 
 for a in cardNumList:
-    if a==2431:
+    if a=='2431':
         a = 689
     detailurl = detail + str(a)
     driver.get(detailurl)
