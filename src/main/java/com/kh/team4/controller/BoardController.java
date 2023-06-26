@@ -1,7 +1,6 @@
 package com.kh.team4.controller;
 
 import com.kh.team4.dto.BoardDTO;
-import com.kh.team4.dto.FileUploadResDTO;
 import com.kh.team4.service.BoardService;
 import com.kh.team4.service.S3Uploader;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,14 +23,10 @@ public class BoardController {
     private final S3Uploader s3Uploader;
 
     @PostMapping("/regist")
-    public ResponseEntity<String> register(@RequestHeader("Authorization") String data, @RequestParam("multipartFile") MultipartFile multipartFile, @RequestBody BoardDTO boardDTO) throws IOException {
+    public ResponseEntity<String> register(@RequestHeader("Authorization") String data,  @RequestBody BoardDTO boardDTO) throws IOException {
         System.out.println("게시글 작성 컨트롤러 진입");
         String atk = data.substring(7);
         System.out.println("atk : " + atk);
-        System.out.println("MultipartFile" + multipartFile);
-        //S3 Bucket 내부에 "/profile"
-        FileUploadResDTO profile = s3Uploader.upload( multipartFile, "profile", atk);
-        System.out.println("profile의 최종값은?" + profile.getProfilePhoto());
         service.register(boardDTO, atk);
         System.out.println("boardDTO:" + boardDTO);
         return new ResponseEntity<>("게시글이 작성되었습니다.", HttpStatus.OK);
