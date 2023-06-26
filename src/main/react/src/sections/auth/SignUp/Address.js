@@ -122,9 +122,7 @@ const PopupPostCode = ({ onClose, onComplete }) => {
         }}
         onComplete={onComplete}
       />
-      <button type="button" onClick={onClose} className="postCode_btn">
-        닫기
-      </button>
+      
     </div>
   );
 };
