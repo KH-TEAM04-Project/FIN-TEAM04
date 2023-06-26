@@ -57,11 +57,10 @@ const ElasticsearchVisualization = () => {
       </BarChart>
 
         <div>
-            <h1>My Dashboard</h1>
-            <iframe src="http://localhost:5601/goto/4ecf777797d1ea6efdd18f93c76398c2" title="Kibana Dashboard" width="100%" height="600px" />
+            <h1>카드별 최대 혜택 금액</h1>
+            <iframe src="http://localhost:5601/app/visualize#/edit/4674a190-12c5-11ee-ae85-c3bdedc972e0?embed=true&type=horizontal_bar&indexPattern=a1d4dfc0-12b4-11ee-ae85-c3bdedc972e0&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-15m,to:now))&_a=(filters:!(),linked:!f,query:(language:kuery,query:''),uiState:(),vis:(aggs:!((enabled:!t,id:'1',params:(field:discount),schema:metric,type:max),(enabled:!t,id:'2',params:(field:card,missingBucket:!f,missingBucketLabel:Missing,order:desc,orderBy:'1',otherBucket:!f,otherBucketLabel:Other,size:5),schema:segment,type:terms)),params:(addLegend:!t,addTimeMarker:!f,addTooltip:!t,categoryAxes:!((id:CategoryAxis-1,labels:(filter:!f,rotate:0,show:!t,truncate:200),position:left,scale:(type:linear),show:!t,style:(),title:(),type:category)),grid:(categoryLines:!f),labels:(),legendPosition:right,seriesParams:!((data:(id:'1',label:'Max%20discount'),drawLinesBetweenPoints:!t,lineWidth:2,mode:normal,show:!t,showCircles:!t,type:histogram,valueAxis:ValueAxis-1)),thresholdLine:(color:%23E7664C,show:!f,style:full,value:10,width:1),times:!(),type:histogram,valueAxes:!((id:ValueAxis-1,labels:(filter:!t,rotate:75,show:!t,truncate:100),name:LeftAxis-1,position:bottom,scale:(mode:normal,type:linear),show:!t,style:(),title:(text:'Max%20discount'),type:value))),title:'%EC%B9%B4%EB%93%9C%EB%B3%84%20%EC%B5%9C%EB%8C%80%20%ED%98%9C%ED%83%9D%EA%B8%88%EC%95%A1',type:horizontal_bar))" title="Kibana Dashboard" width="100%" height="600px" />
         </div>
-
-      <style>
+    <style>
         {`
         .cardContainer {
           display: flex;
