@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Drawer, Typography, Avatar } from '@mui/material';
 import SvgColor from '../../../components/svg-color';
@@ -27,9 +27,12 @@ Nav.propTypes = {
 
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const isDesktop = useResponsive('up', 'lg');
 
   const [navConfig, setNavConfig] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(''); // 사용자 ID 추가
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -40,19 +43,20 @@ export default function Nav({ openNav, onCloseNav }) {
     );
 
     const initialNavConfig = [
-      
       {
-        title: '게 시 판',
+        title: '공 지 사 항',
         path: '/board/list',
         icon: icon('ic_cart'),
       },
-      {
-        title: 'Q & A',
-        path: '/qna/list',
-        icon: icon('ic_cart'),
-      },
-      
-      
+      ...(token
+        ? [
+            {
+              title: 'Q & A',
+              path: '/qna/list',
+              icon: icon('ic_cart'),
+            },
+          ]
+        : []),
       {
         title: 'login',
         path: '/login',
@@ -60,13 +64,15 @@ export default function Nav({ openNav, onCloseNav }) {
         isLogin: !token,
       },
       {
-        title: 'tax',
+        title: '연 말 정 산',
         path: '/tax',
         icon: icon('ic_analytics'),
       },
     ].filter((item) => !(item.title === 'login' && !item.isLogin));
 
     setNavConfig(initialNavConfig);
+    setIsLoggedIn(token && token.split('.').length === 3); // 토큰의 유효성에 따라 isLoggedIn 상태를 업데이트합니다.
+    setUserId(sub);
   }, []);
 
   useEffect(() => {
@@ -88,19 +94,23 @@ export default function Nav({ openNav, onCloseNav }) {
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none">
-          <StyledAccount>
+          {/* <StyledAccount>
             <Avatar src={account.photoURL} alt="photoURL" />
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                여기바꿀꺼임
+<<<<<<< HEAD
+                {isLoggedIn ? `${userId}님 환영합니다 ` : '로그인 해주세용><'}
+=======
+                스타일어카운트.
+>>>>>>> feature/seokjun2
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {account.role}
               </Typography>
             </Box>
-          </StyledAccount>
+          </StyledAccount> */}
         </Link>
       </Box>
 

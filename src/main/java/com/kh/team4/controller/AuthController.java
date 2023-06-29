@@ -4,6 +4,7 @@ import com.kh.team4.dto.FileUploadResDTO;
 import com.kh.team4.dto.MailDTO;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.TokenDTO;
+import com.kh.team4.entity.Member;
 import com.kh.team4.service.MemberService;
 import com.kh.team4.service.S3Uploader;
 import com.kh.team4.service.SendEmailService;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "localhost:3000")
@@ -52,6 +54,7 @@ public class AuthController {
 
     @GetMapping("/check/findPw")
     public @ResponseBody Map<String, Boolean> pw_find(String email, String mname) {
+        System.out.println(email + mname);
         Map<String, Boolean> json = new HashMap<>();
         boolean pwFindCheck = memberService.memberEmailCheck(email, mname);
 
@@ -68,5 +71,11 @@ public class AuthController {
         MailDTO dto = sendEmailService.createMailAndChangePassword(email, mname);
         System.out.println(dto.toString());
         sendEmailService.mailSend(dto);
+    }
+
+    @GetMapping("/saveMembers")
+    public String getAllMembers() {
+
+        return memberService.saveMembers();
     }
 }

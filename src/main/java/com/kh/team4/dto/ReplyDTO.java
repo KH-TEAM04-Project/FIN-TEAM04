@@ -19,8 +19,8 @@ public class ReplyDTO {
     private Long qno;
     private String writerID;
 
-    private String regDate; // 추가: 문자열 형식의 작성일 필드
-    private LocalDateTime rawRegDate; // 변경: 기존 LocalDateTime 필드 이름 변경
+    private String regDate;
+    private LocalDateTime rawRegDate;
     private Long mno;
 
     // entity 를 dto 로 변환하는 내용

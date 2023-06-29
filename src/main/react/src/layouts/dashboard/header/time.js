@@ -75,10 +75,11 @@ const CombinedComponent = (props) => {
     setLoggedIn(false);
     setTokenExpiry(null);
     setTime(null);
+    
   };
 
   return (
-    <div>
+    <div style={{ width: '210px' }}> 
       <div style={{ backgroundColor: 'orange' }}>
         {displayTokenInfo()}
       </div>

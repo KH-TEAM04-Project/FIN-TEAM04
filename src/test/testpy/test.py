@@ -9,7 +9,7 @@ driver = webdriver.Chrome()
 
 
 
-""" url = "https://www.card-gorilla.com/chart/check100?term=weekly"
+url = "https://www.card-gorilla.com/chart/check100?term=weekly"
 
 driver.get(url)
 html = driver.page_source
@@ -28,10 +28,10 @@ for a in sele:
 cardNumList = np.delete(cardNumList, 0)
 
 print(cardNumList) 
-# 카드 번호 추출 완료. """
+# 카드 번호 추출 완료.
 
 # 테스트용
-cardNumList = [435, 618, 646, 2432]
+# cardNumList = [435, 618, 646, 2432]
 
 
 detail = "https://www.card-gorilla.com/card/detail/"

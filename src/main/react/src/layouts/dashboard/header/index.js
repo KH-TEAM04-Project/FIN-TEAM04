@@ -30,6 +30,9 @@ const StyledRoot = styled(AppBar)(({ theme }) => ({
   },
 }));
 
+
+
+
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   minHeight: HEADER_MOBILE,
   [theme.breakpoints.up('lg')]: {
@@ -59,7 +62,7 @@ export default function Header({ onOpenNav }) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
 
-        <Searchbar />
+        
         <Box sx={{ flexGrow: 100 }} />
 
         <Stack

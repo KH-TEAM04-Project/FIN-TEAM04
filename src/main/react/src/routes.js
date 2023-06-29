@@ -23,6 +23,8 @@ import QnaRegistPage from './pages/QnaRegistPage';
 import QnaDetailPage from './pages/QnaDetailPage';
 import QnaUpdatePage from './pages/QnaUpdatePage';
 import TaxForm from "./sections/auth/Tax/Taxform";
+import Dcardform from "./sections/auth/Tax/Dcardform";
+import CardPage from "./pages/CardPage";
 
 // ----------------------------------------------------------------------
 export default function Router() {
@@ -55,6 +57,7 @@ export default function Router() {
                 {path: '/blog', element: <BlogPage/>},
                 {path: '/qna/list', element: <QnaListPage/>},
                 {path: '/board/list', element: <BoardListPage/>},
+                {path: '/card', element: <CardPage/>},
                 {path: '/tax', element: !token ? <Navigate to="/login"/> : <PwMyPage2/>},
             ],
         },
@@ -149,6 +152,14 @@ export default function Router() {
         {
             path: '/board/detail:bno',
             element: <BoardDetailPage/>,
+        },
+        {
+            path: '/card',
+            element: <CardPage/>,
+        },
+        {
+            path: '/dcard',
+            element: <Dcardform/>,
         },
         {
             path: '*',

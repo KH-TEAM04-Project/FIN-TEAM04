@@ -10,13 +10,15 @@ function MyPage() {
     const [avatarSrc, setAvatarSrc] = useState('/assets/images/avatars/avatar_default.jpg');
     const [userData, setUserData] = useState({
         mname: "",
+        profilephoto: "",
         mid: "",
-        regno: "", // Resident Registration Number
+        regno: "",
         email: "",
         address: "",
         detailAddress: "",
         ph: "",
-        pwd: "" // Include pwd in the initial state
+        pwd: ""
+
     });
     const navigate = useNavigate();
     const [mno, setMno] = useState(""); // 토큰에서 추출한 sub 값 상태
@@ -216,21 +218,39 @@ function MyPage() {
     };
 
 
-
     const handleGoBack = () => {
         navigate(-1); // Go back one step in the browser history
     };
 
-
+    console.log(userData.mid);
+    console.log(userData.address);
+    console.log(userData.profilephoto);
     return (
 
         <div className={"center-container"}><Nav/> {/* 사이드바 컴포넌트를 추가 */}
             <div className={"content"}>
                 <h1>마이페이지</h1>
-                <ImageUpload avatarSrc={avatarSrc} setAvatarSrc={setAvatarSrc}/>
 
                 {userData.mname && !isEditing && !isChangingPassword && (
                     <>
+
+                        
+
+
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '100%',
+                            height: '100%'
+                        }}>
+                            <img src={userData.profilephoto} alt="프로필사진"
+                                 style={{width: '200px', height: '200px', borderRadius: '50%'}}/>
+                        </div>
+
+
+
+                        <ImageUpload/>
                         <p>이름: {userData.mname}</p>
                         <p>아이디: {userData.mid}</p>
                         <p>생년월일: {getMaskedRegNo()}</p>

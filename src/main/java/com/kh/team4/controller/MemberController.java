@@ -65,7 +65,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.Update(memberReqDTO, atk));
     }
 
-    @PostMapping("/profilePhoto")
+    @PostMapping("/Profilephoto")
     public ResponseEntity<?> uploadProfilePhoto(@RequestHeader("Authorization") String data,  @RequestParam("multipartFile") MultipartFile multipartFile) throws IOException {
         System.out.println("받은 값 확인 : " + data);
         String atk = data.substring(7);
@@ -74,7 +74,8 @@ public class MemberController {
         System.out.println("MultipartFile" + multipartFile);
         //S3 Bucket 내부에 "/profile"
         FileUploadResDTO profile = s3Uploader.upload( multipartFile, "profile", atk);
-        return ResponseEntity.ok(profile);
+        System.out.println("profile의 최종값은?" + profile.getProfilePhoto());
+        return ResponseEntity.ok(memberService.detail(atk));
     }
 
 

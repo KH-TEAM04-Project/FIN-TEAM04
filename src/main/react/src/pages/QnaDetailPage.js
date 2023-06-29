@@ -23,11 +23,16 @@ import {
   TableRow,
   TableCell,
   Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
 import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
+import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
 import styled from 'styled-components'; // styled-components 추가
 import DeleteIcon from '@mui/icons-material/Delete';
 // ----------------------------------------------------------------------
@@ -62,7 +67,6 @@ const QnaDetailPage = () => {
   const sub = token ? JSON.parse(atob(token.split('.')[1])).sub : '';
   const [mno, setMno] = useState(token ? JSON.parse(atob(token.split('.')[1])).mno : '');
 
-  console.log(mno);
   useEffect(() => {
     if (token) {
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
@@ -85,9 +89,15 @@ const QnaDetailPage = () => {
 
   const { qno } = useParams();
   const [post, setPost] = useState(null); // 게시글 상태
-  const [replys, setReplys] = useState([]); // 댓글 목록 상태
+  const [reply, setReply] = useState([]); // 댓글 목록 상태
   const [replyContent, setReplyContent] = useState(''); // 댓글 내용 상태
   const [liked, setLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0); // 좋아요 개수 표시
+  const [likeData, setLikeData] = useState(0); // 초기값을 빈 객체로 설정
+  const [isLiked, setIsLiked] = useState(false);
+  // 사용자 인증 상태
+  const isAuthenticated = !!token;
+  const loggedInUserId = sub; // 로그인한 사용자의 ID를 얻어오는 코드 또는 상태
 
   const getPost = () => {
     axios
@@ -100,11 +110,11 @@ const QnaDetailPage = () => {
       .then((response) => {
         setPost(response.data); // 게시글 업데이트
         console.log(response.data);
-        console.log("yaya");
+        console.log("성공");
       })
       .catch((error) => {
         if (error.response) {
-          console.log("이거 에러인걸?");
+          console.log("response 에러 발생");
         } else if (error.request) {
           console.log("network error");
         } else {
@@ -113,7 +123,7 @@ const QnaDetailPage = () => {
       });
   };
 
-  const getReplys = () => {
+  const getReply = () => {
     axios
       .get(`/qna/replys/${qno}`, {
          headers: {
@@ -122,13 +132,13 @@ const QnaDetailPage = () => {
          }
       })
       .then((response) => {
-        setReplys(response.data); // 댓글 목록 업데이트
+        setReply(response.data); // 댓글 목록 업데이트
         console.log(response.data);
-        console.log("yaya");
+        console.log("댓글 목록");
       })
       .catch((error) => {
         if (error.response) {
-          console.log("이거 에러인걸?");
+          console.log("response 에러 발생");
         } else if (error.request) {
           console.log("network error");
         } else {
@@ -139,7 +149,7 @@ const QnaDetailPage = () => {
 
   useEffect(() => {
     getPost();
-    getReplys();
+    getReply();
   }, []);
 
   const navigate = useNavigate();
@@ -205,55 +215,96 @@ const QnaDetailPage = () => {
       });
   };
 
+  const fetchLikesData = async () => {
+    try {
+      const response = await axios.get(`/qna/likes/${qno}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = response.data;
+      setLikeData(data); // 좋아요 데이터를 가져와서 likeData에 설정
+      setIsLiked(true); // 좋아요 요청이 성공하면 좋아요 상태를 true로 설정
+    } catch (error) {
+      console.log('Error fetching likes data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLikesData();
+  }, []);
+
+  console.log(likeData);
+
   const handleLike = () => {
-    setLiked(true);
+    if (liked) return; // 이미 좋아요한 상태라면 중복 클릭 방지
 
     const requestData = {
-      qno: data.qno, // 좋아요할 질문 번호
+      qno, // 좋아요할 질문 번호
       mno,
     };
 
     axios
-      .post(`/qna/likes/{qno}`, requestData, {
-         headers: {
-           // http 헤더의 auth 부분에 accessToken 값 설정
-           'Authorization': `Bearer ${token}`
-         }
-      }) // 요청 본문을 requestData로 전달
+      .post(`/qna/addLike/${likeData.qno}`, requestData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       .then((response) => {
         console.log('좋아요 요청 성공:', response.data);
+        fetchLikesData(); // 좋아요 요청 성공 시 좋아요 데이터를 다시 가져와서 상태를 업데이트
         // 좋아요 요청 성공 시 추가 동작 구현
       })
       .catch((error) => {
         console.error('좋아요 요청 실패:', error);
         // 좋아요 요청 실패 시 추가 동작 구현
       });
+      setLiked(true); // 좋아요 상태 변경
   };
 
   const handleUnlike = () => {
-    setLiked(false);
+    if (!liked) return; // 좋아요하지 않은 상태라면 중복 클릭 방지
 
+    setLiked(false);
     const requestData = {
-      qno: data.qno, // 좋아요 취소할 질문 번호
+      qno, // 좋아요 취소할 질문 번호
       mno,
     };
 
     axios
-      .post(`/qna/unLikes/{qno}`, requestData, {
-         headers: {
-           // http 헤더의 auth 부분에 accessToken 값 설정
-           'Authorization': `Bearer ${token}`
-         }
-      }) // 요청 본문을 requestData로 전달
+      .delete(`/qna/removeLike/${likeData.qno}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        data: requestData // 요청 본문에 데이터 추가
+      })
       .then((response) => {
         console.log('좋아요 취소 요청 성공:', response.data);
+        fetchLikesData(); // 좋아요 취소 요청 성공 시 좋아요 데이터를 다시 가져와서 상태를 업데이트
         // 좋아요 취소 요청 성공 시 추가 동작 구현
       })
-      .catch((error) => {
-        console.error('좋아요 취소 요청 실패:', error);
-        // 좋아요 취소 요청 실패 시 추가 동작 구현
+        .catch((error) => {
+          console.error('좋아요 취소 요청 실패:', error);
+          // 좋아요 취소 요청 실패 시 추가 동작 구현
       });
+    setLiked(false); // 좋아요 상태 변경
   };
+
+  // 좋아요 개수 가져오기
+  const fetchLikesCount = async () => {
+    try {
+      const response = await axios.get(`/qna/likes/${qno}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // 필요한 경우 헤더에 인증 토큰 추가
+        },
+      });
+      const data = response.data;
+      setLikesCount(data);
+    } catch (error) {
+      console.log('Error fetching likes count:', error);
+    }
+  };
+
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // 삭제 다이얼로그 열림/닫힘 상태
   // 삭제 다이얼로그 열기
@@ -264,24 +315,41 @@ const QnaDetailPage = () => {
   const handleCloseDeleteDialog = () => {
     setOpenDeleteDialog(false);
   };
+
   // 댓글 삭제 함수
-  const handleDeleteReply = (rno) => {
+  const handleDeleteReply = (reply) => {
+    console.log('reply:', reply); // 추가: reply 객체 확인
+    if (!reply || typeof reply.qno === 'undefined' || typeof reply.rno === 'undefined') {
+      console.error('유효하지 않은 댓글입니다.');
+      return;
+    }
+    const { qno, rno } = reply;
     axios
-      .delete(`/qna/replys/${qno}/${rno}`, {
+      .delete(`/qna/replys/delete/${qno}/${rno}`, {
         headers: {
-          // http 헤더의 auth 부분에 accessToken 값 설정
           'Authorization': `Bearer ${token}`
         }
       })
       .then((response) => {
         console.log('댓글이 성공적으로 삭제되었습니다.');
         alert('댓글이 삭제되었습니다.');
-        getReplys();
+        getReply();
       })
       .catch((error) => {
         console.error('댓글 삭제 실패:', error);
+        alert('댓글 삭제에 실패했습니다.');
       });
-    };
+  };
+
+  // 삭제 버튼 클릭 이벤트 핸들러
+  const handleDeleteButtonClick = (reply) => {
+    if (!reply || typeof reply.qno === 'undefined' || typeof reply.rno === 'undefined') {
+      console.error('유효하지 않은 댓글입니다.');
+      return;
+    }
+    handleDeleteReply(reply);
+    handleCloseDeleteDialog(); // 다이얼로그를 닫는 함수 호출
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -303,7 +371,7 @@ const QnaDetailPage = () => {
         alert("댓글이 작성되었습니다.");
         // 댓글 목록을 다시 불러옵니다.
         setReplyContent(''); // 작성한 댓글의 내용을 초기화
-        getReplys();
+        getReply();
       })
       .catch((error) => {
         console.error('댓글 작성 실패:', error);
@@ -368,45 +436,16 @@ const QnaDetailPage = () => {
               <MenuItem component={Link} to="/qna/regist">
                 새로 작성하기
               </MenuItem>
-              <MenuItem onClick={handleDelete}>
-                삭제하기
-              </MenuItem>
+
             </Menu>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Q&A 상세
+              Q&A 상세보기
             </Typography>
             <Tooltip title="Light / Dark" edge="end">
               <IconButton color="inherit" onClick={handleOpen}>
                 <WbSunnyIcon />
               </IconButton>
             </Tooltip>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: 400,
-                  bgcolor: 'background.paper',
-                  border: '2px solid #000',
-                  boxShadow: 24,
-                  p: 4,
-                }}
-              >
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  기능 준비 중
-                </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  이 기능은 준비 중에 있습니다.
-                </Typography>
-              </Box>
-            </Modal>
             <Avatar alt="User Avatar" src="/avatar.png" />
           </Toolbar>
         </AppBar>
@@ -414,7 +453,7 @@ const QnaDetailPage = () => {
 
           <Stack sx={{ marginTop: '80px' }}>
             <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
+              <Grid item xs={1}>
                 <Typography variant="h5">제목:</Typography>
               </Grid>
               <Grid item xs={10}>
@@ -424,7 +463,7 @@ const QnaDetailPage = () => {
                   disabled
                   sx={{
                     width: '100%',
-                    padding: '10px',
+                    padding: '1px',
                     borderRadius: '5px',
                     fontSize: '24px',
                     fontWeight: 'bold',
@@ -434,8 +473,8 @@ const QnaDetailPage = () => {
             </Grid>
 
             <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
-                <Typography variant="h6">작성자:</Typography>
+              <Grid item xs={1}>
+                <Typography variant="h5">작성자:</Typography>
               </Grid>
               <Grid item xs={10}>
                 <TextField
@@ -445,7 +484,7 @@ const QnaDetailPage = () => {
                   disabled
                   sx={{
                     width: '100%',
-                    padding: '10px',
+                    padding: '1px',
                     borderRadius: '5px',
                     fontSize: '20px',
                   }}
@@ -454,8 +493,8 @@ const QnaDetailPage = () => {
             </Grid>
 
             <Grid container alignItems="center" sx={{ mb: 2 }}>
-              <Grid item xs={2}>
-                <Typography variant="h6">작성일:</Typography>
+              <Grid item xs={1}>
+                <Typography variant="h5">작성일:</Typography>
               </Grid>
               <Grid item xs={10}>
                 <TextField
@@ -465,15 +504,13 @@ const QnaDetailPage = () => {
                   disabled
                   sx={{
                     width: '100%',
-                    padding: '10px',
+                    padding: '1px',
                     borderRadius: '5px',
                     fontSize: '20px',
                   }}
                 />
               </Grid>
             </Grid>
-
-            <Typography variant="h6">내용:</Typography>
             <TextField
               id="outlined-multiline-static"
               disabled
@@ -483,23 +520,51 @@ const QnaDetailPage = () => {
               sx={{ width: '100%', padding: '10px', borderRadius: '5px', marginTop: '20px' }}
             />
           </Stack>
-          <Stack direction="row" spacing={2} sx={{ marginTop: '32px' }}>
-            {!liked ? (
-              <Button variant="outlined" onClick={handleLike}>
-                <ThumbUpOffAltRoundedIcon sx={{ marginRight: '8px' }} /> 좋아요
-              </Button>
-            ) : (
-              <Button variant="outlined" onClick={handleUnlike}>
-                좋아요 취소
+          <Stack direction="row" spacing={2} sx={{ marginTop: '32px', marginBottom: '16px', justifyContent: 'space-between' }}>
+            <Stack direction="row" spacing={2}>
+              {!liked ? (
+                <Button variant="outlined" onClick={handleLike}>
+                  <ThumbUpOffAltRoundedIcon sx={{ marginRight: '8px' }} />
+                  좋아요
+                </Button>
+              ) : (
+                <Button variant="outlined" onClick={handleUnlike}>
+                  <ThumbUpAltRoundedIcon sx={{ marginRight: '8px' }} />
+                  좋아요 취소
+                </Button>
+              )}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  backgroundColor: '#f5f5f5',
+                }}
+              >
+                <Typography variant="subtitle2" color="textSecondary">
+                  이 게시글을 좋아하는 사람: {likeData}명
+                </Typography>
+              </div>
+            </Stack>
+            {isAuthenticated && post && post.writerID === loggedInUserId && (
+              <Button
+                onClick={handleDelete}
+                variant="contained"
+                color="error"
+                size="small"
+                startIcon={<DeleteIcon />}
+              >
+                게시글 삭제하기
               </Button>
             )}
           </Stack>
+
             <Stack sx={{ marginTop: '32px' }}>
-            <Typography variant="h5">댓글 작성</Typography>
             <form onSubmit={handleSubmit}>
               <Stack direction="row" spacing={2}>
                 <TextField
-                  label="댓글 내용"
+                  label="댓글을 작성해주세요"
                   variant="outlined"
                   multiline
                   rows={4}
@@ -521,26 +586,32 @@ const QnaDetailPage = () => {
               </LoadingButton>
             </form>
           </Stack>
-          <Stack sx={{ marginTop: '32px' }}>
+          <Stack sx={{ marginTop: '60px' }}>
             <Typography variant="h5">댓글</Typography>
-            <Table sx={{ marginTop: '16px' }}>
+            <Table sx={{ marginTop: '20px' }}>
               <TableHead>
                 <TableRow>
                   <TableCell>작성자</TableCell>
                   <TableCell>내용</TableCell>
                   <TableCell>작성일시</TableCell>
+                  <TableCell>댓글 삭제</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {replys?.map((reply) => (
+                {reply?.map((reply) => (
                   <TableRow key={reply.rno}>
                     <TableCell>{reply.writerID}</TableCell>
                     <TableCell>{reply.content}</TableCell>
                     <TableCell>{reply.regDate}</TableCell>
                     <TableCell>
-                      <IconButton color="error" onClick={() => handleOpenDeleteDialog(reply.qno, reply.rno)}>
-                        <DeleteIcon />
-                      </IconButton>
+                      {isAuthenticated && reply.writerID === loggedInUserId && (
+                        <IconButton
+                          color="error"
+                          onClick={() => handleDeleteButtonClick(reply)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

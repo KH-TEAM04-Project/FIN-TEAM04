@@ -1,13 +1,7 @@
 import PropTypes from 'prop-types';
 import { Card, Typography } from '@mui/material';
-// utils
 
-
-
-// ----------------------------------------------------------------------
-
-
-// ----------------------------------------------------------------------
+// ...
 
 AppWidgetSummary.propTypes = {
   color: PropTypes.string,
@@ -17,10 +11,12 @@ AppWidgetSummary.propTypes = {
 };
 
 export default function AppWidgetSummary({ title, total, color = 'primary', sx, ...other }) {
+  const formattedTotal = total !== null ? total.toLocaleString() : '';
+
   return (
     <Card
       sx={{
-        py: 5,
+        py: 3,
         boxShadow: 0,
         textAlign: 'center',
         color: (theme) => theme.palette[color].darker,
@@ -29,9 +25,9 @@ export default function AppWidgetSummary({ title, total, color = 'primary', sx, 
       }}
       {...other}
     >
-
-      <Typography variant="h3">{total}</Typography>
-
+      <Typography variant="h3" sx={{ overflowWrap: 'break-word' }}>
+        {formattedTotal}
+      </Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         {title}
       </Typography>

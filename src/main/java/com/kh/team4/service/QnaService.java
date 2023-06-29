@@ -1,9 +1,7 @@
 package com.kh.team4.service;
 
-import com.kh.team4.dto.BoardDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.QnaDTO;
-import com.kh.team4.entity.Board;
 import com.kh.team4.entity.Qna;
 import com.kh.team4.jwt.TokenProvider;
 import com.kh.team4.repository.MemberRepository;
@@ -75,10 +73,6 @@ public class QnaService {
         System.out.println("qnaservice 진입");
         List<Qna> qnaEntityList = qnaRepository.findAll();
         System.out.println("repository에서 가져오는중");
-        // findAll 을 하게 되면, repository 뭔가를 가져올때는 무조건 entity 로 온다.
-        // List<BoardEntity> -> list 형태의 entity 가 넘어오게 됨.
-
-        // entity 로 넘어온 객체를 dto 객체로 옮겨 담아서 다시 컨트롤러로 리턴을 해줘야됨
         List<QnaDTO> qnaDTOList = new ArrayList<>(); // 리턴할 객체 선언
         System.out.println("리턴할 객체 선언");
         for (Qna qna: qnaEntityList) {

@@ -1,16 +1,10 @@
 package com.kh.team4.dto;
 
-import com.kh.team4.entity.Base;
 import com.kh.team4.entity.Board;
-import com.kh.team4.entity.Files;
-import com.kh.team4.entity.Member;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 // DTO(Data Transfer Object), VO, Bean,
@@ -33,7 +27,9 @@ public class BoardDTO {
     private Long mno;
 
     // 첨부파일 관련
-    private List<MultipartFile> boardFile;  // 여러개의 파일을 담아주려면 List 적용
+    private String files;
+
+    private List<MultipartFile> boardFiles;  // 여러개의 파일을 담아주려면 List 적용
     // MultipartFile : 스프링에서 제공하는 인터페이스 - 실제 파일을 담아줄 수 있는 역할을 함.
     private List<String> originFile;    // 원본 파일 이름
     private List<String> storedFile;    // 서버 저장용 파일 이름
@@ -45,11 +41,11 @@ public class BoardDTO {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .writerID(board.getMember().getMid())
-                //.regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .hits(board.getHits())
                 .mno(board.getMember().getMno())
                 .build();
-// 파일첨부
+/*// 파일첨부
         if(board.getFileAttached() == 0) {
             boardDTO.setFileAttached(board.getFileAttached());    // 0
         } else {
@@ -63,7 +59,7 @@ public class BoardDTO {
             }
             boardDTO.setOriginFile(originFileList);
             boardDTO.setStoredFile(storedFileList);
-        }
+        }*/
         return boardDTO;
 
     }
@@ -76,7 +72,7 @@ public class BoardDTO {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .hits(board.getHits())
-//                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .regDate(board.getRegDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
     }
 }

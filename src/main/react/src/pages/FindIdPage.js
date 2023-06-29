@@ -5,8 +5,8 @@ import Swal from 'sweetalert2';
 
 const UsernameRecoveryModal = () => {
   const [showModal, setShowModal] = useState(false);
-  const [mname, setMname] = useState(''); // Changed userName to mname
-  const [email, setEmail] = useState(''); // Changed userEmail to email
+  const [mname, setMname] = useState('');
+  const [email, setEmail] = useState('');
   const [retrievedUsername, setRetrievedUsername] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -22,11 +22,11 @@ const UsernameRecoveryModal = () => {
     setErrorMsg('');
   };
 
-  const handleMnameChange = (e) => { // Changed handleUserNameChange to handleMnameChange
+  const handleMnameChange = (e) => {
     setMname(e.target.value);
   };
 
-  const handleEmailChange = (e) => { // Changed handleUserEmailChange to handleEmailChange
+  const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
@@ -34,21 +34,18 @@ const UsernameRecoveryModal = () => {
     e.preventDefault();
 
     const requestData = {
-      email, // Changed userEmail to email
-      mname, // Changed userName to mname
+      email,
+      mname,
     };
 
-    console.log('Request Data:', requestData);
-
     axios
-      .post('/check/findID', requestData)
+      .post('/auth/check/findID', requestData)
       .then((response) => {
         const res = response.data;
         if (res) {
           Swal.fire({
             icon: 'success',
             title: '아이디 찾기 성공',
-
             text: `아이디: ${res}`,
           });
           setRetrievedUsername(res);
@@ -76,54 +73,58 @@ const UsernameRecoveryModal = () => {
   };
 
   return (
-    <>
-      <Button onClick={openModal}>아이디 찾기</Button>
-      <Modal show={showModal} onHide={closeModal}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Button onClick={openModal} style={{ backgroundColor: '#007bff', color: '#fff', border: 'none', fontSize: '20px', padding: '10px 20px' }}>
+        아이디 찾기
+      </Button>
+      <Modal show={showModal} onHide={closeModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title>아이디 찾기</Modal.Title>
+          <Modal.Title style={{ fontSize: '24px' }}>아이디 찾기</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group>
-              <Form.Label>이름</Form.Label>
+              <Form.Label style={{ fontSize: '18px' }}>이름</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="가입 시 등록한 이름을 입력하세요."
-                value={mname} // Changed userName to mname
-                onChange={handleMnameChange} // Changed handleUserNameChange to handleMnameChange
+                value={mname}
+                onChange={handleMnameChange}
+                style={{ border: '1px solid #ced4da', borderRadius: '4px', fontSize: '16px', padding: '10px' }}
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>이메일</Form.Label>
+              <Form.Label style={{ fontSize: '18px' }}>이메일</Form.Label>
               <Form.Control
                 type="email"
                 placeholder="가입 시 등록한 이메일을 입력하세요."
-                value={email} // Changed userEmail to email
-                onChange={handleEmailChange} // Changed handleUserEmailChange to handleEmailChange
+                value={email}
+                onChange={handleEmailChange}
+                style={{ border: '1px solid #ced4da', borderRadius: '4px', fontSize: '16px', padding: '10px' }}
               />
             </Form.Group>
-            <Button type="submit" variant="success" block>
+            <Button type="submit" variant="success" block style={{ fontSize: '18px', padding: '10px 20px' }}>
               아이디 찾기
             </Button>
           </Form>
           {retrievedUsername && (
-            <div className="text-center mt-3">
+            <div className="text-center mt-3" style={{ color: '#000', fontSize: '18px' }}>
               <strong>아이디:</strong> {retrievedUsername}
             </div>
           )}
           {errorMsg && (
-            <div className="text-center mt-3 text-danger">
+            <div className="text-center mt-3 text-danger" style={{ fontSize: '18px' }}>
               {errorMsg}
             </div>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={closeModal}>
+          <Button variant="danger" onClick={closeModal} style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none', fontSize: '20px', padding: '10px 20px' }}>
             닫기
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </div>
   );
 };
 

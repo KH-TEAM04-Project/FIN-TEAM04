@@ -1,9 +1,10 @@
 package com.kh.team4.service;
 
-import com.kh.team4.config.RedisUtil;
+import org.springframework.dao.DataAccessException;
 import com.kh.team4.dto.MemberReqDTO;
 import com.kh.team4.dto.MemberResDTO;
 import com.kh.team4.dto.TokenDTO;
+import com.kh.team4.entity.Authority;
 import com.kh.team4.entity.Member;
 import com.kh.team4.jwt.TokenProvider;
 import com.kh.team4.repository.MemberRepository;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.LongStream;
 
 @Service
 @RequiredArgsConstructor
@@ -39,20 +41,23 @@ public class MemberService {
         String aaa = "success";
         return aaa;
     }
-    public MemberResDTO detail(String atk) {
-        System.out.println("Detail Service 진입");
-        Authentication authentication = tokenProvider.getAuthentication(atk);
-        Long mno = memberRepository.findByMid2(authentication.getName());
-        MemberResDTO member = MemberResDTO.of2(memberRepository.findById(mno));
-        System.out.println("마이페이지로 보낼 값 (3가지만 선정) : " + member.toString());
-        return member;
-    }
 
-/*    public void delete(Long mno) {
-        System.out.println("삭제할 회원의 No. : " + mno);
-        System.out.println("받은 값 : " + mno);
-        memberRepository.deleteById(mno);
-    }*/
+
+    public MemberResDTO detail(String atk) {
+        try {
+            System.out.println("Detail Service 진입");
+            Authentication authentication = tokenProvider.getAuthentication(atk);
+            Long mno = memberRepository.findByMid2(authentication.getName());
+            System.out.println("이 회원의 mno는? " + mno);
+            MemberResDTO member = MemberResDTO.of2(memberRepository.findByMno(mno));
+            System.out.println("마이페이지로 보낼 값 (3가지만 선정) : " + member.toString());
+            return member;
+        } catch (DataAccessException e) {
+            System.out.println("DataAccessException occurred: " + e.getMessage());
+
+            throw e;
+        }
+    }
 
     public void delete(String atk) {
         String name = tokenProvider.getAuthentication(atk).getName();
@@ -211,11 +216,6 @@ public class MemberService {
         // 가입된 정보가 있다면 입력받은 name과 등록된 name이 일치한지 여부를 리턴하는 메소드
     }
 
-
-
-
-
-
     public String findID2(String email, String mname) {
         System.out.println("아이디 찾기 진행중");
         Optional<Member> findID2 = memberRepository.findByMidwithemailandmname(email, mname);
@@ -242,5 +242,33 @@ public class MemberService {
             return false;
         }
     }
+
+
+    // 회원 더미데이터 생성
+    public String saveMembers() {
+        for(Long i = 1L; i<51L; i++) {
+            try {
+                Member parm = Member.builder()
+                        .authority(Authority.ROLE_USER)
+                        .email(i + "@naver.com")
+                        .mid("id" + i)
+                        .mname("Mname " + i)
+                        .ph("1234")
+                        .pwd(passwordEncoder.encode("Cwsook97!")) // 비밀번호 인코딩
+                        .regno(i + "1234567890123")
+                        .Profilephoto(null)
+                        .address(null)
+                        .build();
+                memberRepository.save(parm);
+            } catch (Exception e) {
+                System.out.println("Exception occurred at index: " + i);
+                e.printStackTrace();
+            }
+        }
+        return "success";
+    }
+
+
+
 }
 
