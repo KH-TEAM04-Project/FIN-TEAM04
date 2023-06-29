@@ -82,7 +82,7 @@ function DcardForm() {
     };
 
     return (
-        <div>
+        <div style={{ marginTop: '200px' }}>
             <Nav/>
             <div className={"info-box"}>
                 {(
