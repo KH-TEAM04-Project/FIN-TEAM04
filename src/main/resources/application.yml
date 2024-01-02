@@ -48,8 +48,8 @@ spring:
   mail:
     host: smtp.naver.com
     port: 465
-    username: lee970808@naver.com
-    password: lee990606
+    username: 
+    password: 
     properties:
       mail.smtp.auth: true
       mail.smtp.ssl.enable: true
